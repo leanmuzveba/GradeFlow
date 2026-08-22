@@ -11,14 +11,14 @@ and staying focused — wrapped in a warm, accessible pink design system.
 
 ---
 
-## ✨ Overview
+## Overview
 
 **GradeFlow** helps students see their whole academic picture at a glance: current
 standing and GPA, upcoming deadlines, study time against weekly goals, and per-module
 performance. It combines a grade tracker, a focus timer, a deadline planner, and a
 "what-if" grade simulator in one clean, touch-friendly interface.
 
-## 🎯 Features
+## Features
 
 | Screen | What it does |
 |--------|--------------|
@@ -31,7 +31,7 @@ performance. It combines a grade tracker, a focus timer, a deadline planner, and
 | **Profile** | Semester, target GPA, and weekly study goals |
 | **What-If Simulator** | Model how future marks would change your final grade |
 
-## 🎨 Design System
+## Design System
 
 GradeFlow uses a signature pink palette from the brand board, with an accessible,
 mobile-first layout.
@@ -64,7 +64,7 @@ mobile-first layout.
 - Pinch-zoom enabled; safe-area insets for notched devices
 - Honors `prefers-reduced-motion`
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **React 19** + **TypeScript**
 - **Vite 6** build tooling
@@ -74,7 +74,7 @@ mobile-first layout.
 - **lucide-react** icons
 - **@google/genai** (Gemini) for AI features
 
-## 🚀 Run Locally
+## Run Locally
 
 **Prerequisites:** Node.js
 
@@ -99,7 +99,7 @@ npm run preview   # preview the production build
 npm run lint      # type-check with tsc
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -119,5 +119,5 @@ public/
 ---
 
 <div align="center">
-<sub>GradeFlow — track it, plan it, flow through it. 🎓</sub>
+<sub>GradeFlow — track it, plan it, flow through it.</sub>
 </div>
