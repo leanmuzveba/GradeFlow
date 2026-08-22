@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    /* ---- GradeFlow palette (from brand board) ---- */
+    --color-gf-pink-light: #fdedf5;   /* blush background */
+    --color-gf-pink-soft: #f6b9d5;    /* soft pink / hairlines */
+    --color-gf-pink-medium: #ed8cb9;  /* pink */
+    --color-gf-pink-bright: #ec68a0;  /* rose */
+    --color-gf-pink-primary: #dd2987; /* primary magenta */
+    --color-gf-nude-cream: #f5e6e3;   /* warm off-white */
+    --color-gf-dark-berry: #2c1228;   /* primary text (near-black plum) */
+    --color-gf-deep-navy: #190e22;
+
+    /* Accessible muted text — unified token, >= 4.5:1 on white & tinted cards */
+    --color-gf-muted: #7a5672;
+
+    /* Fluid spacing anchor for safe areas */
+    --gf-safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html {
+    /* Respect user font-size preference; never disable zoom */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #2c1228;
+    background-color: #fdedf5;
+    -webkit-tap-highlight-color: transparent;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* UI headings stay in the geometric sans for legibility in dense data views */
+  h2, h3, .font-heading {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* Hero / page titles carry the warm brand serif (Avigea → Fraunces) */
+  h1, .font-serif-brand {
+    font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
+    font-optical-sizing: auto;
+  }
+
+  /* Script accent (Better Together → Dancing Script) — decorative only, never body copy */
+  .font-script {
+    font-family: 'Dancing Script', 'Segoe Script', cursive;
+  }
+}
+
+@layer utilities {
+  /* Semantic accessible muted text */
+  .text-gf-muted { color: var(--color-gf-muted); }
+
+  /* Guarantee a 44x44 minimum touch target (WCAG 2.5.5) */
+  .tap-target {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .pb-safe {
+    padding-bottom: calc(0.5rem + var(--gf-safe-bottom));
+  }
+}
+
+/* ---- Keyboard focus visibility (WCAG 2.4.7) ---- */
+:focus-visible {
+  outline: 2px solid #dd2987;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+/* Don't paint focus rings on mouse/touch interaction */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Custom aesthetic scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #f6b9d5;
+  border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ec68a0;
+}
+
+/* Sharp, Non-Rounded Cards and Tiles matching modern GradeFlow branding */
+.gf-3d-card {
+  background: #ffffff;
+  box-shadow: 0 4px 16px -2px rgba(221, 41, 135, 0.08), 0 1px 3px 0 rgba(221, 41, 135, 0.04);
+  border: 1px solid rgba(246, 185, 213, 0.7);
+  border-radius: 0px !important;
+}
+
+.gf-3d-button {
+  background: linear-gradient(135deg, #ec68a0 0%, #dd2987 100%);
+  box-shadow: 0 3px 10px 0 rgba(221, 41, 135, 0.28);
+  border-radius: 0px !important;
+  transition: all 0.15s ease-in-out;
+}
+.gf-3d-button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 4px 0 rgba(221, 41, 135, 0.3);
+}
+
+.gf-pill-active {
+  background: #dd2987;
+  color: white;
+  border-radius: 0px !important;
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ---- Motion sensitivity (WCAG 2.3.3 / respect prefers-reduced-motion) ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

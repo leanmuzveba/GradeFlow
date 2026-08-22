@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 260" width="780" height="260">
+  <!-- GradeFlow Logo (g12) -->
+  <g transform="translate(20, 20)">
+    <!-- 4-block brand icon on the left -->
+    <!-- Top Left -->
+    <rect x="10" y="10" width="80" height="52" rx="10" fill="#f6e8e5" />
+    <!-- Bottom Left -->
+    <rect x="10" y="74" width="80" height="126" rx="10" fill="#ea81b4" />
+    <!-- Top Right -->
+    <rect x="102" y="10" width="98" height="92" rx="10" fill="#dd2987" />
+    <!-- Bottom Right -->
+    <rect x="102" y="114" width="98" height="86" rx="10" fill="#faeaf4" />
+  </g>
+
+  <!-- Typography on the right -->
+  <!-- GRADE -->
+  <text x="250" y="105" font-family="'Outfit', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" font-size="80" font-weight="900" letter-spacing="3" fill="#dd2987">GRADE</text>
+  <!-- flow. -->
+  <text x="252" y="195" font-family="'Outfit', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif" font-size="76" font-weight="800" letter-spacing="-0.5" fill="#ea81b4">flow<tspan fill="#dd2987">.</tspan></text>
+</svg>

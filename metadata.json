@@ -1,0 +1,6 @@
+{
+  "name": "GradeFlow - Student Productivity & Academic Tracking",
+  "description": "A mobile-first academic performance tracker, study focus timer, grade calculator, and deadline planner styled with the signature GradeFlow pink design system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

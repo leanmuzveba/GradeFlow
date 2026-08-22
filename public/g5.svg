@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <clipPath id="clip">
+      <rect width="512" height="512" rx="0" />
+    </clipPath>
+  </defs>
+  <!-- GradeFlow Icon (g5) -->
+  <!-- Top Left: Pale Blush Cream -->
+  <rect x="44" y="44" width="188" height="120" rx="18" fill="#f6e8e5" />
+  <!-- Bottom Left: Medium Rose Pink -->
+  <rect x="44" y="194" width="188" height="274" rx="18" fill="#ea81b4" />
+  <!-- Top Right: Berry Magenta -->
+  <rect x="262" y="44" width="206" height="200" rx="18" fill="#dd2987" />
+  <!-- Bottom Right: Soft Pale Blush Pink -->
+  <rect x="262" y="274" width="206" height="194" rx="18" fill="#faeaf4" />
+</svg>
