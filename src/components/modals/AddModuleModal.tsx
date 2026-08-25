@@ -3,10 +3,10 @@ import { useApp } from '../../context/AppContext';
 import { X, BookOpen, UserCheck, Hash, Target, Check } from 'lucide-react';
 
 const PALETTE_SWATCHES = [
-  { hex: '#dd2987', label: 'Berry Magenta' },
-  { hex: '#ec68a0', label: 'Vibrant Pink' },
-  { hex: '#ed8cb9', label: 'Medium Rose' },
-  { hex: '#f6b9d5', label: 'Blush Pastel' },
+  { hex: '#e91e8c', label: 'Berry Magenta' },
+  { hex: '#ff6ec7', label: 'Vibrant Pink' },
+  { hex: '#ff6ec7', label: 'Medium Rose' },
+  { hex: '#ffd6ee', label: 'Blush Pastel' },
   { hex: '#b32069', label: 'Deep Wine' },
   { hex: '#d94b80', label: 'Flamingo' },
   { hex: '#8e3a73', label: 'Purple Orchid' },
@@ -58,21 +58,21 @@ export const AddModuleModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg shadow-2xl border border-[#f6b9d5] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl border border-[#ffd6ee] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#fdedf5] to-[#fff5f9] px-6 py-4 border-b border-[#f6b9d5]/60 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#fff0f8] to-[#fff5f9] px-6 py-4 border-b border-[#ffd6ee] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
               <BookOpen className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#2c1228]">New Course / Module</h3>
-              <p className="text-xs text-[#7a5672]">Add a new subject to your academic semester</p>
+              <h3 className="text-base font-bold text-[#1e0f3e]">New Course / Module</h3>
+              <p className="text-xs text-[#7b5ea7]">Add a new subject to your academic semester</p>
             </div>
           </div>
           <button
             onClick={() => setIsQuickAddModuleOpen(false)}
-            className="p-1.5 text-[#7a5672] hover:text-[#dd2987] hover:bg-white transition-colors"
+            className="p-1.5 rounded-full text-[#7b5ea7] hover:text-[#e91e8c] hover:bg-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -81,14 +81,14 @@ export const AddModuleModal: React.FC = () => {
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
+            <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
               {error}
             </div>
           )}
 
           {/* Module Name */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1">
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
               Course / Module Name *
             </label>
             <input
@@ -98,15 +98,15 @@ export const AddModuleModal: React.FC = () => {
               placeholder="e.g. Data Structures & Algorithms, Physics II"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
             />
           </div>
 
           {/* Code & Period */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <Hash className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <Hash className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Course Code
               </label>
               <input
@@ -115,12 +115,12 @@ export const AddModuleModal: React.FC = () => {
                 placeholder="e.g. CS 201"
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm font-semibold uppercase text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-semibold uppercase text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1">
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
                 Semester / Term
               </label>
               <input
@@ -128,14 +128,14 @@ export const AddModuleModal: React.FC = () => {
                 placeholder="e.g. Fall 2026"
                 value={academicPeriod}
                 onChange={(e) => setAcademicPeriod(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
           </div>
 
           {/* Color Palette Swatches */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1.5">
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1.5">
               Course Color Tag (GradeFlow Palette)
             </label>
             <div className="flex flex-wrap gap-2.5">
@@ -147,7 +147,7 @@ export const AddModuleModal: React.FC = () => {
                     type="button"
                     title={swatch.label}
                     onClick={() => setColour(swatch.hex)}
-                    className="w-8 h-8 flex items-center justify-center transition-transform hover:scale-105 relative cursor-pointer"
+                    className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-105 relative cursor-pointer"
                     style={{
                       backgroundColor: swatch.hex,
                       boxShadow: isSelected ? `0 0 0 2px #fff, 0 0 0 4px ${swatch.hex}` : 'none',
@@ -163,7 +163,7 @@ export const AddModuleModal: React.FC = () => {
           {/* Credits & Target Grade */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1">
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
                 Credit Hours
               </label>
               <input
@@ -173,13 +173,13 @@ export const AddModuleModal: React.FC = () => {
                 max="12"
                 value={creditHours}
                 onChange={(e) => setCreditHours(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm font-semibold text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-semibold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <Target className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <Target className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Target Grade (%)
               </label>
               <input
@@ -189,7 +189,7 @@ export const AddModuleModal: React.FC = () => {
                 max="100"
                 value={targetGrade}
                 onChange={(e) => setTargetGrade(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm font-bold text-[#dd2987] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-bold text-[#e91e8c] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
           </div>
@@ -197,8 +197,8 @@ export const AddModuleModal: React.FC = () => {
           {/* Instructor & Classroom */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <UserCheck className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <UserCheck className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Professor / Instructor
               </label>
               <input
@@ -206,12 +206,12 @@ export const AddModuleModal: React.FC = () => {
                 placeholder="e.g. Dr. Vance"
                 value={instructor}
                 onChange={(e) => setInstructor(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1">
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
                 Classroom / Hall
               </label>
               <input
@@ -219,7 +219,7 @@ export const AddModuleModal: React.FC = () => {
                 placeholder="e.g. Room 302"
                 value={room}
                 onChange={(e) => setRoom(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
           </div>
@@ -229,7 +229,7 @@ export const AddModuleModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsQuickAddModuleOpen(false)}
-              className="px-4 py-2.5 text-xs font-bold text-[#6b4c62] hover:bg-[#fdedf5] transition-colors"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#7b5ea7] hover:bg-[#fff0f8] transition-colors"
             >
               Cancel
             </button>

@@ -85,35 +85,35 @@ export const AnalyticsView: React.FC = () => {
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 border border-[#f6b9d5]/60 shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
               <BarChart3 className="w-4 h-4" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-[#2c1228] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#1e0f3e] tracking-tight">
               Academic Analytics & Insights
             </h1>
           </div>
-          <p className="text-xs text-[#7a5672] mt-1">
+          <p className="text-xs text-[#7b5ea7] mt-1">
             Visual breakdown of study effort, grade progression, and course performance
           </p>
         </div>
 
         {/* Time range selector */}
-        <div className="flex bg-[#fdedf5] p-1 border border-[#f6b9d5]/60 self-start sm:self-auto">
+        <div className="flex bg-[#fff0f8] p-1 rounded-2xl border border-[#ffd6ee] self-start sm:self-auto">
           <button
             onClick={() => setTimeRange('week')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-              timeRange === 'week' ? 'bg-white text-[#dd2987] shadow-xs' : 'text-[#7a5672]'
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              timeRange === 'week' ? 'bg-white text-[#e91e8c] shadow-xs' : 'text-[#7b5ea7]'
             }`}
           >
             Weekly View
           </button>
           <button
             onClick={() => setTimeRange('month')}
-            className={`px-3 py-1.5 text-xs font-bold transition-all cursor-pointer ${
-              timeRange === 'month' ? 'bg-white text-[#dd2987] shadow-xs' : 'text-[#7a5672]'
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              timeRange === 'month' ? 'bg-white text-[#e91e8c] shadow-xs' : 'text-[#7b5ea7]'
             }`}
           >
             Semester Term
@@ -124,48 +124,48 @@ export const AnalyticsView: React.FC = () => {
       {/* KPI Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7a5672] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
             Overall Average
           </span>
-          <div className="text-2xl font-extrabold text-[#2c1228] mt-1">
+          <div className="text-2xl font-extrabold text-[#1e0f3e] mt-1">
             {overallAvg > 0 ? `${overallAvg.toFixed(1)}%` : '--'}
           </div>
-          <span className="text-[11px] font-bold text-[#dd2987] flex items-center gap-1 mt-0.5">
+          <span className="text-[11px] font-bold text-[#e91e8c] flex items-center gap-1 mt-0.5">
             <TrendingUp className="w-3.5 h-3.5" /> +2.4% this semester
           </span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7a5672] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
             Total Study Hours
           </span>
-          <div className="text-2xl font-extrabold text-[#dd2987] mt-1">
-            {totalStudyHours} <span className="text-sm font-semibold text-[#7a5672]">hrs</span>
+          <div className="text-2xl font-extrabold text-[#e91e8c] mt-1">
+            {totalStudyHours} <span className="text-sm font-semibold text-[#7b5ea7]">hrs</span>
           </div>
-          <span className="text-[11px] font-semibold text-[#7a5672]">
+          <span className="text-[11px] font-semibold text-[#7b5ea7]">
             {totalCompletedSessions.length} total sessions
           </span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7a5672] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
             Study Streak
           </span>
           <div className="text-2xl font-extrabold text-amber-500 mt-1 flex items-center gap-1.5">
             <Flame className="w-5 h-5 fill-amber-500" />
             <span>6 Days</span>
           </div>
-          <span className="text-[11px] font-semibold text-[#7a5672]">Daily goal met</span>
+          <span className="text-[11px] font-semibold text-[#7b5ea7]">Daily goal met</span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7a5672] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
             Target Completion
           </span>
           <div className="text-2xl font-extrabold text-emerald-600 mt-1">
             94%
           </div>
-          <span className="text-[11px] font-semibold text-[#7a5672]">Tasks on schedule</span>
+          <span className="text-[11px] font-semibold text-[#7b5ea7]">Tasks on schedule</span>
         </div>
       </div>
 
@@ -175,13 +175,13 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#2c1228] flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#dd2987]" />
+              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#e91e8c]" />
                 Daily Study Hours Breakdown
               </h3>
-              <p className="text-[11px] text-[#7a5672] mt-0.5">Hours focused across each day</p>
+              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Hours focused across each day</p>
             </div>
-            <span className="text-xs font-extrabold text-[#dd2987] bg-[#fdedf5] px-2.5 py-1">
+            <span className="text-xs font-extrabold text-[#e91e8c] bg-[#fff0f8] rounded-full px-2.5 py-1">
               Avg 3.2h / day
             </span>
           </div>
@@ -189,24 +189,24 @@ export const AnalyticsView: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dailyStudyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f6b9d5" opacity={0.3} vertical={false} />
-                <XAxis dataKey="day" stroke="#7a5672" fontSize={11} tickLine={false} />
-                <YAxis stroke="#7a5672" fontSize={11} tickLine={false} unit="h" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#ffd6ee" opacity={0.3} vertical={false} />
+                <XAxis dataKey="day" stroke="#7b5ea7" fontSize={11} tickLine={false} />
+                <YAxis stroke="#7b5ea7" fontSize={11} tickLine={false} unit="h" />
                 <Tooltip
                   formatter={(val: number) => [`${val} hours`, 'Study Time']}
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    borderColor: '#f6b9d5',
-                    borderRadius: '0px',
+                    borderColor: '#ffd6ee',
+                    borderRadius: '16px',
                     fontSize: '12px',
-                    boxShadow: '0 4px 12px rgba(221,41,135,0.15)',
+                    boxShadow: '0 4px 12px rgba(233, 30, 140,0.15)',
                   }}
                 />
                 <Bar dataKey="hours">
                   {dailyStudyData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={index === 5 ? '#dd2987' : '#ec68a0'}
+                      fill={index === 5 ? '#e91e8c' : '#ff6ec7'}
                     />
                   ))}
                 </Bar>
@@ -219,13 +219,13 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#2c1228] flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#dd2987]" />
+              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[#e91e8c]" />
                 Assessment Grade Progression
               </h3>
-              <p className="text-[11px] text-[#7a5672] mt-0.5">Historical scores vs 90% target baseline</p>
+              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Historical scores vs 90% target baseline</p>
             </div>
-            <span className="text-xs font-extrabold text-[#dd2987] bg-[#fdedf5] px-2.5 py-1">
+            <span className="text-xs font-extrabold text-[#e91e8c] bg-[#fff0f8] rounded-full px-2.5 py-1">
               {assessments.length} marks
             </span>
           </div>
@@ -233,31 +233,31 @@ export const AnalyticsView: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f6b9d5" opacity={0.3} vertical={false} />
-                <XAxis dataKey="name" stroke="#7a5672" fontSize={10} tickLine={false} />
-                <YAxis stroke="#7a5672" fontSize={11} tickLine={false} domain={[60, 100]} unit="%" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#ffd6ee" opacity={0.3} vertical={false} />
+                <XAxis dataKey="name" stroke="#7b5ea7" fontSize={10} tickLine={false} />
+                <YAxis stroke="#7b5ea7" fontSize={11} tickLine={false} domain={[60, 100]} unit="%" />
                 <Tooltip
                   formatter={(val: number) => [`${val}%`, 'Score']}
                   contentStyle={{
                     backgroundColor: '#ffffff',
-                    borderColor: '#f6b9d5',
-                    borderRadius: '0px',
+                    borderColor: '#ffd6ee',
+                    borderRadius: '16px',
                     fontSize: '12px',
-                    boxShadow: '0 4px 12px rgba(221,41,135,0.15)',
+                    boxShadow: '0 4px 12px rgba(233, 30, 140,0.15)',
                   }}
                 />
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#dd2987"
+                  stroke="#e91e8c"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#dd2987', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, fill: '#dd2987' }}
+                  dot={{ r: 4, fill: '#e91e8c', strokeWidth: 2, stroke: '#fff' }}
+                  activeDot={{ r: 6, fill: '#e91e8c' }}
                 />
                 <Line
                   type="monotone"
                   dataKey="target"
-                  stroke="#ec68a0"
+                  stroke="#ff6ec7"
                   strokeDasharray="4 4"
                   strokeWidth={1.5}
                   dot={false}
@@ -271,11 +271,11 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#2c1228] flex items-center gap-2">
-                <PieIcon className="w-4 h-4 text-[#dd2987]" />
+              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
+                <PieIcon className="w-4 h-4 text-[#e91e8c]" />
                 Study Allocation by Course
               </h3>
-              <p className="text-[11px] text-[#7a5672] mt-0.5">Distribution of focus hours per subject</p>
+              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Distribution of focus hours per subject</p>
             </div>
           </div>
 
@@ -293,23 +293,23 @@ export const AnalyticsView: React.FC = () => {
                     dataKey="value"
                   >
                     {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color || '#dd2987'} />
+                      <Cell key={`cell-${index}`} fill={entry.color || '#e91e8c'} />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(val: number) => [`${val} hrs`, 'Study Time']}
                     contentStyle={{
                       backgroundColor: '#ffffff',
-                      borderColor: '#f6b9d5',
-                      borderRadius: '0px',
+                      borderColor: '#ffd6ee',
+                      borderRadius: '16px',
                       fontSize: '12px',
                     }}
                   />
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xs font-bold text-[#7a5672]">Total</span>
-                <span className="text-lg font-extrabold text-[#2c1228]">{totalStudyHours}h</span>
+                <span className="text-xs font-bold text-[#7b5ea7]">Total</span>
+                <span className="text-lg font-extrabold text-[#1e0f3e]">{totalStudyHours}h</span>
               </div>
             </div>
 
@@ -317,11 +317,11 @@ export const AnalyticsView: React.FC = () => {
               {modulePerformanceData.map((mod) => (
                 <div key={mod.name} className="flex items-center gap-2">
                   <span
-                    className="w-3 h-3"
+                    className="w-3 h-3 rounded-sm"
                     style={{ backgroundColor: mod.color }}
                   />
-                  <span className="font-bold text-[#2c1228]">{mod.name}:</span>
-                  <span className="text-[#7a5672]">{mod.studyHours}h ({Math.round((mod.studyHours / (totalStudyHours || 1)) * 100)}%)</span>
+                  <span className="font-bold text-[#1e0f3e]">{mod.name}:</span>
+                  <span className="text-[#7b5ea7]">{mod.studyHours}h ({Math.round((mod.studyHours / (totalStudyHours || 1)) * 100)}%)</span>
                 </div>
               ))}
             </div>
@@ -331,26 +331,26 @@ export const AnalyticsView: React.FC = () => {
         {/* Insight / Recommendation Box */}
         <div className="gf-3d-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 pb-3 border-b border-[#f6b9d5]/40">
-              <div className="w-8 h-8 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+            <div className="flex items-center gap-2 pb-3 border-b border-[#ffd6ee]/40">
+              <div className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold text-[#2c1228]">Productivity Insights</h3>
+              <h3 className="text-sm font-bold text-[#1e0f3e]">Productivity Insights</h3>
             </div>
 
-            <div className="mt-4 space-y-3 text-xs leading-relaxed text-[#6b4c62]">
-              <div className="p-3 bg-[#fff7fb] border border-[#f6b9d5]/60">
-                <strong className="text-[#dd2987] block mb-0.5">Optimal Performance Window:</strong>
+            <div className="mt-4 space-y-3 text-xs leading-relaxed text-[#7b5ea7]">
+              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
+                <strong className="text-[#e91e8c] block mb-0.5">Optimal Performance Window:</strong>
                 Your study sessions between <strong>8:00 AM and 11:00 AM</strong> average 20% higher task completion.
               </div>
 
-              <div className="p-3 bg-[#fff7fb] border border-[#f6b9d5]/60">
-                <strong className="text-[#dd2987] block mb-0.5">Course Focus Recommendation:</strong>
+              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
+                <strong className="text-[#e91e8c] block mb-0.5">Course Focus Recommendation:</strong>
                 <strong>MATH 202</strong> has an exam coming up in 6 days. Allocating 4 more focus hours this week will keep you on track for your 88% target.
               </div>
 
-              <div className="p-3 bg-[#fff7fb] border border-[#f6b9d5]/60">
-                <strong className="text-[#dd2987] block mb-0.5">Study Streak:</strong>
+              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
+                <strong className="text-[#e91e8c] block mb-0.5">Study Streak:</strong>
                 You are on a <strong>6-day study streak</strong>. Complete today's focus session to hit 7 consecutive days!
               </div>
             </div>

@@ -64,21 +64,21 @@ export const AddEventModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-lg shadow-2xl border border-[#f6b9d5] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl border border-[#ffd6ee] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#fdedf5] to-[#fff5f9] px-6 py-4 border-b border-[#f6b9d5]/60 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[#fff0f8] to-[#fff5f9] px-6 py-4 border-b border-[#ffd6ee] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
               <Calendar className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#2c1228]">Schedule Academic Event</h3>
-              <p className="text-xs text-[#7a5672]">Add deadlines, tests, and study sessions</p>
+              <h3 className="text-base font-bold text-[#1e0f3e]">Schedule Academic Event</h3>
+              <p className="text-xs text-[#7b5ea7]">Add deadlines, tests, and study sessions</p>
             </div>
           </div>
           <button
             onClick={() => setIsQuickAddEventOpen(false)}
-            className="p-1.5 text-[#7a5672] hover:text-[#dd2987] hover:bg-white transition-colors"
+            className="p-1.5 rounded-full text-[#7b5ea7] hover:text-[#e91e8c] hover:bg-white transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -87,14 +87,14 @@ export const AddEventModal: React.FC = () => {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 overflow-y-auto">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
+            <div className="p-3 rounded-2xl bg-red-50 border border-red-200 text-red-600 text-xs font-medium">
               {error}
             </div>
           )}
 
           {/* Title */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1">
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
               Event / Deadline Title *
             </label>
             <input
@@ -104,21 +104,21 @@ export const AddEventModal: React.FC = () => {
               placeholder="e.g. Final Project Submission, Midterm Exam, Problem Set"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
             />
           </div>
 
           {/* Module Selector */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-[#dd2987]" />
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-[#e91e8c]" />
               Associated Module
             </label>
             <select
               id="event-module-select"
               value={moduleId}
               onChange={(e) => setModuleId(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-[#fdedf5]/50 border border-[#f6b9d5] text-sm font-semibold text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-semibold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
             >
               <option value="">-- General / No Specific Course --</option>
               {modules.map((m) => (
@@ -131,7 +131,7 @@ export const AddEventModal: React.FC = () => {
 
           {/* Event Type */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1.5">
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1.5">
               Event Category
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -142,10 +142,10 @@ export const AddEventModal: React.FC = () => {
                   key={type}
                   type="button"
                   onClick={() => setEventType(type)}
-                  className={`px-3 py-1.5 text-xs font-bold capitalize transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
                     eventType === type
                       ? 'gf-pill-active'
-                      : 'bg-[#fdedf5] text-[#6b4c62] hover:bg-[#f6b9d5]/50'
+                      : 'bg-[#fff0f8] text-[#7b5ea7] hover:bg-[#ffd6ee]/50'
                   }`}
                 >
                   {type.replace('_', ' ')}
@@ -157,8 +157,8 @@ export const AddEventModal: React.FC = () => {
           {/* Due Date and Time */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Due / Event Date *
               </label>
               <input
@@ -167,13 +167,13 @@ export const AddEventModal: React.FC = () => {
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <Clock className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Time
               </label>
               <input
@@ -181,15 +181,15 @@ export const AddEventModal: React.FC = () => {
                 type="time"
                 value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
           </div>
 
           {/* Priority */}
           <div>
-            <label className="block text-xs font-bold text-[#2c1228] mb-1.5 flex items-center gap-1">
-              <AlertCircle className="w-3.5 h-3.5 text-[#dd2987]" />
+            <label className="block text-xs font-bold text-[#1e0f3e] mb-1.5 flex items-center gap-1">
+              <AlertCircle className="w-3.5 h-3.5 text-[#e91e8c]" />
               Priority Level
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -204,10 +204,10 @@ export const AddEventModal: React.FC = () => {
                   key={p.id}
                   type="button"
                   onClick={() => setPriority(p.id)}
-                  className={`py-2 px-2 text-xs font-bold text-center border transition-all cursor-pointer ${
+                  className={`py-2 px-2 rounded-xl text-xs font-bold text-center border transition-all cursor-pointer ${
                     priority === p.id
-                      ? `${p.color} ring-2 ring-[#dd2987] font-extrabold shadow-xs`
-                      : 'bg-white border-[#f6b9d5]/60 text-[#7a5672]'
+                      ? `${p.color} ring-2 ring-[#e91e8c] font-extrabold shadow-xs`
+                      : 'bg-white border-[#ffd6ee] text-[#7b5ea7]'
                   }`}
                 >
                   {p.label}
@@ -219,8 +219,8 @@ export const AddEventModal: React.FC = () => {
           {/* Location & Reminder */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Location / Link
               </label>
               <input
@@ -228,19 +228,19 @@ export const AddEventModal: React.FC = () => {
                 placeholder="e.g. Room 302 / Canvas"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#2c1228] mb-1 flex items-center gap-1">
-                <BellRing className="w-3.5 h-3.5 text-[#dd2987]" />
+              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
+                <BellRing className="w-3.5 h-3.5 text-[#e91e8c]" />
                 Reminder Alert
               </label>
               <select
                 value={reminderMinutes}
                 onChange={(e) => setReminderMinutes(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-[#fdedf5]/30 border border-[#f6b9d5] text-sm text-[#2c1228] focus:outline-none focus:ring-2 focus:ring-[#dd2987]"
+                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
               >
                 <option value={15}>15 minutes before</option>
                 <option value={60}>1 hour before</option>
@@ -256,7 +256,7 @@ export const AddEventModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsQuickAddEventOpen(false)}
-              className="px-4 py-2.5 text-xs font-bold text-[#6b4c62] hover:bg-[#fdedf5] transition-colors"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#7b5ea7] hover:bg-[#fff0f8] transition-colors"
             >
               Cancel
             </button>

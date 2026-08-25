@@ -2,18 +2,19 @@
 
 @layer base {
   :root {
-    /* ---- GradeFlow palette (from brand board) ---- */
-    --color-gf-pink-light: #fdedf5;   /* blush background */
-    --color-gf-pink-soft: #f6b9d5;    /* soft pink / hairlines */
-    --color-gf-pink-medium: #ed8cb9;  /* pink */
-    --color-gf-pink-bright: #ec68a0;  /* rose */
-    --color-gf-pink-primary: #dd2987; /* primary magenta */
-    --color-gf-nude-cream: #f5e6e3;   /* warm off-white */
-    --color-gf-dark-berry: #2c1228;   /* primary text (near-black plum) */
-    --color-gf-deep-navy: #190e22;
+    /* ---- GradeFlow palette (reverse-engineered from the Figma Make redesign) ---- */
+    --color-gf-pink-light: #fff0f8;   /* tinted surfaces / icon backgrounds / chips */
+    --color-gf-pink-soft: #ffd6ee;    /* borders / hairlines */
+    --color-gf-pink-medium: #ff6ec7;  /* pink light / gradient partner */
+    --color-gf-pink-bright: #ff6ec7;  /* rose accent */
+    --color-gf-pink-primary: #e91e8c; /* primary pink */
+    --color-gf-nude-cream: #fff0f8;   /* retired "nude cream", now surface */
+    --color-gf-dark-berry: #1e0f3e;   /* primary text (navy) */
+    --color-gf-deep-navy: #1e0f3e;
+    --color-gf-bg: #fff8fc;           /* page background */
 
     /* Accessible muted text — unified token, >= 4.5:1 on white & tinted cards */
-    --color-gf-muted: #7a5672;
+    --color-gf-muted: #7b5ea7;
 
     /* Fluid spacing anchor for safe areas */
     --gf-safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -26,21 +27,20 @@
   }
 
   body {
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #2c1228;
-    background-color: #fdedf5;
+    font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    color: #1e0f3e;
+    background-color: #fff8fc;
     -webkit-tap-highlight-color: transparent;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* UI headings stay in the geometric sans for legibility in dense data views */
-  h2, h3, .font-heading {
+  h1, h2, h3, .font-heading {
     font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   }
 
-  /* Hero / page titles carry the warm brand serif (Avigea → Fraunces) */
-  h1, .font-serif-brand {
+  /* Kept for any future decorative use — no longer applied to page titles */
+  .font-serif-brand {
     font-family: 'Fraunces', 'Playfair Display', Georgia, serif;
     font-optical-sizing: auto;
   }
@@ -64,11 +64,16 @@
   .pb-safe {
     padding-bottom: calc(0.5rem + var(--gf-safe-bottom));
   }
+
+  /* Monospaced numeric readout — timer, big percentages */
+  .font-mono-timer {
+    font-family: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+  }
 }
 
 /* ---- Keyboard focus visibility (WCAG 2.4.7) ---- */
 :focus-visible {
-  outline: 2px solid #dd2987;
+  outline: 2px solid #e91e8c;
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -86,36 +91,36 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #f6b9d5;
-  border-radius: 0px;
+  background: #ffd6ee;
+  border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ec68a0;
+  background: #ff6ec7;
 }
 
-/* Sharp, Non-Rounded Cards and Tiles matching modern GradeFlow branding */
+/* Soft rounded card used throughout GradeFlow */
 .gf-3d-card {
   background: #ffffff;
-  box-shadow: 0 4px 16px -2px rgba(221, 41, 135, 0.08), 0 1px 3px 0 rgba(221, 41, 135, 0.04);
-  border: 1px solid rgba(246, 185, 213, 0.7);
-  border-radius: 0px !important;
+  box-shadow: 0 2px 16px 0 rgba(233, 30, 140, 0.07);
+  border: 1px solid #ffd6ee;
+  border-radius: 24px !important;
 }
 
 .gf-3d-button {
-  background: linear-gradient(135deg, #ec68a0 0%, #dd2987 100%);
-  box-shadow: 0 3px 10px 0 rgba(221, 41, 135, 0.28);
-  border-radius: 0px !important;
+  background: linear-gradient(135deg, #ff6ec7 0%, #e91e8c 100%);
+  box-shadow: 0 6px 18px 0 rgba(233, 30, 140, 0.28);
+  border-radius: 18px !important;
   transition: all 0.15s ease-in-out;
 }
 .gf-3d-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 4px 0 rgba(221, 41, 135, 0.3);
+  transform: scale(0.98);
+  box-shadow: 0 3px 10px 0 rgba(233, 30, 140, 0.28);
 }
 
 .gf-pill-active {
-  background: #dd2987;
+  background: #e91e8c;
   color: white;
-  border-radius: 0px !important;
+  border-radius: 999px !important;
 }
 
 /* Hide scrollbar utility */

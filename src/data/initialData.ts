@@ -27,7 +27,7 @@ export const initialModules: AcademicModule[] = [
     userId: 'usr_001',
     name: 'Data Structures & Algorithms',
     code: 'CS 201',
-    colour: '#dd2987', // Primary berry pink
+    colour: '#e91e8c', // Primary berry pink
     academicPeriod: 'Fall 2026',
     moduleWeight: 1.0,
     creditHours: 4,
@@ -43,7 +43,7 @@ export const initialModules: AcademicModule[] = [
     userId: 'usr_001',
     name: 'Multivariable Calculus',
     code: 'MATH 202',
-    colour: '#ec68a0', // Bright pink
+    colour: '#ff6ec7', // Bright pink
     academicPeriod: 'Fall 2026',
     moduleWeight: 1.0,
     creditHours: 4,
@@ -59,7 +59,7 @@ export const initialModules: AcademicModule[] = [
     userId: 'usr_001',
     name: 'Cell Biology & Genetics',
     code: 'BIO 105',
-    colour: '#ed8cb9', // Medium rose
+    colour: '#ff6ec7', // Medium rose
     academicPeriod: 'Fall 2026',
     moduleWeight: 0.8,
     creditHours: 3,
@@ -75,7 +75,7 @@ export const initialModules: AcademicModule[] = [
     userId: 'usr_001',
     name: 'Microeconomic Theory',
     code: 'ECON 210',
-    colour: '#f6b9d5', // Soft blush
+    colour: '#ffd6ee', // Soft blush
     academicPeriod: 'Fall 2026',
     moduleWeight: 0.8,
     creditHours: 3,

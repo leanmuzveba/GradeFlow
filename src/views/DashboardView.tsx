@@ -73,11 +73,11 @@ export const DashboardView: React.FC = () => {
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
       {/* Front Page Header Banner with g5.png icon */}
-      <div className="bg-gradient-to-r from-[#dd2987] via-[#ec68a0] to-[#ea81b4] p-5 text-white shadow-md border-b-2 border-[#b32069]">
+      <div className="bg-gradient-to-br from-[#e91e8c] to-[#ff6ec7] rounded-3xl p-5 text-white shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-start gap-3.5">
             {/* Front Page Icon g5.png */}
-            <div className="w-12 h-12 bg-white/20 p-1.5 flex items-center justify-center shrink-0 border border-white/30">
+            <div className="w-12 h-12 rounded-2xl bg-white/20 p-1.5 flex items-center justify-center shrink-0 border border-white/30">
               <img
                 src="/g5.png"
                 alt="GradeFlow Icon"
@@ -85,7 +85,7 @@ export const DashboardView: React.FC = () => {
               />
             </div>
             <div>
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-black/15 text-xs font-semibold mb-1">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-black/15 text-xs font-semibold mb-1">
                 <span>{profile.semester || 'Fall Semester 2026'}</span>
               </div>
               <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
@@ -101,9 +101,9 @@ export const DashboardView: React.FC = () => {
           {/* Simulator button */}
           <button
             onClick={() => setIsSimulatorOpen(true)}
-            className="self-start md:self-auto bg-white text-[#dd2987] px-4 py-2 text-xs font-extrabold shadow-sm hover:bg-pink-50 transition-all flex items-center gap-2 cursor-pointer active:scale-95 whitespace-nowrap"
+            className="self-start md:self-auto bg-white text-[#e91e8c] rounded-2xl px-4 py-2 text-xs font-extrabold shadow-sm hover:bg-pink-50 transition-all flex items-center gap-2 cursor-pointer active:scale-95 whitespace-nowrap"
           >
-            <TrendingUp className="w-4 h-4 text-[#dd2987]" />
+            <TrendingUp className="w-4 h-4 text-[#e91e8c]" />
             What-If Simulator
           </button>
         </div>
@@ -112,22 +112,25 @@ export const DashboardView: React.FC = () => {
       {/* Primary KPI Metric Tiles (Non-rounded sharp geometry) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Tile 1: Academic Standing & GPA */}
-        <div className="gf-3d-card p-5 transition-transform hover:-translate-y-0.5">
+        <button
+          onClick={() => setActiveTab('marks')}
+          className="gf-3d-card p-5 text-left transition-transform hover:-translate-y-0.5 cursor-pointer"
+        >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#7a5672] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#7b5ea7] uppercase tracking-wider">
               Overall Academic Average
             </span>
-            <div className="w-7 h-7 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
               <Award className="w-4 h-4" />
             </div>
           </div>
 
           <div className="mt-3 flex items-baseline justify-between">
             <div>
-              <div className="text-3xl font-extrabold text-[#2c1228] tracking-tight">
+              <div className="text-3xl font-extrabold text-[#1e0f3e] tracking-tight">
                 {overallAvg > 0 ? `${overallAvg.toFixed(1)}%` : '--'}
               </div>
-              <div className="text-xs font-bold text-[#dd2987] mt-0.5 flex items-center gap-1.5">
+              <div className="text-xs font-bold text-[#e91e8c] mt-0.5 flex items-center gap-1.5">
                 <span>Grade: {overallAvg > 0 ? letterGrade : 'N/A'}</span>
                 <span>•</span>
                 <span>GPA: {overallAvg > 0 ? currentGpa.toFixed(2) : '--'} / 4.0</span>
@@ -135,61 +138,61 @@ export const DashboardView: React.FC = () => {
             </div>
 
             {/* Sharp Letter Badge */}
-            <div className="w-11 h-11 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center font-extrabold text-xl shadow-xs">
+            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center font-extrabold text-xl shadow-xs">
               {overallAvg > 0 ? letterGrade : '—'}
             </div>
           </div>
 
           {/* Target GPA progress bar */}
-          <div className="mt-4 pt-3 border-t border-[#f6b9d5]/40">
-            <div className="flex justify-between text-[11px] font-semibold text-[#6b4c62] mb-1">
+          <div className="mt-4 pt-3 border-t border-[#ffd6ee]/60">
+            <div className="flex justify-between text-[11px] font-semibold text-[#7b5ea7] mb-1">
               <span>Target: {profile.targetGpa.toFixed(2)} GPA</span>
               <span>{Math.min(100, Math.round((currentGpa / profile.targetGpa) * 100))}% reached</span>
             </div>
-            <div className="w-full h-2 bg-[#fdedf5] overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-[#fff0f8] overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[#ec68a0] to-[#dd2987] transition-all duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#ff6ec7] to-[#e91e8c] transition-all duration-500"
                 style={{ width: `${Math.min(100, (currentGpa / profile.targetGpa) * 100)}%` }}
               />
             </div>
           </div>
-        </div>
+        </button>
 
         {/* Tile 2: Weekly Study Hours vs Target */}
         <div className="gf-3d-card p-5 transition-transform hover:-translate-y-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#7a5672] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#7b5ea7] uppercase tracking-wider">
               Study Time (This Week)
             </span>
-            <div className="w-7 h-7 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
           </div>
 
           <div className="mt-3 flex items-baseline justify-between">
             <div>
-              <div className="text-3xl font-extrabold text-[#2c1228] tracking-tight">
-                {thisWeekHours} <span className="text-sm font-semibold text-[#7a5672]">hrs</span>
+              <div className="text-3xl font-extrabold text-[#1e0f3e] tracking-tight">
+                {thisWeekHours} <span className="text-sm font-semibold text-[#7b5ea7]">hrs</span>
               </div>
-              <div className="text-xs font-bold text-[#dd2987] mt-0.5">
+              <div className="text-xs font-bold text-[#e91e8c] mt-0.5">
                 Target: {studyGoal.weeklyTargetHours} hrs / week
               </div>
             </div>
 
-            <div className="w-11 h-11 bg-[#fdedf5] border border-[#f6b9d5] text-[#dd2987] flex flex-col items-center justify-center">
-              <Flame className="w-4 h-4 fill-[#dd2987]" />
+            <div className="w-11 h-11 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-[#e91e8c] flex flex-col items-center justify-center">
+              <Flame className="w-4 h-4 fill-[#e91e8c]" />
               <span className="text-[9px] font-extrabold">Streak</span>
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#f6b9d5]/40">
-            <div className="flex justify-between text-[11px] font-semibold text-[#6b4c62] mb-1">
+          <div className="mt-4 pt-3 border-t border-[#ffd6ee]/60">
+            <div className="flex justify-between text-[11px] font-semibold text-[#7b5ea7] mb-1">
               <span>Goal Progress</span>
               <span>{Math.min(100, Math.round((thisWeekHours / studyGoal.weeklyTargetHours) * 100))}%</span>
             </div>
-            <div className="w-full h-2 bg-[#fdedf5] overflow-hidden">
+            <div className="w-full h-2 rounded-full bg-[#fff0f8] overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-[#ed8cb9] to-[#dd2987] transition-all duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#ff6ec7] to-[#e91e8c] transition-all duration-500"
                 style={{ width: `${Math.min(100, (thisWeekHours / studyGoal.weeklyTargetHours) * 100)}%` }}
               />
             </div>
@@ -199,20 +202,20 @@ export const DashboardView: React.FC = () => {
         {/* Tile 3: Today's Focus Goal */}
         <div className="gf-3d-card p-5 transition-transform hover:-translate-y-0.5 sm:col-span-2 lg:col-span-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-[#7a5672] uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#7b5ea7] uppercase tracking-wider">
               Today's Focus Goal
             </span>
-            <div className="w-7 h-7 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
               <Timer className="w-4 h-4" />
             </div>
           </div>
 
           <div className="mt-3 flex items-center justify-between">
             <div>
-              <div className="text-3xl font-extrabold text-[#2c1228] tracking-tight">
-                {todayMinutes} <span className="text-sm font-semibold text-[#7a5672]">/ {dailyGoalMinutes} min</span>
+              <div className="text-3xl font-extrabold text-[#1e0f3e] tracking-tight">
+                {todayMinutes} <span className="text-sm font-semibold text-[#7b5ea7]">/ {dailyGoalMinutes} min</span>
               </div>
-              <p className="text-xs font-medium text-[#7a5672] mt-0.5">
+              <p className="text-xs font-medium text-[#7b5ea7] mt-0.5">
                 {todayProgressPercent >= 100 ? 'Goal completed!' : `${dailyGoalMinutes - todayMinutes} mins remaining`}
               </p>
             </div>
@@ -224,7 +227,7 @@ export const DashboardView: React.FC = () => {
                   cx="22"
                   cy="22"
                   r="16"
-                  stroke="#fdedf5"
+                  stroke="#fff0f8"
                   strokeWidth="4"
                   fill="transparent"
                 />
@@ -232,7 +235,7 @@ export const DashboardView: React.FC = () => {
                   cx="22"
                   cy="22"
                   r="16"
-                  stroke="#dd2987"
+                  stroke="#e91e8c"
                   strokeWidth="4"
                   strokeDasharray="100"
                   strokeDashoffset={100 - todayProgressPercent}
@@ -240,64 +243,64 @@ export const DashboardView: React.FC = () => {
                   className="transition-all duration-500"
                 />
               </svg>
-              <span className="absolute text-[10px] font-extrabold text-[#2c1228]">
+              <span className="absolute text-[10px] font-extrabold text-[#1e0f3e]">
                 {todayProgressPercent}%
               </span>
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-[#f6b9d5]/40 flex items-center justify-between">
+          <div className="mt-4 pt-3 border-t border-[#ffd6ee]/60 flex items-center justify-between">
             <button
               onClick={() => setActiveTab('focus')}
-              className="text-xs font-bold text-[#dd2987] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-[#e91e8c] hover:underline flex items-center gap-1 cursor-pointer"
             >
               Start Focus Session
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-            <span className="text-[11px] font-semibold text-[#7a5672]">
+            <span className="text-[11px] font-semibold text-[#7b5ea7]">
               {todaySessions.length} session{todaySessions.length === 1 ? '' : 's'} today
             </span>
           </div>
         </div>
       </div>
 
-      {/* Quick Action Bar (Sharp non-rounded tiles) */}
-      <div className="bg-white p-4 border border-[#f6b9d5]/60 shadow-xs">
-        <div className="text-xs font-bold text-[#7a5672] uppercase tracking-wider mb-3 px-1">
+      {/* Quick Actions */}
+      <div className="bg-white rounded-3xl p-4 border border-[#ffd6ee] shadow-xs">
+        <div className="text-xs font-bold text-[#7b5ea7] uppercase tracking-wider mb-3 px-1">
           Quick Actions
         </div>
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => setActiveTab('focus')}
-            className="flex flex-col items-center justify-center p-3 bg-[#fff7fb] hover:bg-[#fdedf5] border border-[#f6b9d5]/60 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#fff0f8] hover:bg-[#ffd6ee]/40 border border-[#ffd6ee] transition-all group cursor-pointer"
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
               <Timer className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-[#2c1228] mt-2 text-center">Start Timer</span>
-            <span className="text-[10px] text-[#7a5672]">Focus session</span>
+            <span className="text-xs font-bold text-[#1e0f3e] mt-2 text-center">Start Timer</span>
+            <span className="text-[10px] text-[#7b5ea7]">Focus session</span>
           </button>
 
           <button
             onClick={() => setIsQuickAddMarkOpen(true)}
-            className="flex flex-col items-center justify-center p-3 bg-[#fff7fb] hover:bg-[#fdedf5] border border-[#f6b9d5]/60 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#fff0f8] hover:bg-[#ffd6ee]/40 border border-[#ffd6ee] transition-all group cursor-pointer"
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
               <Award className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-[#2c1228] mt-2 text-center">Log Mark</span>
-            <span className="text-[10px] text-[#7a5672]">Assessment</span>
+            <span className="text-xs font-bold text-[#1e0f3e] mt-2 text-center">Log Mark</span>
+            <span className="text-[10px] text-[#7b5ea7]">Assessment</span>
           </button>
 
           <button
             onClick={() => setIsQuickAddEventOpen(true)}
-            className="flex flex-col items-center justify-center p-3 bg-[#fff7fb] hover:bg-[#fdedf5] border border-[#f6b9d5]/60 transition-all group cursor-pointer"
+            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[#fff0f8] hover:bg-[#ffd6ee]/40 border border-[#ffd6ee] transition-all group cursor-pointer"
           >
-            <div className="w-9 h-9 bg-gradient-to-br from-[#ec68a0] to-[#dd2987] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
               <Calendar className="w-4 h-4" />
             </div>
-            <span className="text-xs font-bold text-[#2c1228] mt-2 text-center">Add Event</span>
-            <span className="text-[10px] text-[#7a5672]">Deadlines</span>
+            <span className="text-xs font-bold text-[#1e0f3e] mt-2 text-center">Add Event</span>
+            <span className="text-[10px] text-[#7b5ea7]">Deadlines</span>
           </button>
         </div>
       </div>
@@ -307,16 +310,16 @@ export const DashboardView: React.FC = () => {
         {/* Section: Upcoming Deadlines */}
         <div className="gf-3d-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#f6b9d5]/40">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ffd6ee]/60">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
                   <Calendar className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-bold text-[#2c1228]">Upcoming Deadlines</h3>
+                <h3 className="text-sm font-bold text-[#1e0f3e]">Upcoming Deadlines</h3>
               </div>
               <button
                 onClick={() => setActiveTab('calendar')}
-                className="text-xs font-bold text-[#dd2987] hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#e91e8c] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 View All ({events.filter((e) => !e.isCompleted).length})
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -326,8 +329,8 @@ export const DashboardView: React.FC = () => {
             {/* List */}
             <div className="mt-3 space-y-2.5">
               {upcomingEvents.length === 0 ? (
-                <div className="text-center py-8 text-xs text-[#7a5672]">
-                  <CheckCircle2 className="w-8 h-8 text-[#f6b9d5] mx-auto mb-2" />
+                <div className="text-center py-8 text-xs text-[#7b5ea7]">
+                  <CheckCircle2 className="w-8 h-8 text-[#ffd6ee] mx-auto mb-2" />
                   No upcoming deadlines scheduled.
                 </div>
               ) : (
@@ -340,16 +343,16 @@ export const DashboardView: React.FC = () => {
                   return (
                     <div
                       key={evt.id}
-                      className="p-3 bg-white border border-[#f6b9d5]/60 hover:border-[#dd2987]/60 transition-all flex items-center justify-between gap-3 shadow-xs"
+                      className="p-3 rounded-2xl bg-white border border-[#ffd6ee] hover:border-[#e91e8c]/60 transition-all flex items-center justify-between gap-3 shadow-xs"
                     >
                       <div className="flex items-start gap-3 min-w-0">
                         <div
-                          className="w-2 h-10 shrink-0"
-                          style={{ backgroundColor: mod?.colour || '#dd2987' }}
+                          className="w-2 h-10 rounded-full shrink-0"
+                          style={{ backgroundColor: mod?.colour || '#e91e8c' }}
                         />
                         <div className="truncate">
-                          <h4 className="text-xs font-bold text-[#2c1228] truncate">{evt.title}</h4>
-                          <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[#7a5672]">
+                          <h4 className="text-xs font-bold text-[#1e0f3e] truncate">{evt.title}</h4>
+                          <div className="flex items-center gap-2 mt-0.5 text-[11px] text-[#7b5ea7]">
                             <span>{mod?.code || 'General'}</span>
                             <span>•</span>
                             <span className="capitalize">{evt.eventType.replace('_', ' ')}</span>
@@ -359,17 +362,17 @@ export const DashboardView: React.FC = () => {
 
                       <div className="text-right shrink-0">
                         <span
-                          className={`text-[10px] font-extrabold px-2 py-0.5 inline-block ${
+                          className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full inline-block ${
                             isOverdue
                               ? 'bg-rose-100 text-rose-700'
                               : daysUntil <= 1
                               ? 'bg-amber-100 text-amber-800'
-                              : 'bg-[#fdedf5] text-[#dd2987]'
+                              : 'bg-[#fff0f8] text-[#e91e8c]'
                           }`}
                         >
                           {isOverdue ? 'Overdue' : daysUntil === 0 ? 'Today' : daysUntil === 1 ? 'Tomorrow' : `${daysUntil}d left`}
                         </span>
-                        <div className="text-[10px] text-[#7a5672] mt-0.5">
+                        <div className="text-[10px] text-[#7b5ea7] mt-0.5">
                           {dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                         </div>
                       </div>
@@ -382,7 +385,7 @@ export const DashboardView: React.FC = () => {
 
           <button
             onClick={() => setIsQuickAddEventOpen(true)}
-            className="mt-4 w-full py-2.5 border border-dashed border-[#f6b9d5] hover:border-[#dd2987] hover:bg-[#fff7fb] text-xs font-bold text-[#dd2987] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="mt-4 w-full py-2.5 rounded-2xl border border-dashed border-[#ffd6ee] hover:border-[#e91e8c] hover:bg-[#fff0f8] text-xs font-bold text-[#e91e8c] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             Add Deadline or Event
@@ -392,16 +395,16 @@ export const DashboardView: React.FC = () => {
         {/* Section: Active Modules Performance */}
         <div className="gf-3d-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#f6b9d5]/40">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ffd6ee]/60">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 bg-[#fdedf5] text-[#dd2987] flex items-center justify-center">
+                <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
                   <BookOpen className="w-4 h-4" />
                 </div>
-                <h3 className="text-sm font-bold text-[#2c1228]">Active Modules</h3>
+                <h3 className="text-sm font-bold text-[#1e0f3e]">Active Modules</h3>
               </div>
               <button
                 onClick={() => setActiveTab('modules')}
-                className="text-xs font-bold text-[#dd2987] hover:underline flex items-center gap-1 cursor-pointer"
+                className="text-xs font-bold text-[#e91e8c] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 All Courses ({activeModules.length})
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -424,20 +427,20 @@ export const DashboardView: React.FC = () => {
                       setSelectedModuleIdForDetail(mod.id);
                       setActiveTab('modules');
                     }}
-                    className="p-3 bg-white border border-[#f6b9d5]/60 hover:border-[#dd2987] transition-all flex items-center justify-between gap-3 shadow-xs cursor-pointer group"
+                    className="p-3 rounded-2xl bg-white border border-[#ffd6ee] hover:border-[#e91e8c] transition-all flex items-center justify-between gap-3 shadow-xs cursor-pointer group"
                   >
                     <div className="flex items-center gap-3 min-w-0">
                       <div
-                        className="w-9 h-9 flex items-center justify-center text-white font-extrabold text-xs shadow-xs"
+                        className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-white font-extrabold text-[9px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
                         style={{ backgroundColor: mod.colour }}
                       >
-                        {mod.code.split(' ')[0] || mod.code.slice(0, 3)}
+                        <span className="truncate w-full">{mod.code.split(' ')[0] || mod.code.slice(0, 3)}</span>
                       </div>
                       <div className="truncate">
-                        <h4 className="text-xs font-bold text-[#2c1228] group-hover:text-[#dd2987] transition-colors truncate">
+                        <h4 className="text-xs font-bold text-[#1e0f3e] group-hover:text-[#e91e8c] transition-colors truncate">
                           {mod.name}
                         </h4>
-                        <div className="flex items-center gap-2 text-[11px] text-[#7a5672] mt-0.5">
+                        <div className="flex items-center gap-2 text-[11px] text-[#7b5ea7] mt-0.5">
                           <span>{mod.code}</span>
                           <span>•</span>
                           <span>{studyHours}h studied</span>
@@ -446,10 +449,10 @@ export const DashboardView: React.FC = () => {
                     </div>
 
                     <div className="text-right shrink-0">
-                      <div className="text-sm font-extrabold text-[#2c1228]">
+                      <div className="text-sm font-extrabold text-[#1e0f3e]">
                         {avg > 0 ? `${avg.toFixed(1)}%` : '--'}
                       </div>
-                      <span className="text-[10px] font-bold text-[#dd2987]">
+                      <span className="text-[10px] font-bold text-[#e91e8c]">
                         {avg > 0 ? percentageToLetter(avg) : 'No marks'}
                       </span>
                     </div>
@@ -461,7 +464,7 @@ export const DashboardView: React.FC = () => {
 
           <button
             onClick={() => setActiveTab('modules')}
-            className="mt-4 w-full py-2.5 border border-dashed border-[#f6b9d5] hover:border-[#dd2987] hover:bg-[#fff7fb] text-xs font-bold text-[#dd2987] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+            className="mt-4 w-full py-2.5 rounded-2xl border border-dashed border-[#ffd6ee] hover:border-[#e91e8c] hover:bg-[#fff0f8] text-xs font-bold text-[#e91e8c] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <BookOpen className="w-4 h-4" />
             Manage All Modules & Syllabus

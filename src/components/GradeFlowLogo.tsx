@@ -50,7 +50,7 @@ export const GradeFlowLogo: React.FC<LogoProps> = ({
         className={`${heightClasses[size]} w-auto object-contain shrink-0`}
       />
       {showSubtitle && (
-        <p className="font-script text-sm sm:text-[15px] leading-none text-[#dd2987] mt-1">
+        <p className="font-script text-sm sm:text-[15px] leading-none text-[#e91e8c] mt-1">
           Your academic life, in flow.
         </p>
       )}
