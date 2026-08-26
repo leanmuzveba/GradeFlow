@@ -9,6 +9,41 @@ import {
   Camera,
 } from 'lucide-react';
 
+// Raw photos from a phone camera can be several MB; base64-encoded as a data
+// URL that easily blows the localStorage quota (5-10MB total). When
+// localStorage.setItem throws, the write is silently dropped and the profile
+// reverts to whatever was last saved on the next load. Downscaling to a small
+// JPEG here keeps every avatar comfortably under a few hundred KB.
+const MAX_AVATAR_DIMENSION = 512;
+const AVATAR_JPEG_QUALITY = 0.85;
+
+const resizeImageToDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const scale = Math.min(1, MAX_AVATAR_DIMENSION / Math.max(img.width, img.height));
+      const width = Math.max(1, Math.round(img.width * scale));
+      const height = Math.max(1, Math.round(img.height * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      URL.revokeObjectURL(objectUrl);
+      if (!ctx) {
+        reject(new Error('Canvas rendering is not supported on this device.'));
+        return;
+      }
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', AVATAR_JPEG_QUALITY));
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('That file could not be read as an image.'));
+    };
+    img.src = objectUrl;
+  });
+
 export const ProfileView: React.FC = () => {
   const {
     profile,
@@ -31,19 +66,20 @@ export const ProfileView: React.FC = () => {
   const [weeklyHours, setWeeklyHours] = useState(studyGoal.weeklyTargetHours);
   const [dailyMinutes, setDailyMinutes] = useState(studyGoal.dailyTargetMinutes);
   const [successMsg, setSuccessMsg] = useState('');
+  const [avatarError, setAvatarError] = useState('');
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        updateProfile({ avatarUrl: reader.result });
-      }
-    };
-    reader.readAsDataURL(file);
     e.target.value = '';
+    if (!file) return;
+    setAvatarError('');
+    try {
+      const dataUrl = await resizeImageToDataUrl(file);
+      updateProfile({ avatarUrl: dataUrl });
+    } catch {
+      setAvatarError('Could not update your profile picture. Try a different photo.');
+    }
   };
 
   const handleSaveProfile = (e: React.FormEvent) => {
@@ -109,6 +145,11 @@ export const ProfileView: React.FC = () => {
           >
             <Camera className="w-4 h-4" />
           </button>
+          {avatarError && (
+            <p className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 w-40 text-center text-[10px] font-semibold text-rose-600">
+              {avatarError}
+            </p>
+          )}
         </div>
 
         <div className="text-center sm:text-left flex-1">

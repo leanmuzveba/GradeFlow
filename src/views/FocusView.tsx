@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { SessionType } from '../types';
 import { soundEngine } from '../utils/audioSynth';
@@ -15,6 +15,8 @@ import {
   Sparkles,
   Clock,
   BarChart3,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -23,89 +25,85 @@ export const FocusView: React.FC = () => {
     modules,
     addStudySession,
     studySessions,
+    updateStudySession,
+    deleteStudySession,
+    focusTimer,
+    setFocusTimer,
     focusTimerAutoModuleId,
     setFocusTimerAutoModuleId,
     setActiveTab,
   } = useApp();
 
-  const [mode, setMode] = useState<SessionType>('pomodoro');
-  const [selectedModuleId, setSelectedModuleId] = useState<string>('');
-  const [timerDurationMinutes, setTimerDurationMinutes] = useState<number>(25);
-  const [timeLeftSeconds, setTimeLeftSeconds] = useState<number>(25 * 60);
-  const [stopwatchSeconds, setStopwatchSeconds] = useState<number>(0);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
+  const { mode, moduleId: selectedModuleId, durationMinutes: timerDurationMinutes, isRunning } = focusTimer;
+
   const [ambientSound, setAmbientSound] = useState<'none' | 'pink_noise' | 'rain' | 'binaural'>('none');
   const [sessionNotes, setSessionNotes] = useState<string>('');
   const [isCompletionModalOpen, setIsCompletionModalOpen] = useState<boolean>(false);
   const [completedSecondsToSave, setCompletedSecondsToSave] = useState<number>(0);
   const [customMinutesInput, setCustomMinutesInput] = useState<string>('');
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editModuleId, setEditModuleId] = useState<string>('');
+  const [editMinutes, setEditMinutes] = useState<number>(0);
+  const [editNotes, setEditNotes] = useState<string>('');
 
-  const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  // Forces a re-render every second while running so the displayed clock moves;
+  // the actual elapsed time is always derived from real timestamps below, so it
+  // stays correct even if this tick was suspended (tab switch, backgrounded app).
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    if (!isRunning) return;
+    const interval = setInterval(() => setTick((t) => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
+  const elapsedSeconds =
+    focusTimer.accumulatedSeconds +
+    (isRunning && focusTimer.runStartedAt ? (Date.now() - focusTimer.runStartedAt) / 1000 : 0);
+
+  const stopwatchSeconds = Math.floor(elapsedSeconds);
+  const timeLeftSeconds = Math.max(0, Math.ceil(timerDurationMinutes * 60 - elapsedSeconds));
 
   // Sync auto module selection if passed from another view
   useEffect(() => {
     if (focusTimerAutoModuleId) {
-      setSelectedModuleId(focusTimerAutoModuleId);
+      setFocusTimer((prev) => ({ ...prev, moduleId: focusTimerAutoModuleId }));
       setFocusTimerAutoModuleId(null);
     } else if (modules.length > 0 && !selectedModuleId) {
-      setSelectedModuleId(modules[0].id);
+      setFocusTimer((prev) => ({ ...prev, moduleId: modules[0].id }));
     }
-  }, [focusTimerAutoModuleId, modules, selectedModuleId, setFocusTimerAutoModuleId]);
+  }, [focusTimerAutoModuleId, modules, selectedModuleId, setFocusTimerAutoModuleId, setFocusTimer]);
+
+  // Catches a countdown that finished while this view was unmounted or the app
+  // was closed entirely: as soon as we're back, surface the completion modal
+  // instead of silently losing the finished session.
+  useEffect(() => {
+    if (mode !== 'stopwatch' && isRunning && timeLeftSeconds <= 0) {
+      const durationSecs = timerDurationMinutes * 60;
+      setFocusTimer((prev) => ({ ...prev, isRunning: false, runStartedAt: null, accumulatedSeconds: durationSecs }));
+      setCompletedSecondsToSave(durationSecs);
+      setIsCompletionModalOpen(true);
+      soundEngine.playChime(true);
+      confetti({
+        particleCount: 70,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#e91e8c', '#ff6ec7', '#ffd6ee'],
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, isRunning, timeLeftSeconds, timerDurationMinutes]);
 
   // Mode changes
   const switchMode = (newMode: SessionType) => {
-    setIsRunning(false);
-    setMode(newMode);
-    if (newMode === 'pomodoro') {
-      setTimerDurationMinutes(25);
-      setTimeLeftSeconds(25 * 60);
-    } else if (newMode === 'timer') {
-      setTimerDurationMinutes(45);
-      setTimeLeftSeconds(45 * 60);
-    } else {
-      setStopwatchSeconds(0);
-    }
+    setFocusTimer((prev) => ({
+      ...prev,
+      mode: newMode,
+      isRunning: false,
+      runStartedAt: null,
+      accumulatedSeconds: 0,
+      durationMinutes: newMode === 'pomodoro' ? 25 : newMode === 'timer' ? 45 : prev.durationMinutes,
+    }));
   };
-
-  // Timer Tick Engine
-  useEffect(() => {
-    if (isRunning) {
-      timerIntervalRef.current = setInterval(() => {
-        if (mode === 'stopwatch') {
-          setStopwatchSeconds((prev) => prev + 1);
-        } else {
-          setTimeLeftSeconds((prev) => {
-            if (prev <= 1) {
-              clearInterval(timerIntervalRef.current as NodeJS.Timeout);
-              setIsRunning(false);
-              soundEngine.playChime(true);
-              const durationSecs = timerDurationMinutes * 60;
-              setCompletedSecondsToSave(durationSecs);
-              setIsCompletionModalOpen(true);
-              confetti({
-                particleCount: 70,
-                spread: 70,
-                origin: { y: 0.6 },
-                colors: ['#e91e8c', '#ff6ec7', '#ffd6ee'],
-              });
-              return 0;
-            }
-            return prev - 1;
-          });
-        }
-      }, 1000);
-    } else {
-      if (timerIntervalRef.current) {
-        clearInterval(timerIntervalRef.current);
-      }
-    }
-
-    return () => {
-      if (timerIntervalRef.current) {
-        clearInterval(timerIntervalRef.current);
-      }
-    };
-  }, [isRunning, mode, timerDurationMinutes]);
 
   // Handle ambient sound changes
   const handleAmbientChange = (type: 'none' | 'pink_noise' | 'rain' | 'binaural') => {
@@ -115,31 +113,29 @@ export const FocusView: React.FC = () => {
 
   const handleToggleTimer = () => {
     soundEngine.playTick();
-    setIsRunning(!isRunning);
+    setFocusTimer((prev) => {
+      if (prev.isRunning) {
+        const elapsed = prev.runStartedAt ? (Date.now() - prev.runStartedAt) / 1000 : 0;
+        return { ...prev, isRunning: false, runStartedAt: null, accumulatedSeconds: prev.accumulatedSeconds + elapsed };
+      }
+      return { ...prev, isRunning: true, runStartedAt: Date.now() };
+    });
   };
 
   const handleResetTimer = () => {
-    setIsRunning(false);
-    if (mode === 'stopwatch') {
-      setStopwatchSeconds(0);
-    } else {
-      setTimeLeftSeconds(timerDurationMinutes * 60);
-    }
+    setFocusTimer((prev) => ({ ...prev, isRunning: false, runStartedAt: null, accumulatedSeconds: 0 }));
   };
 
   const handleFinishEarly = () => {
-    setIsRunning(false);
-    const elapsedSeconds =
-      mode === 'stopwatch'
-        ? stopwatchSeconds
-        : timerDurationMinutes * 60 - timeLeftSeconds;
+    const elapsedNow = mode === 'stopwatch' ? stopwatchSeconds : timerDurationMinutes * 60 - timeLeftSeconds;
 
-    if (elapsedSeconds < 10) {
+    if (elapsedNow < 10) {
       handleResetTimer();
       return;
     }
 
-    setCompletedSecondsToSave(elapsedSeconds);
+    setFocusTimer((prev) => ({ ...prev, isRunning: false, runStartedAt: null }));
+    setCompletedSecondsToSave(elapsedNow);
     setIsCompletionModalOpen(true);
   };
 
@@ -162,9 +158,34 @@ export const FocusView: React.FC = () => {
   };
 
   const applyPreset = (mins: number) => {
-    setTimerDurationMinutes(mins);
-    setTimeLeftSeconds(mins * 60);
+    setFocusTimer((prev) => ({ ...prev, durationMinutes: mins }));
     setCustomMinutesInput('');
+  };
+
+  const startEditSession = (session: (typeof studySessions)[number]) => {
+    setEditingSessionId(session.id);
+    setEditModuleId(session.moduleId || '');
+    setEditMinutes(Math.round(session.durationSeconds / 60));
+    setEditNotes(session.notes || '');
+  };
+
+  const cancelEditSession = () => setEditingSessionId(null);
+
+  const handleSaveSessionEdit = () => {
+    if (!editingSessionId) return;
+    updateStudySession(editingSessionId, {
+      moduleId: editModuleId || undefined,
+      durationSeconds: Math.max(1, editMinutes) * 60,
+      notes: editNotes.trim() || undefined,
+    });
+    setEditingSessionId(null);
+  };
+
+  const handleDeleteSession = (id: string) => {
+    if (confirm('Remove this study session from your log? This cannot be undone.')) {
+      if (editingSessionId === id) setEditingSessionId(null);
+      deleteStudySession(id);
+    }
   };
 
   const handleApplyCustomMinutes = (e: React.FormEvent) => {
@@ -271,7 +292,7 @@ export const FocusView: React.FC = () => {
             <span className="text-xs font-bold text-[#7b5ea7]">Studying:</span>
             <select
               value={selectedModuleId}
-              onChange={(e) => setSelectedModuleId(e.target.value)}
+              onChange={(e) => setFocusTimer((prev) => ({ ...prev, moduleId: e.target.value }))}
               className="bg-transparent text-xs font-extrabold text-[#1e0f3e] focus:outline-none cursor-pointer"
             >
               <option value="">-- General Study --</option>
@@ -402,7 +423,7 @@ export const FocusView: React.FC = () => {
             ) : (
               <>
                 <Play className="w-5 h-5 fill-white ml-0.5" />
-                <span>{timeLeftSeconds === timerDurationMinutes * 60 ? 'Start Flow' : 'Resume'}</span>
+                <span>{elapsedSeconds < 1 ? 'Start Flow' : 'Resume'}</span>
               </>
             )}
           </button>
@@ -503,20 +524,81 @@ export const FocusView: React.FC = () => {
             studySessions.slice(0, 5).map((session) => {
               const mod = modules.find((m) => m.id === session.moduleId);
               const mins = Math.round(session.durationSeconds / 60);
+              const isEditing = editingSessionId === session.id;
+
+              if (isEditing) {
+                return (
+                  <div
+                    key={session.id}
+                    className="p-3 rounded-2xl bg-white border border-[#e91e8c] space-y-2.5"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Module</label>
+                        <select
+                          value={editModuleId}
+                          onChange={(e) => setEditModuleId(e.target.value)}
+                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                        >
+                          <option value="">-- General Study --</option>
+                          {modules.map((m) => (
+                            <option key={m.id} value={m.id}>
+                              {m.code ? `[${m.code}] ` : ''}{m.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Minutes</label>
+                        <input
+                          type="number"
+                          min={1}
+                          value={editMinutes}
+                          onChange={(e) => setEditMinutes(Number(e.target.value))}
+                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Notes</label>
+                      <textarea
+                        rows={2}
+                        value={editNotes}
+                        onChange={(e) => setEditNotes(e.target.value)}
+                        className="w-full px-2.5 py-1.5 rounded-xl text-xs text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                      />
+                    </div>
+                    <div className="flex items-center justify-end gap-2 pt-1">
+                      <button
+                        onClick={cancelEditSession}
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#7b5ea7] hover:bg-[#fff0f8] cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleSaveSessionEdit}
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white bg-[#e91e8c] cursor-pointer"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
 
               return (
                 <div
                   key={session.id}
                   className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] flex items-center justify-between gap-3"
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
                       className="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-extrabold text-[9px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
                       style={{ backgroundColor: mod?.colour || '#e91e8c' }}
                     >
                       <span className="truncate w-full">{mod?.code || 'STUDY'}</span>
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <h4 className="text-xs font-bold text-[#1e0f3e]">
                         {mod?.name || 'General Focus Session'}
                       </h4>
@@ -524,20 +606,38 @@ export const FocusView: React.FC = () => {
                         <span className="capitalize">{session.sessionType}</span> • {new Date(session.startedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                       </div>
                       {session.notes && (
-                        <p className="text-[11px] text-[#7b5ea7] italic mt-1">
+                        <p className="text-[11px] text-[#7b5ea7] italic mt-1 truncate">
                           "{session.notes}"
                         </p>
                       )}
                     </div>
                   </div>
 
-                  <div className="text-right shrink-0">
-                    <span className="text-sm font-extrabold text-[#e91e8c]">
-                      {mins} mins
-                    </span>
-                    <span className="text-[10px] block font-semibold text-emerald-600">
-                      Completed
-                    </span>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <div className="text-right">
+                      <span className="text-sm font-extrabold text-[#e91e8c]">
+                        {mins} mins
+                      </span>
+                      <span className="text-[10px] block font-semibold text-emerald-600">
+                        Completed
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => startEditSession(session)}
+                      aria-label="Edit study session"
+                      title="Edit session"
+                      className="w-7 h-7 rounded-full bg-white border border-[#ffd6ee] text-[#7b5ea7] hover:text-[#e91e8c] flex items-center justify-center cursor-pointer transition-colors"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSession(session.id)}
+                      aria-label="Delete study session"
+                      title="Delete session"
+                      className="w-7 h-7 rounded-full bg-white border border-[#ffd6ee] text-[#7b5ea7] hover:text-rose-600 flex items-center justify-center cursor-pointer transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );

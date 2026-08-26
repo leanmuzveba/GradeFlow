@@ -99,3 +99,15 @@ export interface NotificationItem {
 }
 
 export type ActiveTab = 'dashboard' | 'modules' | 'marks' | 'focus' | 'calendar' | 'analytics' | 'profile';
+
+// Timer progress is derived from real wall-clock timestamps (not a decrementing
+// counter) so it stays correct across tab switches, backgrounding, and full app
+// relaunches, where any in-memory setInterval would otherwise be lost.
+export interface ActiveFocusTimer {
+  mode: SessionType;
+  moduleId: string;
+  durationMinutes: number;
+  isRunning: boolean;
+  accumulatedSeconds: number;
+  runStartedAt: number | null; // epoch ms; null while paused
+}

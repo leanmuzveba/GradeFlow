@@ -8,6 +8,7 @@ import {
   StudyGoal,
   NotificationItem,
   ActiveTab,
+  ActiveFocusTimer,
 } from '../types';
 import {
   initialProfile,
@@ -17,6 +18,15 @@ import {
   initialStudySessions,
   initialStudyGoal,
 } from '../data/initialData';
+
+const defaultFocusTimer: ActiveFocusTimer = {
+  mode: 'pomodoro',
+  moduleId: '',
+  durationMinutes: 25,
+  isRunning: false,
+  accumulatedSeconds: 0,
+  runStartedAt: null,
+};
 
 interface AppContextType {
   profile: UserProfile;
@@ -37,7 +47,10 @@ interface AppContextType {
   deleteEvent: (id: string) => void;
   studySessions: StudySession[];
   addStudySession: (session: Omit<StudySession, 'id' | 'createdAt' | 'userId'>) => void;
+  updateStudySession: (id: string, updates: Partial<StudySession>) => void;
   deleteStudySession: (id: string) => void;
+  focusTimer: ActiveFocusTimer;
+  setFocusTimer: React.Dispatch<React.SetStateAction<ActiveFocusTimer>>;
   studyGoal: StudyGoal;
   updateStudyGoal: (updates: Partial<StudyGoal>) => void;
   notifications: NotificationItem[];
@@ -68,6 +81,7 @@ const STORAGE_KEYS = {
   SESSIONS: 'gradeflow_sessions_v1',
   GOAL: 'gradeflow_goal_v1',
   NOTIFICATIONS: 'gradeflow_notifications_v1',
+  FOCUS_TIMER: 'gradeflow_focus_timer_v1',
 };
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -144,6 +158,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     },
   ]);
 
+  const [focusTimer, setFocusTimer] = useState<ActiveFocusTimer>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEYS.FOCUS_TIMER);
+      return saved ? { ...defaultFocusTimer, ...JSON.parse(saved) } : defaultFocusTimer;
+    } catch {
+      return defaultFocusTimer;
+    }
+  });
+
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedModuleIdForDetail, setSelectedModuleIdForDetail] = useState<string | null>(null);
   const [isQuickAddMarkOpen, setIsQuickAddMarkOpen] = useState(false);
@@ -199,6 +222,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.warn(e);
     }
   }, [studyGoal]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEYS.FOCUS_TIMER, JSON.stringify(focusTimer));
+    } catch (e) {
+      console.warn(e);
+    }
+  }, [focusTimer]);
 
   const updateProfile = (updates: Partial<UserProfile>) => {
     setProfile((prev) => ({ ...prev, ...updates }));
@@ -300,6 +331,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addNotification('Study Session Completed', `Great focus! ${minutes} minutes recorded into study statistics.`, 'study');
   };
 
+  const updateStudySession = (id: string, updates: Partial<StudySession>) => {
+    setStudySessions((prev) => prev.map((s) => (s.id === id ? { ...s, ...updates } : s)));
+  };
+
   const deleteStudySession = (id: string) => {
     setStudySessions((prev) => prev.filter((s) => s.id !== id));
   };
@@ -331,6 +366,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setEvents(initialEvents);
     setStudySessions(initialStudySessions);
     setStudyGoal(initialStudyGoal);
+    setFocusTimer(defaultFocusTimer);
     localStorage.clear();
   };
 
@@ -355,7 +391,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteEvent,
         studySessions,
         addStudySession,
+        updateStudySession,
         deleteStudySession,
+        focusTimer,
+        setFocusTimer,
         studyGoal,
         updateStudyGoal,
         notifications,
