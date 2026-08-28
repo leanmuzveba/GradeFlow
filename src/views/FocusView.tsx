@@ -225,37 +225,37 @@ export const FocusView: React.FC = () => {
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--gf-card)] p-5 rounded-3xl border border-[var(--gf-border)] shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl sm:text-2xl font-extrabold text-[#1e0f3e] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--gf-text)] tracking-tight">
               Focus Session
             </h1>
             <button
               onClick={() => setActiveTab('analytics')}
-              className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center cursor-pointer hover:bg-[#ffd6ee] transition-colors"
+              className="w-8 h-8 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center cursor-pointer hover:bg-[var(--gf-border)] transition-colors"
               title="Study Analytics"
               aria-label="View study analytics"
             >
               <BarChart3 className="w-4 h-4" />
             </button>
-            <span className="ml-1 px-3 py-1 rounded-full text-white text-[11px] font-bold bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c]">
+            <span className="ml-1 px-3 py-1 rounded-full text-white text-[11px] font-bold bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)]">
               Today: {formatTodayTotal(todaySeconds)}
             </span>
           </div>
-          <p className="text-xs text-[#7b5ea7] mt-1">
+          <p className="text-xs text-[var(--gf-muted)] mt-1">
             Countdown timer, stopwatch, and ambient sound generator
           </p>
         </div>
 
         {/* Mode Selector */}
-        <div className="flex bg-[#fff0f8] p-1 rounded-2xl border border-[#ffd6ee]">
+        <div className="flex bg-[var(--gf-tint)] p-1 rounded-2xl border border-[var(--gf-border)]">
           <button
             onClick={() => switchMode('pomodoro')}
             className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
               mode === 'pomodoro'
-                ? 'bg-white text-[#e91e8c] shadow-xs'
-                : 'text-[#7b5ea7] hover:text-[#e91e8c]'
+                ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs'
+                : 'text-[var(--gf-muted)] hover:text-[var(--gf-primary)]'
             }`}
           >
             Pomodoro (25m)
@@ -264,8 +264,8 @@ export const FocusView: React.FC = () => {
             onClick={() => switchMode('timer')}
             className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
               mode === 'timer'
-                ? 'bg-white text-[#e91e8c] shadow-xs'
-                : 'text-[#7b5ea7] hover:text-[#e91e8c]'
+                ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs'
+                : 'text-[var(--gf-muted)] hover:text-[var(--gf-primary)]'
             }`}
           >
             Custom Timer
@@ -274,8 +274,8 @@ export const FocusView: React.FC = () => {
             onClick={() => switchMode('stopwatch')}
             className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer ${
               mode === 'stopwatch'
-                ? 'bg-white text-[#e91e8c] shadow-xs'
-                : 'text-[#7b5ea7] hover:text-[#e91e8c]'
+                ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs'
+                : 'text-[var(--gf-muted)] hover:text-[var(--gf-primary)]'
             }`}
           >
             Stopwatch
@@ -287,13 +287,13 @@ export const FocusView: React.FC = () => {
       <div className="gf-3d-card p-6 sm:p-8 flex flex-col items-center justify-center relative overflow-hidden text-center">
         {/* Module selector banner */}
         <div className="w-full max-w-sm mb-6 flex items-center justify-center">
-          <div className="flex items-center gap-2 bg-[#fff0f8] border border-[#ffd6ee] rounded-full px-3.5 py-1.5 shadow-xs">
-            <BookOpen className="w-4 h-4 text-[#e91e8c]" />
-            <span className="text-xs font-bold text-[#7b5ea7]">Studying:</span>
+          <div className="flex items-center gap-2 bg-[var(--gf-tint)] border border-[var(--gf-border)] rounded-full px-3.5 py-1.5 shadow-xs">
+            <BookOpen className="w-4 h-4 text-[var(--gf-primary)]" />
+            <span className="text-xs font-bold text-[var(--gf-muted)]">Studying:</span>
             <select
               value={selectedModuleId}
               onChange={(e) => setFocusTimer((prev) => ({ ...prev, moduleId: e.target.value }))}
-              className="bg-transparent text-xs font-extrabold text-[#1e0f3e] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-extrabold text-[var(--gf-text)] focus:outline-none cursor-pointer"
             >
               <option value="">-- General Study --</option>
               {modules.map((m) => (
@@ -313,7 +313,7 @@ export const FocusView: React.FC = () => {
               cx="50%"
               cy="50%"
               r="44%"
-              stroke="#fff0f8"
+              stroke="var(--gf-tint)"
               strokeWidth="12"
               fill="transparent"
             />
@@ -332,21 +332,21 @@ export const FocusView: React.FC = () => {
             />
             <defs>
               <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#ff6ec7" />
-                <stop offset="100%" stopColor="#e91e8c" />
+                <stop offset="0%" stopColor="var(--gf-primary-light)" />
+                <stop offset="100%" stopColor="var(--gf-primary)" />
               </linearGradient>
             </defs>
           </svg>
 
           {/* Inner Content Display */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-mono-timer text-3xl sm:text-4xl font-bold text-[#1e0f3e] tracking-tight">
+            <span className="font-mono-timer text-3xl sm:text-4xl font-bold text-[var(--gf-text)] tracking-tight">
               {mode === 'stopwatch' ? formatHMS(stopwatchSeconds) : formatHMS(timeLeftSeconds)}
             </span>
-            <span className="text-xs font-bold text-[#e91e8c] uppercase tracking-wider mt-2 flex items-center gap-1.5">
+            <span className="text-xs font-bold text-[var(--gf-primary)] uppercase tracking-wider mt-2 flex items-center gap-1.5">
               {isRunning ? (
                 <>
-                  <span className="w-2 h-2 rounded-full bg-[#e91e8c] animate-ping" />
+                  <span className="w-2 h-2 rounded-full bg-[var(--gf-primary)] animate-ping" />
                   In Flow Session
                 </>
               ) : (
@@ -354,7 +354,7 @@ export const FocusView: React.FC = () => {
               )}
             </span>
             {currentModule && (
-              <span className="text-[11px] font-semibold text-[#7b5ea7] mt-1 max-w-[180px] truncate">
+              <span className="text-[11px] font-semibold text-[var(--gf-muted)] mt-1 max-w-[180px] truncate">
                 {currentModule.name}
               </span>
             )}
@@ -371,8 +371,8 @@ export const FocusView: React.FC = () => {
                   onClick={() => applyPreset(mins)}
                   className={`px-4 py-2 rounded-full text-xs font-bold border transition-all cursor-pointer ${
                     timerDurationMinutes === mins
-                      ? 'bg-[#e91e8c] border-[#e91e8c] text-white shadow-xs'
-                      : 'bg-[#fff0f8] border-[#ffd6ee] text-[#1e0f3e] hover:bg-[#ffd6ee]/60'
+                      ? 'bg-[var(--gf-primary)] border-[var(--gf-primary)] text-white shadow-xs'
+                      : 'bg-[var(--gf-tint)] border-[var(--gf-border)] text-[var(--gf-text)] hover:bg-[var(--gf-border)]/60'
                   }`}
                 >
                   {mins}m
@@ -388,11 +388,11 @@ export const FocusView: React.FC = () => {
                 placeholder="Custom minutes"
                 value={customMinutesInput}
                 onChange={(e) => setCustomMinutesInput(e.target.value)}
-                className="w-32 px-3 py-2 rounded-full text-xs font-bold text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c] text-center"
+                className="w-32 px-3 py-2 rounded-full text-xs font-bold text-[var(--gf-text)] bg-[var(--gf-tint)] border border-[var(--gf-border)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)] text-center"
               />
               <button
                 type="submit"
-                className="px-4 py-2 rounded-full text-xs font-bold text-white bg-[#e91e8c] cursor-pointer transition-all active:scale-95"
+                className="px-4 py-2 rounded-full text-xs font-bold text-white bg-[var(--gf-primary)] cursor-pointer transition-all active:scale-95"
               >
                 Set
               </button>
@@ -404,7 +404,7 @@ export const FocusView: React.FC = () => {
         <div className="flex items-center gap-3 mt-4">
           <button
             onClick={handleResetTimer}
-            className="p-3.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-[#7b5ea7] hover:text-[#e91e8c] transition-all cursor-pointer active:scale-95 shadow-xs"
+            className="p-3.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-[var(--gf-muted)] hover:text-[var(--gf-primary)] transition-all cursor-pointer active:scale-95 shadow-xs"
             title="Reset Timer"
           >
             <RotateCcw className="w-5 h-5" />
@@ -430,7 +430,7 @@ export const FocusView: React.FC = () => {
 
           <button
             onClick={handleFinishEarly}
-            className="p-3.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-emerald-600 hover:bg-emerald-50 transition-all cursor-pointer active:scale-95 shadow-xs"
+            className="p-3.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-emerald-600 hover:bg-emerald-50 transition-all cursor-pointer active:scale-95 shadow-xs"
             title="Log & Complete Session"
           >
             <CheckCircle2 className="w-5 h-5" />
@@ -438,13 +438,13 @@ export const FocusView: React.FC = () => {
         </div>
 
         {/* Ambient Sound Bar */}
-        <div className="mt-8 pt-6 border-t border-[#ffd6ee]/60 w-full max-w-lg">
+        <div className="mt-8 pt-6 border-t border-[var(--gf-border)]/60 w-full max-w-lg">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-xs font-bold text-[#7b5ea7] uppercase tracking-wider flex items-center gap-1.5">
-              <Volume2 className="w-3.5 h-3.5 text-[#e91e8c]" />
+            <span className="text-xs font-bold text-[var(--gf-muted)] uppercase tracking-wider flex items-center gap-1.5">
+              <Volume2 className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
               Focus Ambience Synth
             </span>
-            <span className="text-[11px] text-[#e91e8c] font-semibold">
+            <span className="text-[11px] text-[var(--gf-primary)] font-semibold">
               {ambientSound === 'none' ? 'Muted' : ambientSound.replace('_', ' ')}
             </span>
           </div>
@@ -454,8 +454,8 @@ export const FocusView: React.FC = () => {
               onClick={() => handleAmbientChange('none')}
               className={`py-2 px-2 rounded-2xl text-xs font-bold border transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 ambientSound === 'none'
-                  ? 'bg-white border-[#e91e8c] text-[#e91e8c] ring-1 ring-[#e91e8c]'
-                  : 'bg-[#fff0f8] border-[#ffd6ee] text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-card)] border-[var(--gf-primary)] text-[var(--gf-primary)] ring-1 ring-[var(--gf-primary)]'
+                  : 'bg-[var(--gf-tint)] border-[var(--gf-border)] text-[var(--gf-muted)]'
               }`}
             >
               <VolumeX className="w-4 h-4" />
@@ -466,8 +466,8 @@ export const FocusView: React.FC = () => {
               onClick={() => handleAmbientChange('pink_noise')}
               className={`py-2 px-2 rounded-2xl text-xs font-bold border transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 ambientSound === 'pink_noise'
-                  ? 'bg-[#e91e8c] border-[#e91e8c] text-white shadow-xs'
-                  : 'bg-[#fff0f8] border-[#ffd6ee] text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-primary)] border-[var(--gf-primary)] text-white shadow-xs'
+                  : 'bg-[var(--gf-tint)] border-[var(--gf-border)] text-[var(--gf-muted)]'
               }`}
             >
               <Radio className="w-4 h-4" />
@@ -478,8 +478,8 @@ export const FocusView: React.FC = () => {
               onClick={() => handleAmbientChange('rain')}
               className={`py-2 px-2 rounded-2xl text-xs font-bold border transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 ambientSound === 'rain'
-                  ? 'bg-[#e91e8c] border-[#e91e8c] text-white shadow-xs'
-                  : 'bg-[#fff0f8] border-[#ffd6ee] text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-primary)] border-[var(--gf-primary)] text-white shadow-xs'
+                  : 'bg-[var(--gf-tint)] border-[var(--gf-border)] text-[var(--gf-muted)]'
               }`}
             >
               <CloudRain className="w-4 h-4" />
@@ -490,8 +490,8 @@ export const FocusView: React.FC = () => {
               onClick={() => handleAmbientChange('binaural')}
               className={`py-2 px-2 rounded-2xl text-xs font-bold border transition-all cursor-pointer flex flex-col items-center gap-1 ${
                 ambientSound === 'binaural'
-                  ? 'bg-[#e91e8c] border-[#e91e8c] text-white shadow-xs'
-                  : 'bg-[#fff0f8] border-[#ffd6ee] text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-primary)] border-[var(--gf-primary)] text-white shadow-xs'
+                  : 'bg-[var(--gf-tint)] border-[var(--gf-border)] text-[var(--gf-muted)]'
               }`}
             >
               <Sparkles className="w-4 h-4" />
@@ -502,22 +502,22 @@ export const FocusView: React.FC = () => {
       </div>
 
       {/* Recent Study Sessions Ledger */}
-      <div className="bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
-        <div className="flex items-center justify-between pb-3 border-b border-[#ffd6ee]/60">
+      <div className="bg-[var(--gf-card)] p-5 rounded-3xl border border-[var(--gf-border)] shadow-xs">
+        <div className="flex items-center justify-between pb-3 border-b border-[var(--gf-border)]/60">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
+            <div className="w-7 h-7 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center">
               <Clock className="w-4 h-4" />
             </div>
-            <h3 className="text-sm font-bold text-[#1e0f3e]">Recent Study Sessions</h3>
+            <h3 className="text-sm font-bold text-[var(--gf-text)]">Recent Study Sessions</h3>
           </div>
-          <span className="text-xs font-bold text-[#7b5ea7]">
+          <span className="text-xs font-bold text-[var(--gf-muted)]">
             {studySessions.length} total logged
           </span>
         </div>
 
         <div className="mt-3 space-y-2.5">
           {studySessions.length === 0 ? (
-            <div className="text-center py-6 text-xs text-[#7b5ea7]">
+            <div className="text-center py-6 text-xs text-[var(--gf-muted)]">
               No study sessions logged yet. Start the timer above!
             </div>
           ) : (
@@ -530,15 +530,15 @@ export const FocusView: React.FC = () => {
                 return (
                   <div
                     key={session.id}
-                    className="p-3 rounded-2xl bg-white border border-[#e91e8c] space-y-2.5"
+                    className="p-3 rounded-2xl bg-[var(--gf-card)] border border-[var(--gf-primary)] space-y-2.5"
                   >
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <div>
-                        <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Module</label>
+                        <label className="block text-[10px] font-bold text-[var(--gf-muted)] mb-1">Module</label>
                         <select
                           value={editModuleId}
                           onChange={(e) => setEditModuleId(e.target.value)}
-                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[var(--gf-text)] bg-[var(--gf-tint)] border border-[var(--gf-border)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                         >
                           <option value="">-- General Study --</option>
                           {modules.map((m) => (
@@ -549,35 +549,35 @@ export const FocusView: React.FC = () => {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Minutes</label>
+                        <label className="block text-[10px] font-bold text-[var(--gf-muted)] mb-1">Minutes</label>
                         <input
                           type="number"
                           min={1}
                           value={editMinutes}
                           onChange={(e) => setEditMinutes(Number(e.target.value))}
-                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                          className="w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold text-[var(--gf-text)] bg-[var(--gf-tint)] border border-[var(--gf-border)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-[#7b5ea7] mb-1">Notes</label>
+                      <label className="block text-[10px] font-bold text-[var(--gf-muted)] mb-1">Notes</label>
                       <textarea
                         rows={2}
                         value={editNotes}
                         onChange={(e) => setEditNotes(e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-xl text-xs text-[#1e0f3e] bg-[#fff0f8] border border-[#ffd6ee] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                        className="w-full px-2.5 py-1.5 rounded-xl text-xs text-[var(--gf-text)] bg-[var(--gf-tint)] border border-[var(--gf-border)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                       />
                     </div>
                     <div className="flex items-center justify-end gap-2 pt-1">
                       <button
                         onClick={cancelEditSession}
-                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#7b5ea7] hover:bg-[#fff0f8] cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-[var(--gf-muted)] hover:bg-[var(--gf-tint)] cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSaveSessionEdit}
-                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white bg-[#e91e8c] cursor-pointer"
+                        className="px-3 py-1.5 rounded-lg text-[11px] font-bold text-white bg-[var(--gf-primary)] cursor-pointer"
                       >
                         Save Changes
                       </button>
@@ -589,24 +589,24 @@ export const FocusView: React.FC = () => {
               return (
                 <div
                   key={session.id}
-                  className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] flex items-center justify-between gap-3"
+                  className="p-3 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3 min-w-0">
                     <div
                       className="w-12 h-12 shrink-0 rounded-full flex items-center justify-center text-white font-extrabold text-[9px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
-                      style={{ backgroundColor: mod?.colour || '#e91e8c' }}
+                      style={{ backgroundColor: mod?.colour || 'var(--gf-primary)' }}
                     >
                       <span className="truncate w-full">{mod?.code || 'STUDY'}</span>
                     </div>
                     <div className="min-w-0">
-                      <h4 className="text-xs font-bold text-[#1e0f3e]">
+                      <h4 className="text-xs font-bold text-[var(--gf-text)]">
                         {mod?.name || 'General Focus Session'}
                       </h4>
-                      <div className="text-[11px] text-[#7b5ea7] mt-0.5">
+                      <div className="text-[11px] text-[var(--gf-muted)] mt-0.5">
                         <span className="capitalize">{session.sessionType}</span> • {new Date(session.startedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                       </div>
                       {session.notes && (
-                        <p className="text-[11px] text-[#7b5ea7] italic mt-1 truncate">
+                        <p className="text-[11px] text-[var(--gf-muted)] italic mt-1 truncate">
                           "{session.notes}"
                         </p>
                       )}
@@ -615,7 +615,7 @@ export const FocusView: React.FC = () => {
 
                   <div className="flex items-center gap-2 shrink-0">
                     <div className="text-right">
-                      <span className="text-sm font-extrabold text-[#e91e8c]">
+                      <span className="text-sm font-extrabold text-[var(--gf-primary)]">
                         {mins} mins
                       </span>
                       <span className="text-[10px] block font-semibold text-emerald-600">
@@ -626,7 +626,7 @@ export const FocusView: React.FC = () => {
                       onClick={() => startEditSession(session)}
                       aria-label="Edit study session"
                       title="Edit session"
-                      className="w-7 h-7 rounded-full bg-white border border-[#ffd6ee] text-[#7b5ea7] hover:text-[#e91e8c] flex items-center justify-center cursor-pointer transition-colors"
+                      className="w-7 h-7 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[var(--gf-muted)] hover:text-[var(--gf-primary)] flex items-center justify-center cursor-pointer transition-colors"
                     >
                       <Pencil className="w-3.5 h-3.5" />
                     </button>
@@ -634,7 +634,7 @@ export const FocusView: React.FC = () => {
                       onClick={() => handleDeleteSession(session.id)}
                       aria-label="Delete study session"
                       title="Delete session"
-                      className="w-7 h-7 rounded-full bg-white border border-[#ffd6ee] text-[#7b5ea7] hover:text-rose-600 flex items-center justify-center cursor-pointer transition-colors"
+                      className="w-7 h-7 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[var(--gf-muted)] hover:text-rose-600 flex items-center justify-center cursor-pointer transition-colors"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -649,21 +649,21 @@ export const FocusView: React.FC = () => {
       {/* Completion Modal */}
       {isCompletionModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-[#ffd6ee] overflow-hidden p-6 text-center">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center mx-auto shadow-md mb-3">
+          <div className="bg-[var(--gf-card)] w-full max-w-md rounded-3xl shadow-2xl border border-[var(--gf-border)] overflow-hidden p-6 text-center">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center mx-auto shadow-md mb-3">
               <CheckCircle2 className="w-7 h-7" />
             </div>
 
-            <h3 className="text-lg font-extrabold text-[#1e0f3e]">
+            <h3 className="text-lg font-extrabold text-[var(--gf-text)]">
               Study Session Completed!
             </h3>
-            <p className="text-xs text-[#7b5ea7] mt-1">
-              You recorded <strong className="text-[#e91e8c]">{Math.round(completedSecondsToSave / 60)} minutes</strong> of focused work for {currentModule?.name || 'your studies'}.
+            <p className="text-xs text-[var(--gf-muted)] mt-1">
+              You recorded <strong className="text-[var(--gf-primary)]">{Math.round(completedSecondsToSave / 60)} minutes</strong> of focused work for {currentModule?.name || 'your studies'}.
             </p>
 
             {/* Reflection Note Input */}
             <div className="my-4 text-left">
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
                 Session Reflection / Accomplishments
               </label>
               <textarea
@@ -671,7 +671,7 @@ export const FocusView: React.FC = () => {
                 placeholder="e.g. Completed problem set, reviewed chapter 4 notes..."
                 value={sessionNotes}
                 onChange={(e) => setSessionNotes(e.target.value)}
-                className="w-full p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-xs text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full p-3 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-xs text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
@@ -681,7 +681,7 @@ export const FocusView: React.FC = () => {
                   setIsCompletionModalOpen(false);
                   handleResetTimer();
                 }}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#7b5ea7] hover:bg-[#fff0f8]"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[var(--gf-muted)] hover:bg-[var(--gf-tint)]"
               >
                 Discard
               </button>

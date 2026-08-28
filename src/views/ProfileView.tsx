@@ -7,7 +7,47 @@ import {
   Check,
   ShieldCheck,
   Camera,
+  Palette,
 } from 'lucide-react';
+import { UserProfile } from '../types';
+
+const THEME_OPTIONS: {
+  id: UserProfile['theme'];
+  label: string;
+  description: string;
+  bg: string;
+  card: string;
+  text: string;
+  accent: string;
+}[] = [
+  {
+    id: 'default',
+    label: 'Default',
+    description: 'Signature GradeFlow pink',
+    bg: '#fff8fc',
+    card: '#ffffff',
+    text: '#1e0f3e',
+    accent: '#e91e8c',
+  },
+  {
+    id: 'dark',
+    label: 'Dark Mode',
+    description: 'Black background, white text',
+    bg: '#000000',
+    card: '#0d0d0d',
+    text: '#ffffff',
+    accent: '#ff2f9e',
+  },
+  {
+    id: 'moonlight',
+    label: 'Moonlight',
+    description: 'Light grey with teal / blue text',
+    bg: '#e7ebee',
+    card: '#f4f6f8',
+    text: '#0f3d4a',
+    accent: '#0d9488',
+  },
+];
 
 // Raw photos from a phone camera can be several MB; base64-encoded as a data
 // URL that easily blows the localStorage quota (5-10MB total). When
@@ -128,7 +168,7 @@ export const ProfileView: React.FC = () => {
           <img
             src={profile.avatarUrl}
             alt={profile.displayName}
-            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-white shadow-md ring-2 ring-[#ffd6ee]"
+            className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-2 border-[var(--gf-card)] shadow-md ring-2 ring-[var(--gf-border)]"
           />
           <input
             ref={avatarInputRef}
@@ -141,7 +181,7 @@ export const ProfileView: React.FC = () => {
             type="button"
             onClick={() => avatarInputRef.current?.click()}
             aria-label="Change profile picture"
-            className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-md cursor-pointer active:scale-95 transition-transform border-2 border-white"
+            className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-md cursor-pointer active:scale-95 transition-transform border-2 border-[var(--gf-card)]"
           >
             <Camera className="w-4 h-4" />
           </button>
@@ -153,23 +193,23 @@ export const ProfileView: React.FC = () => {
         </div>
 
         <div className="text-center sm:text-left flex-1">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#fff0f8] text-xs font-extrabold text-[#e91e8c] mb-1.5">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[var(--gf-tint)] text-xs font-extrabold text-[var(--gf-primary)] mb-1.5">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{profile.academicYear}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1e0f3e] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--gf-text)] tracking-tight">
             {profile.displayName}
           </h1>
-          <p className="font-script text-lg leading-none text-[#e91e8c] mt-1">
+          <p className="font-script text-lg leading-none text-[var(--gf-primary)] mt-1">
             Your academic life, in flow.
           </p>
-          <p className="text-xs text-[#7b5ea7] mt-1.5">{profile.email}</p>
-          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-3 text-xs font-semibold text-[#7b5ea7]">
+          <p className="text-xs text-[var(--gf-muted)] mt-1.5">{profile.email}</p>
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mt-3 text-xs font-semibold text-[var(--gf-muted)]">
             <span>{profile.semester}</span>
             <span>•</span>
-            <span>Target GPA: <strong className="text-[#e91e8c]">{profile.targetGpa.toFixed(2)}</strong></span>
+            <span>Target GPA: <strong className="text-[var(--gf-primary)]">{profile.targetGpa.toFixed(2)}</strong></span>
             <span>•</span>
-            <span>Weekly Goal: <strong className="text-[#e91e8c]">{studyGoal.weeklyTargetHours} hrs</strong></span>
+            <span>Weekly Goal: <strong className="text-[var(--gf-primary)]">{studyGoal.weeklyTargetHours} hrs</strong></span>
           </div>
         </div>
 
@@ -193,57 +233,57 @@ export const ProfileView: React.FC = () => {
       {isEditing && (
         <form
           onSubmit={handleSaveProfile}
-          className="bg-white rounded-3xl p-6 border border-[#ffd6ee] shadow-md space-y-4 animate-fade-in"
+          className="bg-[var(--gf-card)] rounded-3xl p-6 border border-[var(--gf-border)] shadow-md space-y-4 animate-fade-in"
         >
-          <h3 className="text-base font-extrabold text-[#1e0f3e] pb-3 border-b border-[#fff0f8]">
+          <h3 className="text-base font-extrabold text-[var(--gf-text)] pb-3 border-b border-[var(--gf-tint)]">
             Edit Academic Profile & Preferences
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Display Name</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Display Name</label>
               <input
                 type="text"
                 required
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Student Email</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Student Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Academic Year</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Academic Year</label>
               <input
                 type="text"
                 value={academicYear}
                 onChange={(e) => setAcademicYear(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Current Semester</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Current Semester</label>
               <input
                 type="text"
                 value={semester}
                 onChange={(e) => setSemester(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Target GPA (4.0 Scale)</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Target GPA (4.0 Scale)</label>
               <input
                 type="number"
                 step="0.05"
@@ -251,12 +291,12 @@ export const ProfileView: React.FC = () => {
                 max="4.0"
                 value={targetGpa}
                 onChange={(e) => setTargetGpa(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-bold text-[#e91e8c] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1">Weekly Study Target (Hours)</label>
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">Weekly Study Target (Hours)</label>
               <input
                 type="number"
                 step="1"
@@ -264,16 +304,16 @@ export const ProfileView: React.FC = () => {
                 max="80"
                 value={weeklyHours}
                 onChange={(e) => setWeeklyHours(Number(e.target.value))}
-                className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-bold text-[#e91e8c] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 pt-3 border-t border-[#fff0f8]">
+          <div className="flex justify-end gap-2 pt-3 border-t border-[var(--gf-tint)]">
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-[#7b5ea7] hover:bg-[#fff0f8]"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-[var(--gf-muted)] hover:bg-[var(--gf-tint)]"
             >
               Cancel
             </button>
@@ -288,22 +328,75 @@ export const ProfileView: React.FC = () => {
         </form>
       )}
 
+      {/* Appearance / Theme Toggle */}
+      <div className="gf-3d-card p-6">
+        <div className="flex items-center gap-2 mb-1">
+          <Palette className="w-5 h-5 text-[var(--gf-primary)]" />
+          <h3 className="text-base font-extrabold text-[var(--gf-text)]">Appearance</h3>
+        </div>
+        <p className="text-xs text-[var(--gf-muted)] mb-4">
+          Choose how GradeFlow looks on this device.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          {THEME_OPTIONS.map((opt) => {
+            const isSelected = profile.theme === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => updateProfile({ theme: opt.id })}
+                aria-pressed={isSelected}
+                className={`relative rounded-2xl p-3.5 text-left border-2 transition-all cursor-pointer ${
+                  isSelected
+                    ? 'border-[var(--gf-primary)] shadow-md'
+                    : 'border-[var(--gf-border)] hover:border-[var(--gf-primary)]/50'
+                }`}
+                style={{ backgroundColor: opt.bg }}
+              >
+                {isSelected && (
+                  <span
+                    className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: opt.accent }}
+                  >
+                    <Check className="w-3 h-3 text-white" />
+                  </span>
+                )}
+                <div
+                  className="w-full h-10 rounded-xl mb-3 flex items-center gap-1.5 px-2"
+                  style={{ backgroundColor: opt.card, border: `1px solid ${opt.accent}33` }}
+                >
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: opt.accent }} />
+                  <span className="flex-1 h-1.5 rounded-full opacity-40" style={{ backgroundColor: opt.text }} />
+                </div>
+                <p className="text-xs font-extrabold" style={{ color: opt.text }}>
+                  {opt.label}
+                </p>
+                <p className="text-[10px] font-medium mt-0.5 opacity-70" style={{ color: opt.text }}>
+                  {opt.description}
+                </p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Data Management & Backup Controls */}
       <div className="gf-3d-card p-6">
         <div className="flex items-center gap-2 mb-3">
-          <ShieldCheck className="w-5 h-5 text-[#e91e8c]" />
-          <h3 className="text-base font-extrabold text-[#1e0f3e]">Data Management & Backup</h3>
+          <ShieldCheck className="w-5 h-5 text-[var(--gf-primary)]" />
+          <h3 className="text-base font-extrabold text-[var(--gf-text)]">Data Management & Backup</h3>
         </div>
-        <p className="text-xs text-[#7b5ea7] mb-4">
+        <p className="text-xs text-[var(--gf-muted)] mb-4">
           Your academic courses, assessment marks, study sessions, and deadlines are safely stored locally in your browser storage.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={handleExportData}
-            className="px-4 py-2.5 rounded-2xl bg-white border border-[#ffd6ee] hover:border-[#e91e8c] text-xs font-bold text-[#1e0f3e] flex items-center gap-2 shadow-xs cursor-pointer"
+            className="px-4 py-2.5 rounded-2xl bg-[var(--gf-card)] border border-[var(--gf-border)] hover:border-[var(--gf-primary)] text-xs font-bold text-[var(--gf-text)] flex items-center gap-2 shadow-xs cursor-pointer"
           >
-            <Download className="w-4 h-4 text-[#e91e8c]" />
+            <Download className="w-4 h-4 text-[var(--gf-primary)]" />
             Export Data JSON Backup
           </button>
 

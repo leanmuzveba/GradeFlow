@@ -39,7 +39,7 @@ const MainContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fff8fc] flex flex-col font-sans text-[#1e0f3e]">
+    <div className="min-h-screen bg-[var(--gf-bg)] flex flex-col font-sans text-[var(--gf-text)]">
       {/* Top Header */}
       <HeaderBar />
 

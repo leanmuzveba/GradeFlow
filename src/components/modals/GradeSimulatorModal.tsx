@@ -50,21 +50,21 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-[#ffd6ee] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-[var(--gf-card)] w-full max-w-md rounded-3xl shadow-2xl border border-[var(--gf-border)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#fff0f8] to-[#fff5f9] px-6 py-4 border-b border-[#ffd6ee] flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[#fff5f9] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#1e0f3e]">What-If Grade Simulator</h3>
-              <p className="text-xs text-[#7b5ea7]">Calculate target score needed on final exam</p>
+              <h3 className="text-base font-bold text-[var(--gf-text)]">What-If Grade Simulator</h3>
+              <p className="text-xs text-[var(--gf-muted)]">Calculate target score needed on final exam</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full text-[#7b5ea7] hover:text-[#e91e8c] hover:bg-white transition-colors"
+            className="p-1.5 rounded-full text-[var(--gf-muted)] hover:text-[var(--gf-primary)] hover:bg-[var(--gf-card)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -74,13 +74,13 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
         <div className="p-6 space-y-4 overflow-y-auto">
           {/* Select Module */}
           <div>
-            <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
               Select Module
             </label>
             <select
               value={selectedModuleId}
               onChange={(e) => setSelectedModuleId(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-semibold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm font-semibold text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
             >
               {modules.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -91,20 +91,20 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
           </div>
 
           {/* Current Standing Card */}
-          <div className="p-3.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] flex items-center justify-between">
+          <div className="p-3.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] flex items-center justify-between">
             <div>
-              <span className="text-[11px] font-bold text-[#7b5ea7] uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-[var(--gf-muted)] uppercase tracking-wider block">
                 Current Course Standing
               </span>
-              <span className="text-xl font-extrabold text-[#e91e8c]">
+              <span className="text-xl font-extrabold text-[var(--gf-primary)]">
                 {currentAverage > 0 ? `${currentAverage.toFixed(1)}%` : 'No marks yet'}
               </span>
             </div>
             <div className="text-right">
-              <span className="text-[11px] font-bold text-[#7b5ea7] uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-[var(--gf-muted)] uppercase tracking-wider block">
                 Assessments Done
               </span>
-              <span className="text-sm font-bold text-[#1e0f3e]">
+              <span className="text-sm font-bold text-[var(--gf-text)]">
                 {modAssessments.length} logged
               </span>
             </div>
@@ -114,11 +114,11 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
           <div className="space-y-4">
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="text-xs font-bold text-[#1e0f3e] flex items-center gap-1">
-                  <Target className="w-3.5 h-3.5 text-[#e91e8c]" />
+                <label className="text-xs font-bold text-[var(--gf-text)] flex items-center gap-1">
+                  <Target className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                   Desired Final Grade
                 </label>
-                <span className="text-xs font-extrabold text-[#e91e8c] bg-[#fff0f8] rounded-full px-2 py-0.5">
+                <span className="text-xs font-extrabold text-[var(--gf-primary)] bg-[var(--gf-tint)] rounded-full px-2 py-0.5">
                   {targetGrade}% ({targetGrade >= 90 ? 'A' : targetGrade >= 80 ? 'B' : 'C'})
                 </span>
               </div>
@@ -129,9 +129,9 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
                 step="1"
                 value={targetGrade}
                 onChange={(e) => setTargetGrade(Number(e.target.value))}
-                className="w-full accent-[#e91e8c] cursor-pointer"
+                className="w-full accent-[var(--gf-primary)] cursor-pointer"
               />
-              <div className="flex justify-between text-[10px] text-[#7b5ea7]">
+              <div className="flex justify-between text-[10px] text-[var(--gf-muted)]">
                 <span>60% (Pass)</span>
                 <span>80% (B)</span>
                 <span>90% (A)</span>
@@ -141,11 +141,11 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
 
             <div>
               <div className="flex justify-between items-center mb-1">
-                <label className="text-xs font-bold text-[#1e0f3e] flex items-center gap-1">
-                  <HelpCircle className="w-3.5 h-3.5 text-[#e91e8c]" />
+                <label className="text-xs font-bold text-[var(--gf-text)] flex items-center gap-1">
+                  <HelpCircle className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                   Final / Remaining Weight
                 </label>
-                <span className="text-xs font-extrabold text-[#1e0f3e] bg-[#fff0f8] rounded-full px-2 py-0.5">
+                <span className="text-xs font-extrabold text-[var(--gf-text)] bg-[var(--gf-tint)] rounded-full px-2 py-0.5">
                   {effectiveRemainingWeight}% of total course
                 </span>
               </div>
@@ -156,7 +156,7 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
                 step="5"
                 value={effectiveRemainingWeight}
                 onChange={(e) => setRemainingWeight(Number(e.target.value))}
-                className="w-full accent-[#e91e8c] cursor-pointer"
+                className="w-full accent-[var(--gf-primary)] cursor-pointer"
               />
             </div>
           </div>
@@ -165,11 +165,11 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
           <div
             className={`p-5 rounded-2xl border text-center transition-all ${
               simulation.achievable && simulation.requiredPercentage <= 100
-                ? 'bg-[#fff0f8] border-[#ffd6ee]'
+                ? 'bg-[var(--gf-tint)] border-[var(--gf-border)]'
                 : 'bg-rose-50 border-rose-200'
             }`}
           >
-            <span className="text-xs font-bold text-[#7b5ea7] block mb-1">
+            <span className="text-xs font-bold text-[var(--gf-muted)] block mb-1">
               Score Needed on Upcoming {effectiveRemainingWeight}% Exam:
             </span>
             <div className="flex items-center justify-center gap-2 my-2">
@@ -179,17 +179,17 @@ export const GradeSimulatorModal: React.FC<GradeSimulatorModalProps> = ({
                     ? 'text-rose-600'
                     : simulation.requiredPercentage <= 75
                     ? 'text-emerald-600'
-                    : 'text-[#e91e8c]'
+                    : 'text-[var(--gf-primary)]'
                 }`}
               >
                 {simulation.requiredPercentage}%
               </span>
             </div>
 
-            <p className="text-xs font-medium text-[#7b5ea7]">
+            <p className="text-xs font-medium text-[var(--gf-muted)]">
               {simulation.requiredPercentage <= 100 ? (
                 <>
-                  Scoring <strong className="text-[#e91e8c]">{simulation.requiredPercentage}%</strong> or higher on your final will guarantee your goal of <strong>{targetGrade}%</strong> in {currentModule?.name || 'this module'}.
+                  Scoring <strong className="text-[var(--gf-primary)]">{simulation.requiredPercentage}%</strong> or higher on your final will guarantee your goal of <strong>{targetGrade}%</strong> in {currentModule?.name || 'this module'}.
                 </>
               ) : (
                 <span className="text-rose-600 font-semibold">

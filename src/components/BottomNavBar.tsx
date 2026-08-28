@@ -30,13 +30,13 @@ export const BottomNavBar: React.FC = () => {
   return (
     <nav
       id="main-bottom-nav"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-[#ffd6ee] px-1 py-2 pb-safe transition-all"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--gf-card)] border-t border-[var(--gf-border)] px-1 py-2 pb-safe transition-all"
     >
       <div className="max-w-xl mx-auto flex items-center justify-around">
         {navItems.map((item) => {
           const isActive = activeTab === item.id;
           const Icon = item.icon;
-          const color = isActive ? '#e91e8c' : '#7b5ea7';
+          const color = isActive ? 'var(--gf-primary)' : 'var(--gf-muted)';
 
           return (
             <button
@@ -57,7 +57,7 @@ export const BottomNavBar: React.FC = () => {
               {isActive ? (
                 <motion.span
                   layoutId="activeNavDot"
-                  className="w-1 h-1 rounded-full mt-0.5 bg-[#e91e8c]"
+                  className="w-1 h-1 rounded-full mt-0.5 bg-[var(--gf-primary)]"
                   transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                 />
               ) : (

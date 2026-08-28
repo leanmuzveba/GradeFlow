@@ -106,21 +106,21 @@ export const AddMarkModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white rounded-3xl w-full max-w-lg shadow-2xl border border-[#ffd6ee] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="bg-[var(--gf-card)] rounded-3xl w-full max-w-lg shadow-2xl border border-[var(--gf-border)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#fff0f8] to-[#fff5f9] px-6 py-4 border-b border-[#ffd6ee] flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[#fff5f9] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ff6ec7] to-[#e91e8c] text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
               <Award className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#1e0f3e]">Log Assessment Mark</h3>
-              <p className="text-xs text-[#7b5ea7]">Record grades and update your academic average</p>
+              <h3 className="text-base font-bold text-[var(--gf-text)]">Log Assessment Mark</h3>
+              <p className="text-xs text-[var(--gf-muted)]">Record grades and update your academic average</p>
             </div>
           </div>
           <button
             onClick={() => setIsQuickAddMarkOpen(false)}
-            className="p-1.5 rounded-full text-[#7b5ea7] hover:text-[#e91e8c] hover:bg-white transition-colors"
+            className="p-1.5 rounded-full text-[var(--gf-muted)] hover:text-[var(--gf-primary)] hover:bg-[var(--gf-card)] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -136,15 +136,15 @@ export const AddMarkModal: React.FC = () => {
 
           {/* Module Selector */}
           <div>
-            <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-[#e91e8c]" />
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
               Academic Module *
             </label>
             <select
               id="mark-module-select"
               value={moduleId}
               onChange={(e) => setModuleId(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm font-semibold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm font-semibold text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
             >
               {modules.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -156,7 +156,7 @@ export const AddMarkModal: React.FC = () => {
 
           {/* Assessment Title */}
           <div>
-            <label className="block text-xs font-bold text-[#1e0f3e] mb-1">
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
               Assessment Name *
             </label>
             <input
@@ -166,13 +166,13 @@ export const AddMarkModal: React.FC = () => {
               placeholder="e.g. Midterm Exam 1, Lab 4, Essay Final"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+              className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
             />
           </div>
 
           {/* Assessment Type Pills */}
           <div>
-            <label className="block text-xs font-bold text-[#1e0f3e] mb-1.5">
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1.5">
               Assessment Type
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -186,7 +186,7 @@ export const AddMarkModal: React.FC = () => {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
                     assessmentType === type
                       ? 'gf-pill-active'
-                      : 'bg-[#fff0f8] text-[#7b5ea7] hover:bg-[#ffd6ee]/50'
+                      : 'bg-[var(--gf-tint)] text-[var(--gf-muted)] hover:bg-[var(--gf-border)]/50'
                   }`}
                 >
                   {type}
@@ -196,21 +196,21 @@ export const AddMarkModal: React.FC = () => {
           </div>
 
           {/* Score Conversion Box */}
-          <div className="p-4 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
+          <div className="p-4 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)]">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold text-[#1e0f3e] flex items-center gap-1.5">
-                <Calculator className="w-3.5 h-3.5 text-[#e91e8c]" />
+              <span className="text-xs font-bold text-[var(--gf-text)] flex items-center gap-1.5">
+                <Calculator className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                 Score & Grade Calculation
               </span>
               {/* Toggle Mode */}
-              <div className="flex bg-white rounded-xl p-0.5 border border-[#ffd6ee]">
+              <div className="flex bg-[var(--gf-card)] rounded-xl p-0.5 border border-[var(--gf-border)]">
                 <button
                   type="button"
                   onClick={() => setInputMode('raw')}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                     inputMode === 'raw'
-                      ? 'bg-[#e91e8c] text-white'
-                      : 'text-[#7b5ea7] hover:text-[#e91e8c]'
+                      ? 'bg-[var(--gf-primary)] text-white'
+                      : 'text-[var(--gf-muted)] hover:text-[var(--gf-primary)]'
                   }`}
                 >
                   Raw Score
@@ -220,8 +220,8 @@ export const AddMarkModal: React.FC = () => {
                   onClick={() => setInputMode('percentage')}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
                     inputMode === 'percentage'
-                      ? 'bg-[#e91e8c] text-white'
-                      : 'text-[#7b5ea7] hover:text-[#e91e8c]'
+                      ? 'bg-[var(--gf-primary)] text-white'
+                      : 'text-[var(--gf-muted)] hover:text-[var(--gf-primary)]'
                   }`}
                 >
                   Direct %
@@ -232,7 +232,7 @@ export const AddMarkModal: React.FC = () => {
             {inputMode === 'raw' ? (
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#7b5ea7] mb-1">
+                  <label className="block text-[11px] font-semibold text-[var(--gf-muted)] mb-1">
                     Score Achieved
                   </label>
                   <input
@@ -242,11 +242,11 @@ export const AddMarkModal: React.FC = () => {
                     min="0"
                     value={score}
                     onChange={(e) => setScore(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#ffd6ee] text-sm font-bold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--gf-card)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-[#7b5ea7] mb-1">
+                  <label className="block text-[11px] font-semibold text-[var(--gf-muted)] mb-1">
                     Total Possible
                   </label>
                   <input
@@ -256,13 +256,13 @@ export const AddMarkModal: React.FC = () => {
                     min="1"
                     value={totalScore}
                     onChange={(e) => setTotalScore(e.target.value)}
-                    className="w-full px-3 py-2 rounded-xl bg-white border border-[#ffd6ee] text-sm font-bold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                    className="w-full px-3 py-2 rounded-xl bg-[var(--gf-card)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                   />
                 </div>
               </div>
             ) : (
               <div>
-                <label className="block text-[11px] font-semibold text-[#7b5ea7] mb-1">
+                <label className="block text-[11px] font-semibold text-[var(--gf-muted)] mb-1">
                   Percentage (%)
                 </label>
                 <input
@@ -272,19 +272,19 @@ export const AddMarkModal: React.FC = () => {
                   max="100"
                   value={score}
                   onChange={(e) => setScore(e.target.value)}
-                  className="w-full px-3 py-2 rounded-xl bg-white border border-[#ffd6ee] text-sm font-bold text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                  className="w-full px-3 py-2 rounded-xl bg-[var(--gf-card)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
                 />
               </div>
             )}
 
             {/* Calculated Percentage Preview */}
-            <div className="mt-3 pt-3 border-t border-[#ffd6ee] flex items-center justify-between">
-              <span className="text-xs font-medium text-[#7b5ea7]">Calculated Result:</span>
+            <div className="mt-3 pt-3 border-t border-[var(--gf-border)] flex items-center justify-between">
+              <span className="text-xs font-medium text-[var(--gf-muted)]">Calculated Result:</span>
               <div className="flex items-center gap-2">
-                <span className="text-lg font-extrabold text-[#e91e8c]">
+                <span className="text-lg font-extrabold text-[var(--gf-primary)]">
                   {percentage.toFixed(1)}%
                 </span>
-                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#e91e8c] text-white">
+                <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--gf-primary)] text-white">
                   {percentage >= 90 ? 'A' : percentage >= 80 ? 'B' : percentage >= 70 ? 'C' : percentage >= 60 ? 'D' : 'F'}
                 </span>
               </div>
@@ -294,8 +294,8 @@ export const AddMarkModal: React.FC = () => {
           {/* Weighting and Date */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
-                <Percent className="w-3.5 h-3.5 text-[#e91e8c]" />
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
+                <Percent className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                 Weight in Course (%)
               </label>
               <input
@@ -307,13 +307,13 @@ export const AddMarkModal: React.FC = () => {
                 placeholder="e.g. 20"
                 value={weighting}
                 onChange={(e) => setWeighting(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-[#e91e8c]" />
+              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                 Date Received
               </label>
               <input
@@ -321,15 +321,15 @@ export const AddMarkModal: React.FC = () => {
                 type="date"
                 value={assessmentDate}
                 onChange={(e) => setAssessmentDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-sm text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c]"
+                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
           </div>
 
           {/* Notes */}
           <div>
-            <label className="block text-xs font-bold text-[#1e0f3e] mb-1 flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5 text-[#e91e8c]" />
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
+              <FileText className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
               Feedback / Reflection Notes (Optional)
             </label>
             <textarea
@@ -337,7 +337,7 @@ export const AddMarkModal: React.FC = () => {
               placeholder="What went well? Topics to review next time..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-xs text-[#1e0f3e] focus:outline-none focus:ring-2 focus:ring-[#e91e8c] resize-none"
+              className="w-full px-3.5 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-xs text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)] resize-none"
             />
           </div>
 
@@ -346,7 +346,7 @@ export const AddMarkModal: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsQuickAddMarkOpen(false)}
-              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#7b5ea7] hover:bg-[#fff0f8] transition-colors"
+              className="px-4 py-2.5 rounded-xl text-xs font-bold text-[var(--gf-muted)] hover:bg-[var(--gf-tint)] transition-colors"
             >
               Cancel
             </button>

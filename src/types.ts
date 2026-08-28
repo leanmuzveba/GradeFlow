@@ -15,7 +15,7 @@ export interface UserProfile {
   semester: string;
   targetGpa: number;
   gradingScale: '4.0' | 'percentage' | 'letter';
-  theme: 'pink-signature' | 'blush-soft' | 'berry-dark';
+  theme: 'default' | 'dark' | 'moonlight';
   createdAt: string;
 }
 
@@ -75,6 +75,7 @@ export interface AcademicEvent {
   priority: PriorityLevel;
   isCompleted: boolean;
   location?: string;
+  notes?: string;
   reminderMinutes?: number;
   externalEventId?: string;
   createdAt: string;

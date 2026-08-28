@@ -9,7 +9,7 @@ export const initialProfile: UserProfile = {
   semester: 'Semester 2, 2026',
   targetGpa: 3.9,
   gradingScale: '4.0',
-  theme: 'pink-signature',
+  theme: 'default',
   createdAt: '2026-08-01T08:00:00.000Z',
 };
 

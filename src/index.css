@@ -11,28 +11,66 @@
     --color-gf-nude-cream: #fff0f8;   /* retired "nude cream", now surface */
     --color-gf-dark-berry: #1e0f3e;   /* primary text (navy) */
     --color-gf-deep-navy: #1e0f3e;
-    --color-gf-bg: #fff8fc;           /* page background */
 
-    /* Accessible muted text — unified token, >= 4.5:1 on white & tinted cards */
-    --color-gf-muted: #7b5ea7;
+    /* ---- Live theme tokens ----
+       Swapped per `[data-theme]` on <html>, set from profile.theme.
+       "default" (pink) is the baseline defined here on :root. */
+    --gf-bg: #fff8fc;         /* page background */
+    --gf-card: #ffffff;       /* card / surface background */
+    --gf-tint: #fff0f8;       /* tinted chip / icon-bg / hover surface */
+    --gf-border: #ffd6ee;     /* hairline borders */
+    --gf-text: #1e0f3e;       /* primary text */
+    --gf-muted: #7b5ea7;      /* secondary / muted text, >= 4.5:1 on card & tint */
+    --gf-primary: #e91e8c;    /* primary accent (buttons, active states) */
+    --gf-primary-light: #ff6ec7; /* secondary accent / gradient partner */
 
     /* Fluid spacing anchor for safe areas */
     --gf-safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Dark mode: black background, white text, pink accent kept for brand continuity */
+  :root[data-theme="dark"] {
+    --gf-bg: #000000;
+    --gf-card: #0d0d0d;
+    --gf-tint: #1a1a1a;
+    --gf-border: #2e2e2e;
+    --gf-text: #ffffff;
+    --gf-muted: #d4d4d4;
+    --gf-primary: #ff2f9e;
+    --gf-primary-light: #ff6ec7;
+  }
+
+  /* Moonlight mode: light grey background, teal/blue text & accents */
+  :root[data-theme="moonlight"] {
+    --gf-bg: #e7ebee;
+    --gf-card: #f4f6f8;
+    --gf-tint: #dde7ea;
+    --gf-border: #bcd0d6;
+    --gf-text: #0f3d4a;
+    --gf-muted: #3d7080;
+    --gf-primary: #0d9488;
+    --gf-primary-light: #2dd4bf;
   }
 
   html {
     /* Respect user font-size preference; never disable zoom */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
+    color-scheme: light;
+  }
+
+  html[data-theme="dark"] {
+    color-scheme: dark;
   }
 
   body {
     font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    color: #1e0f3e;
-    background-color: #fff8fc;
+    color: var(--gf-text);
+    background-color: var(--gf-bg);
     -webkit-tap-highlight-color: transparent;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 
   h1, h2, h3, .font-heading {
@@ -73,7 +111,7 @@
 
 /* ---- Keyboard focus visibility (WCAG 2.4.7) ---- */
 :focus-visible {
-  outline: 2px solid #e91e8c;
+  outline: 2px solid var(--gf-primary);
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -91,23 +129,23 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #ffd6ee;
+  background: var(--gf-border);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff6ec7;
+  background: var(--gf-primary-light);
 }
 
 /* Soft rounded card used throughout GradeFlow */
 .gf-3d-card {
-  background: #ffffff;
+  background: var(--gf-card);
   box-shadow: 0 2px 16px 0 rgba(233, 30, 140, 0.07);
-  border: 1px solid #ffd6ee;
+  border: 1px solid var(--gf-border);
   border-radius: 24px !important;
 }
 
 .gf-3d-button {
-  background: linear-gradient(135deg, #ff6ec7 0%, #e91e8c 100%);
+  background: linear-gradient(135deg, var(--gf-primary-light) 0%, var(--gf-primary) 100%);
   box-shadow: 0 6px 18px 0 rgba(233, 30, 140, 0.28);
   border-radius: 18px !important;
   transition: all 0.15s ease-in-out;
@@ -118,7 +156,7 @@
 }
 
 .gf-pill-active {
-  background: #e91e8c;
+  background: var(--gf-primary);
   color: white;
   border-radius: 999px !important;
 }

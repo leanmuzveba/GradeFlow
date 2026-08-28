@@ -85,27 +85,27 @@ export const AnalyticsView: React.FC = () => {
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--gf-card)] p-5 rounded-3xl border border-[var(--gf-border)] shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center">
               <BarChart3 className="w-4 h-4" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-[#1e0f3e] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--gf-text)] tracking-tight">
               Academic Analytics & Insights
             </h1>
           </div>
-          <p className="text-xs text-[#7b5ea7] mt-1">
+          <p className="text-xs text-[var(--gf-muted)] mt-1">
             Visual breakdown of study effort, grade progression, and course performance
           </p>
         </div>
 
         {/* Time range selector */}
-        <div className="flex bg-[#fff0f8] p-1 rounded-2xl border border-[#ffd6ee] self-start sm:self-auto">
+        <div className="flex bg-[var(--gf-tint)] p-1 rounded-2xl border border-[var(--gf-border)] self-start sm:self-auto">
           <button
             onClick={() => setTimeRange('week')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              timeRange === 'week' ? 'bg-white text-[#e91e8c] shadow-xs' : 'text-[#7b5ea7]'
+              timeRange === 'week' ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs' : 'text-[var(--gf-muted)]'
             }`}
           >
             Weekly View
@@ -113,7 +113,7 @@ export const AnalyticsView: React.FC = () => {
           <button
             onClick={() => setTimeRange('month')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-              timeRange === 'month' ? 'bg-white text-[#e91e8c] shadow-xs' : 'text-[#7b5ea7]'
+              timeRange === 'month' ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs' : 'text-[var(--gf-muted)]'
             }`}
           >
             Semester Term
@@ -124,48 +124,48 @@ export const AnalyticsView: React.FC = () => {
       {/* KPI Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)] block">
             Overall Average
           </span>
-          <div className="text-2xl font-extrabold text-[#1e0f3e] mt-1">
+          <div className="text-2xl font-extrabold text-[var(--gf-text)] mt-1">
             {overallAvg > 0 ? `${overallAvg.toFixed(1)}%` : '--'}
           </div>
-          <span className="text-[11px] font-bold text-[#e91e8c] flex items-center gap-1 mt-0.5">
+          <span className="text-[11px] font-bold text-[var(--gf-primary)] flex items-center gap-1 mt-0.5">
             <TrendingUp className="w-3.5 h-3.5" /> +2.4% this semester
           </span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)] block">
             Total Study Hours
           </span>
-          <div className="text-2xl font-extrabold text-[#e91e8c] mt-1">
-            {totalStudyHours} <span className="text-sm font-semibold text-[#7b5ea7]">hrs</span>
+          <div className="text-2xl font-extrabold text-[var(--gf-primary)] mt-1">
+            {totalStudyHours} <span className="text-sm font-semibold text-[var(--gf-muted)]">hrs</span>
           </div>
-          <span className="text-[11px] font-semibold text-[#7b5ea7]">
+          <span className="text-[11px] font-semibold text-[var(--gf-muted)]">
             {totalCompletedSessions.length} total sessions
           </span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)] block">
             Study Streak
           </span>
           <div className="text-2xl font-extrabold text-amber-500 mt-1 flex items-center gap-1.5">
             <Flame className="w-5 h-5 fill-amber-500" />
             <span>6 Days</span>
           </div>
-          <span className="text-[11px] font-semibold text-[#7b5ea7]">Daily goal met</span>
+          <span className="text-[11px] font-semibold text-[var(--gf-muted)]">Daily goal met</span>
         </div>
 
         <div className="gf-3d-card p-4">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#7b5ea7] block">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)] block">
             Target Completion
           </span>
           <div className="text-2xl font-extrabold text-emerald-600 mt-1">
             94%
           </div>
-          <span className="text-[11px] font-semibold text-[#7b5ea7]">Tasks on schedule</span>
+          <span className="text-[11px] font-semibold text-[var(--gf-muted)]">Tasks on schedule</span>
         </div>
       </div>
 
@@ -175,13 +175,13 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#e91e8c]" />
+              <h3 className="text-sm font-bold text-[var(--gf-text)] flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[var(--gf-primary)]" />
                 Daily Study Hours Breakdown
               </h3>
-              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Hours focused across each day</p>
+              <p className="text-[11px] text-[var(--gf-muted)] mt-0.5">Hours focused across each day</p>
             </div>
-            <span className="text-xs font-extrabold text-[#e91e8c] bg-[#fff0f8] rounded-full px-2.5 py-1">
+            <span className="text-xs font-extrabold text-[var(--gf-primary)] bg-[var(--gf-tint)] rounded-full px-2.5 py-1">
               Avg 3.2h / day
             </span>
           </div>
@@ -189,14 +189,14 @@ export const AnalyticsView: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={dailyStudyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffd6ee" opacity={0.3} vertical={false} />
-                <XAxis dataKey="day" stroke="#7b5ea7" fontSize={11} tickLine={false} />
-                <YAxis stroke="#7b5ea7" fontSize={11} tickLine={false} unit="h" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--gf-border)" opacity={0.3} vertical={false} />
+                <XAxis dataKey="day" stroke="var(--gf-muted)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--gf-muted)" fontSize={11} tickLine={false} unit="h" />
                 <Tooltip
                   formatter={(val: number) => [`${val} hours`, 'Study Time']}
                   contentStyle={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#ffd6ee',
+                    backgroundColor: 'var(--gf-card)',
+                    borderColor: 'var(--gf-border)',
                     borderRadius: '16px',
                     fontSize: '12px',
                     boxShadow: '0 4px 12px rgba(233, 30, 140,0.15)',
@@ -206,7 +206,7 @@ export const AnalyticsView: React.FC = () => {
                   {dailyStudyData.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={index === 5 ? '#e91e8c' : '#ff6ec7'}
+                      fill={index === 5 ? 'var(--gf-primary)' : 'var(--gf-primary-light)'}
                     />
                   ))}
                 </Bar>
@@ -219,13 +219,13 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#e91e8c]" />
+              <h3 className="text-sm font-bold text-[var(--gf-text)] flex items-center gap-2">
+                <TrendingUp className="w-4 h-4 text-[var(--gf-primary)]" />
                 Assessment Grade Progression
               </h3>
-              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Historical scores vs 90% target baseline</p>
+              <p className="text-[11px] text-[var(--gf-muted)] mt-0.5">Historical scores vs 90% target baseline</p>
             </div>
-            <span className="text-xs font-extrabold text-[#e91e8c] bg-[#fff0f8] rounded-full px-2.5 py-1">
+            <span className="text-xs font-extrabold text-[var(--gf-primary)] bg-[var(--gf-tint)] rounded-full px-2.5 py-1">
               {assessments.length} marks
             </span>
           </div>
@@ -233,14 +233,14 @@ export const AnalyticsView: React.FC = () => {
           <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#ffd6ee" opacity={0.3} vertical={false} />
-                <XAxis dataKey="name" stroke="#7b5ea7" fontSize={10} tickLine={false} />
-                <YAxis stroke="#7b5ea7" fontSize={11} tickLine={false} domain={[60, 100]} unit="%" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--gf-border)" opacity={0.3} vertical={false} />
+                <XAxis dataKey="name" stroke="var(--gf-muted)" fontSize={10} tickLine={false} />
+                <YAxis stroke="var(--gf-muted)" fontSize={11} tickLine={false} domain={[60, 100]} unit="%" />
                 <Tooltip
                   formatter={(val: number) => [`${val}%`, 'Score']}
                   contentStyle={{
-                    backgroundColor: '#ffffff',
-                    borderColor: '#ffd6ee',
+                    backgroundColor: 'var(--gf-card)',
+                    borderColor: 'var(--gf-border)',
                     borderRadius: '16px',
                     fontSize: '12px',
                     boxShadow: '0 4px 12px rgba(233, 30, 140,0.15)',
@@ -249,15 +249,15 @@ export const AnalyticsView: React.FC = () => {
                 <Line
                   type="monotone"
                   dataKey="score"
-                  stroke="#e91e8c"
+                  stroke="var(--gf-primary)"
                   strokeWidth={3}
-                  dot={{ r: 4, fill: '#e91e8c', strokeWidth: 2, stroke: '#fff' }}
-                  activeDot={{ r: 6, fill: '#e91e8c' }}
+                  dot={{ r: 4, fill: 'var(--gf-primary)', strokeWidth: 2, stroke: 'var(--gf-card)' }}
+                  activeDot={{ r: 6, fill: 'var(--gf-primary)' }}
                 />
                 <Line
                   type="monotone"
                   dataKey="target"
-                  stroke="#ff6ec7"
+                  stroke="var(--gf-primary-light)"
                   strokeDasharray="4 4"
                   strokeWidth={1.5}
                   dot={false}
@@ -271,11 +271,11 @@ export const AnalyticsView: React.FC = () => {
         <div className="gf-3d-card p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-sm font-bold text-[#1e0f3e] flex items-center gap-2">
-                <PieIcon className="w-4 h-4 text-[#e91e8c]" />
+              <h3 className="text-sm font-bold text-[var(--gf-text)] flex items-center gap-2">
+                <PieIcon className="w-4 h-4 text-[var(--gf-primary)]" />
                 Study Allocation by Course
               </h3>
-              <p className="text-[11px] text-[#7b5ea7] mt-0.5">Distribution of focus hours per subject</p>
+              <p className="text-[11px] text-[var(--gf-muted)] mt-0.5">Distribution of focus hours per subject</p>
             </div>
           </div>
 
@@ -293,14 +293,14 @@ export const AnalyticsView: React.FC = () => {
                     dataKey="value"
                   >
                     {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color || '#e91e8c'} />
+                      <Cell key={`cell-${index}`} fill={entry.color || 'var(--gf-primary)'} />
                     ))}
                   </Pie>
                   <Tooltip
                     formatter={(val: number) => [`${val} hrs`, 'Study Time']}
                     contentStyle={{
-                      backgroundColor: '#ffffff',
-                      borderColor: '#ffd6ee',
+                      backgroundColor: 'var(--gf-card)',
+                      borderColor: 'var(--gf-border)',
                       borderRadius: '16px',
                       fontSize: '12px',
                     }}
@@ -308,8 +308,8 @@ export const AnalyticsView: React.FC = () => {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xs font-bold text-[#7b5ea7]">Total</span>
-                <span className="text-lg font-extrabold text-[#1e0f3e]">{totalStudyHours}h</span>
+                <span className="text-xs font-bold text-[var(--gf-muted)]">Total</span>
+                <span className="text-lg font-extrabold text-[var(--gf-text)]">{totalStudyHours}h</span>
               </div>
             </div>
 
@@ -320,8 +320,8 @@ export const AnalyticsView: React.FC = () => {
                     className="w-3 h-3 rounded-sm"
                     style={{ backgroundColor: mod.color }}
                   />
-                  <span className="font-bold text-[#1e0f3e]">{mod.name}:</span>
-                  <span className="text-[#7b5ea7]">{mod.studyHours}h ({Math.round((mod.studyHours / (totalStudyHours || 1)) * 100)}%)</span>
+                  <span className="font-bold text-[var(--gf-text)]">{mod.name}:</span>
+                  <span className="text-[var(--gf-muted)]">{mod.studyHours}h ({Math.round((mod.studyHours / (totalStudyHours || 1)) * 100)}%)</span>
                 </div>
               ))}
             </div>
@@ -331,26 +331,26 @@ export const AnalyticsView: React.FC = () => {
         {/* Insight / Recommendation Box */}
         <div className="gf-3d-card p-5 flex flex-col justify-between">
           <div>
-            <div className="flex items-center gap-2 pb-3 border-b border-[#ffd6ee]/40">
-              <div className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
+            <div className="flex items-center gap-2 pb-3 border-b border-[var(--gf-border)]/40">
+              <div className="w-8 h-8 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center">
                 <Sparkles className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold text-[#1e0f3e]">Productivity Insights</h3>
+              <h3 className="text-sm font-bold text-[var(--gf-text)]">Productivity Insights</h3>
             </div>
 
-            <div className="mt-4 space-y-3 text-xs leading-relaxed text-[#7b5ea7]">
-              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
-                <strong className="text-[#e91e8c] block mb-0.5">Optimal Performance Window:</strong>
+            <div className="mt-4 space-y-3 text-xs leading-relaxed text-[var(--gf-muted)]">
+              <div className="p-3 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)]">
+                <strong className="text-[var(--gf-primary)] block mb-0.5">Optimal Performance Window:</strong>
                 Your study sessions between <strong>8:00 AM and 11:00 AM</strong> average 20% higher task completion.
               </div>
 
-              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
-                <strong className="text-[#e91e8c] block mb-0.5">Course Focus Recommendation:</strong>
+              <div className="p-3 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)]">
+                <strong className="text-[var(--gf-primary)] block mb-0.5">Course Focus Recommendation:</strong>
                 <strong>MATH 202</strong> has an exam coming up in 6 days. Allocating 4 more focus hours this week will keep you on track for your 88% target.
               </div>
 
-              <div className="p-3 rounded-2xl bg-[#fff0f8] border border-[#ffd6ee]">
-                <strong className="text-[#e91e8c] block mb-0.5">Study Streak:</strong>
+              <div className="p-3 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)]">
+                <strong className="text-[var(--gf-primary)] block mb-0.5">Study Streak:</strong>
                 You are on a <strong>6-day study streak</strong>. Complete today's focus session to hit 7 consecutive days!
               </div>
             </div>

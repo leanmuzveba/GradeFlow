@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import {
   Calendar as CalendarIcon,
@@ -12,9 +12,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Download,
+  Upload,
   Trash2,
+  X,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { parseCalendarFile, CalendarImportError } from '../utils/calendarImport';
 
 export const CalendarView: React.FC = () => {
   const {
@@ -23,12 +26,16 @@ export const CalendarView: React.FC = () => {
     toggleEventCompleted,
     deleteEvent,
     setIsQuickAddEventOpen,
+    importEvents,
   } = useApp();
 
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 7, 22)); // Aug 2026
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all');
   const [filterModuleId, setFilterModuleId] = useState<string>('all');
   const [activeViewMode, setActiveViewMode] = useState<'agenda' | 'month'>('agenda');
+  const [importFeedback, setImportFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const importInputRef = useRef<HTMLInputElement>(null);
 
   // Month navigation
   const prevMonth = () => {
@@ -86,28 +93,82 @@ export const CalendarView: React.FC = () => {
     document.body.removeChild(link);
   };
 
+  const handleImportFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setIsImporting(true);
+    setImportFeedback(null);
+    try {
+      const text = await file.text();
+      const parsed = parseCalendarFile(file.name, text);
+      const count = importEvents(
+        parsed.map((p) => ({
+          title: p.title,
+          eventType: p.eventType,
+          dueAt: p.dueAt,
+          priority: p.priority,
+          isCompleted: false,
+          location: p.location,
+          notes: p.notes,
+        }))
+      );
+      setImportFeedback({
+        type: 'success',
+        message: `Imported ${count} deadline${count === 1 ? '' : 's'} from ${file.name}.`,
+      });
+    } catch (err) {
+      const message =
+        err instanceof CalendarImportError
+          ? err.message
+          : "Couldn't read that file. Please export a CSV, JSON, or .ics calendar file from your student portal and try again.";
+      setImportFeedback({ type: 'error', message });
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
     <div className="space-y-5 pb-24 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[var(--gf-card)] p-5 rounded-3xl border border-[var(--gf-border)] shadow-xs">
         <div>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#fff0f8] text-[#e91e8c] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center">
               <CalendarIcon className="w-4 h-4" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-[#1e0f3e] tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[var(--gf-text)] tracking-tight">
               Academic Calendar & Deadlines
             </h1>
           </div>
-          <p className="text-xs text-[#7b5ea7] mt-1">
+          <p className="text-xs text-[var(--gf-muted)] mt-1">
             Assignment due dates, exam schedules, and reminders
           </p>
         </div>
 
         <div className="flex items-center gap-2">
+          <input
+            ref={importInputRef}
+            type="file"
+            accept=".csv,.json,.ics,.ical,text/csv,application/json,text/calendar"
+            onChange={handleImportFile}
+            className="hidden"
+          />
+          <button
+            id="calendar-import-btn"
+            onClick={() => importInputRef.current?.click()}
+            disabled={isImporting}
+            className="px-3.5 py-2 rounded-2xl bg-[var(--gf-tint)] hover:bg-[var(--gf-border)]/40 border border-[var(--gf-border)] text-xs font-bold text-[var(--gf-muted)] hover:text-[var(--gf-primary)] flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+            title="Import deadlines from a CSV, JSON, or .ics file exported by your student portal"
+          >
+            <Upload className="w-4 h-4" />
+            <span className="hidden sm:inline">{isImporting ? 'Importing…' : 'Import Calendar'}</span>
+          </button>
+
           <button
             onClick={exportCalendarIcs}
-            className="px-3.5 py-2 rounded-2xl bg-[#fff0f8] hover:bg-[#ffd6ee]/40 border border-[#ffd6ee] text-xs font-bold text-[#7b5ea7] hover:text-[#e91e8c] flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="px-3.5 py-2 rounded-2xl bg-[var(--gf-tint)] hover:bg-[var(--gf-border)]/40 border border-[var(--gf-border)] text-xs font-bold text-[var(--gf-muted)] hover:text-[var(--gf-primary)] flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Export to Apple / Google Calendar (.ics)"
           >
             <Download className="w-4 h-4" />
@@ -124,6 +185,42 @@ export const CalendarView: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Calendar Import Feedback */}
+      {importFeedback && (
+        <div
+          className={`p-4 rounded-2xl border flex items-center justify-between gap-3 ${
+            importFeedback.type === 'success'
+              ? 'bg-emerald-50 border-emerald-200'
+              : 'bg-rose-50 border-rose-200'
+          }`}
+        >
+          <div className="flex items-center gap-3">
+            {importFeedback.type === 'success' ? (
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
+            )}
+            <p
+              className={`text-xs font-semibold ${
+                importFeedback.type === 'success' ? 'text-emerald-800' : 'text-rose-700'
+              }`}
+            >
+              {importFeedback.message}
+            </p>
+          </div>
+          <button
+            onClick={() => setImportFeedback(null)}
+            className={`p-1 rounded-full shrink-0 ${
+              importFeedback.type === 'success'
+                ? 'text-emerald-600 hover:bg-emerald-100'
+                : 'text-rose-600 hover:bg-rose-100'
+            }`}
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* Overdue Alert if applicable */}
       {overdueCount > 0 && (
@@ -143,11 +240,11 @@ export const CalendarView: React.FC = () => {
       )}
 
       {/* Filter and View Toggles */}
-      <div className="bg-white p-4 rounded-3xl border border-[#ffd6ee] shadow-xs space-y-3">
+      <div className="bg-[var(--gf-card)] p-4 rounded-3xl border border-[var(--gf-border)] shadow-xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           {/* Category Filter Pills */}
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-xs font-bold text-[#7b5ea7] flex items-center gap-1">
+            <span className="text-xs font-bold text-[var(--gf-muted)] flex items-center gap-1">
               <Filter className="w-3.5 h-3.5" /> Filter:
             </span>
             {(
@@ -159,7 +256,7 @@ export const CalendarView: React.FC = () => {
                 className={`px-3 py-1 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
                   selectedCategoryFilter === cat
                     ? 'gf-pill-active'
-                    : 'bg-[#fff0f8] text-[#7b5ea7] hover:bg-[#ffd6ee]/40'
+                    : 'bg-[var(--gf-tint)] text-[var(--gf-muted)] hover:bg-[var(--gf-border)]/40'
                 }`}
               >
                 {cat.replace('_', ' ')}
@@ -168,13 +265,13 @@ export const CalendarView: React.FC = () => {
           </div>
 
           {/* Agenda vs Month View */}
-          <div className="flex bg-[#fff0f8] p-1 rounded-2xl border border-[#ffd6ee] self-start sm:self-auto">
+          <div className="flex bg-[var(--gf-tint)] p-1 rounded-2xl border border-[var(--gf-border)] self-start sm:self-auto">
             <button
               onClick={() => setActiveViewMode('agenda')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeViewMode === 'agenda'
-                  ? 'bg-white text-[#e91e8c] shadow-xs'
-                  : 'text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs'
+                  : 'text-[var(--gf-muted)]'
               }`}
             >
               Agenda List
@@ -183,8 +280,8 @@ export const CalendarView: React.FC = () => {
               onClick={() => setActiveViewMode('month')}
               className={`px-3 py-1 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeViewMode === 'month'
-                  ? 'bg-white text-[#e91e8c] shadow-xs'
-                  : 'text-[#7b5ea7]'
+                  ? 'bg-[var(--gf-card)] text-[var(--gf-primary)] shadow-xs'
+                  : 'text-[var(--gf-muted)]'
               }`}
             >
               Month View
@@ -193,12 +290,12 @@ export const CalendarView: React.FC = () => {
         </div>
 
         {/* Module filter selector */}
-        <div className="flex items-center gap-2 pt-2 border-t border-[#fff0f8] text-xs">
-          <span className="text-[#7b5ea7] font-bold">Course:</span>
+        <div className="flex items-center gap-2 pt-2 border-t border-[var(--gf-tint)] text-xs">
+          <span className="text-[var(--gf-muted)] font-bold">Course:</span>
           <select
             value={filterModuleId}
             onChange={(e) => setFilterModuleId(e.target.value)}
-            className="px-2.5 py-1 rounded-xl bg-[#fff0f8] border border-[#ffd6ee] text-xs font-bold text-[#1e0f3e] focus:outline-none"
+            className="px-2.5 py-1 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-xs font-bold text-[var(--gf-text)] focus:outline-none"
           >
             <option value="all">All Courses</option>
             {modules.map((m) => (
@@ -212,19 +309,19 @@ export const CalendarView: React.FC = () => {
 
       {/* Month View Grid Calendar */}
       {activeViewMode === 'month' && (
-        <div className="bg-white p-5 rounded-3xl border border-[#ffd6ee] shadow-xs">
+        <div className="bg-[var(--gf-card)] p-5 rounded-3xl border border-[var(--gf-border)] shadow-xs">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-extrabold text-[#1e0f3e]">{monthName}</h3>
+            <h3 className="text-base font-extrabold text-[var(--gf-text)]">{monthName}</h3>
             <div className="flex items-center gap-1">
               <button
                 onClick={prevMonth}
-                className="p-1.5 rounded-full hover:bg-[#fff0f8] text-[#7b5ea7] hover:text-[#e91e8c]"
+                className="p-1.5 rounded-full hover:bg-[var(--gf-tint)] text-[var(--gf-muted)] hover:text-[var(--gf-primary)]"
               >
                 <ChevronLeft className="w-5 h-5" />
               </button>
               <button
                 onClick={nextMonth}
-                className="p-1.5 rounded-full hover:bg-[#fff0f8] text-[#7b5ea7] hover:text-[#e91e8c]"
+                className="p-1.5 rounded-full hover:bg-[var(--gf-tint)] text-[var(--gf-muted)] hover:text-[var(--gf-primary)]"
               >
                 <ChevronRight className="w-5 h-5" />
               </button>
@@ -232,7 +329,7 @@ export const CalendarView: React.FC = () => {
           </div>
 
           {/* Days of week */}
-          <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-[#7b5ea7] mb-2">
+          <div className="grid grid-cols-7 gap-1 text-center text-xs font-bold text-[var(--gf-muted)] mb-2">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
               <div key={d} className="py-1">
                 {d}
@@ -253,20 +350,20 @@ export const CalendarView: React.FC = () => {
                   key={idx}
                   className={`min-h-[70px] sm:min-h-[85px] p-1.5 rounded-xl border flex flex-col justify-between transition-all ${
                     isToday
-                      ? 'bg-[#fff0f8] border-[#e91e8c] font-bold'
-                      : 'bg-white border-[#ffd6ee]/60 hover:border-[#ffd6ee]'
+                      ? 'bg-[var(--gf-tint)] border-[var(--gf-primary)] font-bold'
+                      : 'bg-[var(--gf-card)] border-[var(--gf-border)]/60 hover:border-[var(--gf-border)]'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <span
                       className={`text-xs ${
-                        isToday ? 'w-5 h-5 rounded-full bg-[#e91e8c] text-white flex items-center justify-center font-extrabold text-[10px]' : 'text-[#7b5ea7]'
+                        isToday ? 'w-5 h-5 rounded-full bg-[var(--gf-primary)] text-white flex items-center justify-center font-extrabold text-[10px]' : 'text-[var(--gf-muted)]'
                       }`}
                     >
                       {dayNum}
                     </span>
                     {dayEvents.length > 0 && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#e91e8c]" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--gf-primary)]" />
                     )}
                   </div>
 
@@ -274,14 +371,14 @@ export const CalendarView: React.FC = () => {
                     {dayEvents.slice(0, 2).map((e) => (
                       <div
                         key={e.id}
-                        className="text-[9px] font-bold truncate px-1 py-0.5 rounded-md bg-[#fff0f8] border border-[#ffd6ee] text-[#e91e8c]"
+                        className="text-[9px] font-bold truncate px-1 py-0.5 rounded-md bg-[var(--gf-tint)] border border-[var(--gf-border)] text-[var(--gf-primary)]"
                         title={e.title}
                       >
                         {e.title}
                       </div>
                     ))}
                     {dayEvents.length > 2 && (
-                      <span className="text-[8px] text-[#7b5ea7] block font-bold">
+                      <span className="text-[8px] text-[var(--gf-muted)] block font-bold">
                         +{dayEvents.length - 2} more
                       </span>
                     )}
@@ -296,10 +393,10 @@ export const CalendarView: React.FC = () => {
       {/* Agenda Event Cards List */}
       <div className="space-y-3">
         {filteredEvents.length === 0 ? (
-          <div className="py-12 text-center bg-white rounded-3xl border border-dashed border-[#ffd6ee] p-6">
-            <CalendarIcon className="w-12 h-12 text-[#ffd6ee] mx-auto mb-3" />
-            <h3 className="text-base font-bold text-[#1e0f3e]">No deadlines found</h3>
-            <p className="text-xs text-[#7b5ea7] max-w-sm mx-auto mt-1 mb-4">
+          <div className="py-12 text-center bg-[var(--gf-card)] rounded-3xl border border-dashed border-[var(--gf-border)] p-6">
+            <CalendarIcon className="w-12 h-12 text-[var(--gf-border)] mx-auto mb-3" />
+            <h3 className="text-base font-bold text-[var(--gf-text)]">No deadlines found</h3>
+            <p className="text-xs text-[var(--gf-muted)] max-w-sm mx-auto mt-1 mb-4">
               Schedule your upcoming homework, project milestones, and exam dates.
             </p>
             <button
@@ -321,36 +418,36 @@ export const CalendarView: React.FC = () => {
                 key={evt.id}
                 className={`gf-3d-card p-4 flex items-center justify-between gap-4 transition-all ${
                   evt.isCompleted
-                    ? 'opacity-65 bg-gray-50'
+                    ? 'opacity-65 bg-[var(--gf-tint)]'
                     : isOverdue
                     ? 'border-rose-300'
-                    : 'hover:border-[#e91e8c]/80'
+                    : 'hover:border-[var(--gf-primary)]/80'
                 }`}
               >
                 {/* Left check and info */}
                 <div className="flex items-start gap-3.5">
                   <button
                     onClick={() => handleToggleComplete(evt.id, evt.isCompleted)}
-                    className="mt-0.5 p-1 rounded-full text-[#7b5ea7] hover:text-[#e91e8c] transition-colors cursor-pointer"
+                    className="mt-0.5 p-1 rounded-full text-[var(--gf-muted)] hover:text-[var(--gf-primary)] transition-colors cursor-pointer"
                     title={evt.isCompleted ? 'Mark as Pending' : 'Mark as Completed'}
                   >
                     {evt.isCompleted ? (
                       <CheckCircle2 className="w-5 h-5 text-emerald-500 fill-emerald-100" />
                     ) : (
-                      <Circle className="w-5 h-5 text-[#ffd6ee] hover:text-[#e91e8c]" />
+                      <Circle className="w-5 h-5 text-[var(--gf-border)] hover:text-[var(--gf-primary)]" />
                     )}
                   </button>
 
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4
-                        className={`text-sm font-bold text-[#1e0f3e] ${
-                          evt.isCompleted ? 'line-through text-[#7b5ea7]' : ''
+                        className={`text-sm font-bold text-[var(--gf-text)] ${
+                          evt.isCompleted ? 'line-through text-[var(--gf-muted)]' : ''
                         }`}
                       >
                         {evt.title}
                       </h4>
-                      <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-[#fff0f8] text-[#e91e8c]">
+                      <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)]">
                         {evt.eventType.replace('_', ' ')}
                       </span>
                       {evt.priority === 'high' && (
@@ -360,11 +457,11 @@ export const CalendarView: React.FC = () => {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-[#7b5ea7] mt-1.5 flex-wrap">
-                      <span className="font-semibold text-[#1e0f3e]">{mod?.code || 'General'}</span>
+                    <div className="flex items-center gap-3 text-xs text-[var(--gf-muted)] mt-1.5 flex-wrap">
+                      <span className="font-semibold text-[var(--gf-text)]">{mod?.code || 'General'}</span>
                       <span>•</span>
                       <div className="flex items-center gap-1">
-                        <Clock className="w-3.5 h-3.5 text-[#e91e8c]" />
+                        <Clock className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                         <span>
                           {dueDate.toLocaleDateString('en-US', {
                             weekday: 'short',
@@ -382,7 +479,7 @@ export const CalendarView: React.FC = () => {
                         <>
                           <span>•</span>
                           <div className="flex items-center gap-1">
-                            <MapPin className="w-3.5 h-3.5 text-[#e91e8c]" />
+                            <MapPin className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
                             <span>{evt.location}</span>
                           </div>
                         </>
@@ -400,7 +497,7 @@ export const CalendarView: React.FC = () => {
                           ? 'bg-rose-100 text-rose-700'
                           : daysUntil <= 1
                           ? 'bg-amber-100 text-amber-800'
-                          : 'bg-[#fff0f8] text-[#e91e8c]'
+                          : 'bg-[var(--gf-tint)] text-[var(--gf-primary)]'
                       }`}
                     >
                       {isOverdue ? 'Overdue' : daysUntil === 0 ? 'Due Today' : `${daysUntil}d left`}
@@ -413,7 +510,7 @@ export const CalendarView: React.FC = () => {
                         deleteEvent(evt.id);
                       }
                     }}
-                    className="p-1.5 rounded-full text-[#7b5ea7] hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full text-[var(--gf-muted)] hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

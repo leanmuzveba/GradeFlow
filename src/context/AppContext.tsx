@@ -42,6 +42,7 @@ interface AppContextType {
   deleteAssessment: (id: string) => void;
   events: AcademicEvent[];
   addEvent: (event: Omit<AcademicEvent, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => void;
+  importEvents: (events: Omit<AcademicEvent, 'id' | 'createdAt' | 'updatedAt' | 'userId'>[]) => number;
   updateEvent: (id: string, updates: Partial<AcademicEvent>) => void;
   toggleEventCompleted: (id: string) => void;
   deleteEvent: (id: string) => void;
@@ -88,7 +89,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [profile, setProfile] = useState<UserProfile>(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.PROFILE);
-      return saved ? JSON.parse(saved) : initialProfile;
+      const parsed = saved ? JSON.parse(saved) : initialProfile;
+      // Older builds stored theme as 'pink-signature' | 'blush-soft' | 'berry-dark'.
+      // Normalize any unrecognized value to the current default theme.
+      if (!['default', 'dark', 'moonlight'].includes(parsed.theme)) {
+        parsed.theme = 'default';
+      }
+      return parsed;
     } catch {
       return initialProfile;
     }
@@ -182,6 +189,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       console.warn(e);
     }
   }, [profile]);
+
+  // Applied to <html> (not a nested element) so the CSS variable overrides
+  // cascade to <body> and everything in the tree, including elements that
+  // render outside the app's root div.
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', profile.theme);
+  }, [profile.theme]);
 
   useEffect(() => {
     try {
@@ -303,6 +317,25 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     addNotification('Deadline Scheduled', `${newEvent.title} added to your academic calendar.`, 'deadline');
   };
 
+  const importEvents = (newEvents: Omit<AcademicEvent, 'id' | 'createdAt' | 'updatedAt' | 'userId'>[]) => {
+    if (newEvents.length === 0) return 0;
+    const now = new Date().toISOString();
+    const created: AcademicEvent[] = newEvents.map((evt, idx) => ({
+      ...evt,
+      id: `evt_import_${Date.now()}_${idx}`,
+      userId: profile.id,
+      createdAt: now,
+      updatedAt: now,
+    }));
+    setEvents((prev) => [...created, ...prev]);
+    addNotification(
+      'Calendar Imported',
+      `${created.length} deadline${created.length === 1 ? '' : 's'} imported from your calendar file.`,
+      'deadline'
+    );
+    return created.length;
+  };
+
   const updateEvent = (id: string, updates: Partial<AcademicEvent>) => {
     setEvents((prev) =>
       prev.map((e) => (e.id === id ? { ...e, ...updates, updatedAt: new Date().toISOString() } : e))
@@ -386,6 +419,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         deleteAssessment,
         events,
         addEvent,
+        importEvents,
         updateEvent,
         toggleEventCompleted,
         deleteEvent,
