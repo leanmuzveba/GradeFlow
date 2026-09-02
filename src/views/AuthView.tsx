@@ -235,10 +235,17 @@ export const AuthView: React.FC = () => {
     </button>
   );
 
-  const submitButton = (
+  // Desktop shows a trailing arrow (per the split-panel design); mobile is plain centered text.
+  const desktopSubmitButton = (
     <button type="submit" className="submit" disabled={submitting}>
       <span>{mode === 'signup' ? 'Create Account' : 'Sign In'}</span>
       <ArrowIcon />
+    </button>
+  );
+
+  const mobileSubmitButton = (
+    <button type="submit" className="submit" disabled={submitting}>
+      {mode === 'signup' ? 'Create Account' : 'Sign In'}
     </button>
   );
 
@@ -311,7 +318,7 @@ export const AuthView: React.FC = () => {
               {desktopNameField}
               {desktopEmailField}
               {desktopPasswordField}
-              {submitButton}
+              {desktopSubmitButton}
               {divider}
               {socials}
               {terms}
@@ -345,7 +352,7 @@ export const AuthView: React.FC = () => {
           {mobileEmailField}
           {mobilePasswordField}
           {mobileForgotLink}
-          {submitButton}
+          {mobileSubmitButton}
           {divider}
           {socials}
         </form>
