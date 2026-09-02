@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import {
   Sparkles,
   Download,
@@ -8,6 +9,7 @@ import {
   ShieldCheck,
   Camera,
   Palette,
+  LogOut,
 } from 'lucide-react';
 import { UserProfile } from '../types';
 
@@ -96,6 +98,7 @@ export const ProfileView: React.FC = () => {
     events,
     resetAllData,
   } = useApp();
+  const { signOut } = useAuth();
 
   const [isEditing, setIsEditing] = useState(false);
   const [displayName, setDisplayName] = useState(profile.displayName);
@@ -388,7 +391,7 @@ export const ProfileView: React.FC = () => {
           <h3 className="text-base font-extrabold text-[var(--gf-text)]">Data Management & Backup</h3>
         </div>
         <p className="text-xs text-[var(--gf-muted)] mb-4">
-          Your academic courses, assessment marks, study sessions, and deadlines are safely stored locally in your browser storage.
+          Your academic courses, assessment marks, study sessions, and deadlines are synced to your account and cached locally for offline use.
         </p>
 
         <div className="flex flex-wrap items-center gap-3">
@@ -411,6 +414,18 @@ export const ProfileView: React.FC = () => {
           >
             <RotateCcw className="w-4 h-4 text-rose-600" />
             Reset to Sample Data
+          </button>
+
+          <button
+            onClick={() => {
+              if (confirm('Sign out of GradeFlow?')) {
+                signOut();
+              }
+            }}
+            className="px-4 py-2.5 rounded-2xl bg-[var(--gf-card)] border border-[var(--gf-border)] hover:border-[var(--gf-primary)] text-xs font-bold text-[var(--gf-text)] flex items-center gap-2 shadow-xs cursor-pointer"
+          >
+            <LogOut className="w-4 h-4 text-[var(--gf-primary)]" />
+            Sign Out
           </button>
         </div>
       </div>

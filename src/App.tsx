@@ -17,6 +17,15 @@ import { AddEventModal } from './components/modals/AddEventModal';
 import { AddModuleModal } from './components/modals/AddModuleModal';
 import { motion, AnimatePresence } from 'motion/react';
 
+const AuthenticatedApp: React.FC = () => {
+  const { dataLoading } = useApp();
+  // Cloud data for this account is still being fetched (or the local-data
+  // migration is running) — hold on the splash rather than flashing an
+  // empty dashboard/modules list.
+  if (dataLoading) return <SplashScreen />;
+  return <MainContent />;
+};
+
 const MainContent: React.FC = () => {
   const { activeTab } = useApp();
 
@@ -95,7 +104,7 @@ const RootRouter: React.FC = () => {
 
   return (
     <AppProvider>
-      <MainContent />
+      <AuthenticatedApp />
     </AppProvider>
   );
 };
