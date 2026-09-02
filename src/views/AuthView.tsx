@@ -140,7 +140,8 @@ export const AuthView: React.FC = () => {
 
   const messageBanner = message && <p className={`auth-message is-${message.kind}`}>{message.text}</p>;
 
-  const nameField = mode === 'signup' && (
+  // Desktop (split-panel) fields: an explicit label row above an icon+input control.
+  const desktopNameField = mode === 'signup' && (
     <label className="field name-field">
       <span className="lbl">Full Name</span>
       <span className="control">
@@ -150,7 +151,7 @@ export const AuthView: React.FC = () => {
     </label>
   );
 
-  const emailField = (
+  const desktopEmailField = (
     <label className="field">
       <span className="lbl">Email Address</span>
       <span className="control">
@@ -167,7 +168,7 @@ export const AuthView: React.FC = () => {
     </label>
   );
 
-  const passwordField = (
+  const desktopPasswordField = (
     <label className="field">
       <span className="lbl">
         Password
@@ -189,6 +190,49 @@ export const AuthView: React.FC = () => {
         />
       </span>
     </label>
+  );
+
+  // Mobile (card) fields: icon + input as direct siblings, placeholder text
+  // doubles as the label (no separate .lbl row) — matches the app-login design.
+  const mobileNameField = mode === 'signup' && (
+    <label className="field name-field">
+      <NameIcon />
+      <input type="text" name="name" placeholder="Full Name" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
+    </label>
+  );
+
+  const mobileEmailField = (
+    <label className="field">
+      <EmailIcon />
+      <input
+        type="email"
+        name="email"
+        placeholder="Email Address"
+        autoComplete="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+    </label>
+  );
+
+  const mobilePasswordField = (
+    <label className="field">
+      <PasswordIcon />
+      <input
+        type="password"
+        name="password"
+        placeholder="Password"
+        autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </label>
+  );
+
+  const mobileForgotLink = mode === 'login' && (
+    <button type="button" className="forgot" onClick={handleForgotPassword}>
+      Forgot password?
+    </button>
   );
 
   const submitButton = (
@@ -264,9 +308,9 @@ export const AuthView: React.FC = () => {
             {messageBanner}
 
             <form className="form" onSubmit={handleSubmit}>
-              {nameField}
-              {emailField}
-              {passwordField}
+              {desktopNameField}
+              {desktopEmailField}
+              {desktopPasswordField}
               {submitButton}
               {divider}
               {socials}
@@ -297,9 +341,10 @@ export const AuthView: React.FC = () => {
         {messageBanner}
 
         <form className="form" onSubmit={handleSubmit}>
-          {nameField}
-          {emailField}
-          {passwordField}
+          {mobileNameField}
+          {mobileEmailField}
+          {mobilePasswordField}
+          {mobileForgotLink}
           {submitButton}
           {divider}
           {socials}
