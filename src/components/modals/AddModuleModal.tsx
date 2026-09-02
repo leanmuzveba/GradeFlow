@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { X, BookOpen, UserCheck, Hash, Target, Check } from 'lucide-react';
 
-const PALETTE_SWATCHES = [
+export const PALETTE_SWATCHES = [
   { hex: '#e91e8c', label: 'Berry Magenta' },
   { hex: '#ff6ec7', label: 'Vibrant Pink' },
   { hex: '#ff6ec7', label: 'Medium Rose' },
@@ -136,9 +136,9 @@ export const AddModuleModal: React.FC = () => {
           {/* Color Palette Swatches */}
           <div>
             <label className="block text-xs font-bold text-[var(--gf-text)] mb-1.5">
-              Course Color Tag (GradeFlow Palette)
+              Course Color Tag
             </label>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex flex-wrap items-center gap-2.5">
               {PALETTE_SWATCHES.map((swatch) => {
                 const isSelected = colour === swatch.hex;
                 return (
@@ -157,6 +157,32 @@ export const AddModuleModal: React.FC = () => {
                   </button>
                 );
               })}
+
+              {/* Full color wheel picker */}
+              <label
+                title="Pick any color"
+                className="w-8 h-8 rounded-full relative cursor-pointer transition-transform hover:scale-105 overflow-hidden shadow-xs"
+                style={{
+                  background:
+                    'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
+                  boxShadow: !PALETTE_SWATCHES.some((s) => s.hex === colour)
+                    ? `0 0 0 2px #fff, 0 0 0 4px ${colour}`
+                    : 'none',
+                }}
+              >
+                <input
+                  type="color"
+                  value={colour}
+                  onChange={(e) => setColour(e.target.value)}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </label>
+
+              <span
+                className="text-[11px] font-mono font-semibold text-[var(--gf-muted)] px-2 py-1 rounded-lg bg-[var(--gf-tint)] border border-[var(--gf-border)]"
+              >
+                {colour.toUpperCase()}
+              </span>
             </div>
           </div>
 

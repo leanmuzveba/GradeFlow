@@ -4,10 +4,7 @@ import { calculateModuleAverage, percentageToLetter } from '../utils/academicCal
 import {
   BookOpen,
   Plus,
-  UserCheck,
-  MapPin,
   Clock,
-  Target,
   Award,
   Timer,
   Archive,
@@ -15,8 +12,11 @@ import {
   ChevronRight,
   X,
   Calendar,
+  Check,
+  Palette,
 } from 'lucide-react';
 import { AcademicModule } from '../types';
+import { PALETTE_SWATCHES } from '../components/modals/AddModuleModal';
 
 export const ModulesView: React.FC = () => {
   const {
@@ -31,6 +31,7 @@ export const ModulesView: React.FC = () => {
     setSelectedModuleIdForDetail,
     toggleArchiveModule,
     deleteModule,
+    updateModule,
     setActiveTab,
     setFocusTimerAutoModuleId,
   } = useApp();
@@ -136,15 +137,11 @@ export const ModulesView: React.FC = () => {
           </div>
         ) : (
           filteredModules.map((mod) => {
-            const modMarks = assessments.filter((a) => a.moduleId === mod.id);
-            const avg = calculateModuleAverage(modMarks);
-            const letter = percentageToLetter(avg);
             const modSessions = studySessions.filter(
               (s) => s.moduleId === mod.id && s.status === 'completed'
             );
             const totalSecs = modSessions.reduce((sum, s) => sum + s.durationSeconds, 0);
             const hours = Math.round((totalSecs / 3600) * 10) / 10;
-            const completedWeight = modMarks.reduce((sum, a) => sum + (a.weighting || 0), 0);
 
             return (
               <div
@@ -158,66 +155,29 @@ export const ModulesView: React.FC = () => {
                   style={{ backgroundColor: mod.colour }}
                 />
 
-                <div>
-                  {/* Top row */}
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center text-white font-extrabold text-[10px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
-                        style={{ backgroundColor: mod.colour }}
-                      >
-                        <span className="truncate w-full">{mod.code}</span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)]">
-                          {mod.academicPeriod} • {mod.creditHours} Credits
-                        </span>
-                        <h3 className="text-base font-bold text-[var(--gf-text)] group-hover:text-[var(--gf-primary)] transition-colors">
-                          {mod.name}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <div className="text-2xl font-extrabold text-[var(--gf-text)]">
-                        {avg > 0 ? `${avg.toFixed(1)}%` : '--'}
-                      </div>
-                      <span className="text-[11px] font-extrabold text-[var(--gf-primary)] bg-[var(--gf-tint)] rounded-full px-2 py-0.5 inline-block mt-0.5">
-                        {avg > 0 ? `Grade ${letter}` : 'No Marks'}
-                      </span>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-14 h-14 shrink-0 rounded-2xl flex items-center justify-center text-white font-extrabold text-[10px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
+                    style={{ backgroundColor: mod.colour }}
+                  >
+                    <span className="truncate w-full">{mod.code}</span>
                   </div>
-
-                  {/* Metadata chips */}
-                  <div className="mt-4 grid grid-cols-2 gap-2 text-xs text-[var(--gf-muted)]">
-                    {mod.instructor && (
-                      <div className="flex items-center gap-1.5 truncate">
-                        <UserCheck className="w-3.5 h-3.5 text-[var(--gf-primary)] shrink-0" />
-                        <span className="truncate">{mod.instructor}</span>
-                      </div>
-                    )}
-                    {mod.room && (
-                      <div className="flex items-center gap-1.5 truncate">
-                        <MapPin className="w-3.5 h-3.5 text-[var(--gf-primary)] shrink-0" />
-                        <span className="truncate">{mod.room}</span>
-                      </div>
-                    )}
-                    <div className="flex items-center gap-1.5">
+                  <div>
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--gf-muted)]">
+                      {mod.code}
+                    </span>
+                    <h3 className="text-base font-bold text-[var(--gf-text)] group-hover:text-[var(--gf-primary)] transition-colors">
+                      {mod.name}
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-1 text-xs text-[var(--gf-muted)]">
                       <Clock className="w-3.5 h-3.5 text-[var(--gf-primary)] shrink-0" />
                       <span>{hours} hrs studied</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <Target className="w-3.5 h-3.5 text-[var(--gf-primary)] shrink-0" />
-                      <span>Target: {mod.targetGrade || 85}%</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Action Footer */}
-                <div className="mt-4 pt-3 border-t border-[var(--gf-border)]/40 flex items-center justify-between">
-                  <div className="text-[11px] font-semibold text-[var(--gf-muted)]">
-                    {modMarks.length} assessment{modMarks.length === 1 ? '' : 's'} ({completedWeight}% accounted)
-                  </div>
+                <div className="mt-4 pt-3 border-t border-[var(--gf-border)]/40 flex items-center justify-end">
                   <div className="flex items-center gap-1 text-xs font-bold text-[var(--gf-primary)] group-hover:translate-x-1 transition-transform">
                     <span>Course Details</span>
                     <ChevronRight className="w-4 h-4" />
@@ -312,6 +272,56 @@ export const ModulesView: React.FC = () => {
                 >
                   <Calendar className="w-4 h-4" /> Add Deadline
                 </button>
+              </div>
+
+              {/* Course Color */}
+              <div>
+                <h4 className="text-xs font-bold text-[var(--gf-text)] uppercase tracking-wider flex items-center gap-1.5 mb-2">
+                  <Palette className="w-4 h-4 text-[var(--gf-primary)]" />
+                  Course Color
+                </h4>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  {PALETTE_SWATCHES.map((swatch) => {
+                    const isSelected = selectedModule.colour === swatch.hex;
+                    return (
+                      <button
+                        key={swatch.hex}
+                        type="button"
+                        title={swatch.label}
+                        onClick={() => updateModule(selectedModule.id, { colour: swatch.hex })}
+                        className="w-8 h-8 rounded-full flex items-center justify-center transition-transform hover:scale-105 relative cursor-pointer"
+                        style={{
+                          backgroundColor: swatch.hex,
+                          boxShadow: isSelected ? `0 0 0 2px var(--gf-card), 0 0 0 4px ${swatch.hex}` : 'none',
+                        }}
+                      >
+                        {isSelected && <Check className="w-4 h-4 text-white drop-shadow-xs" />}
+                      </button>
+                    );
+                  })}
+
+                  <label
+                    title="Pick any color"
+                    className="w-8 h-8 rounded-full relative cursor-pointer transition-transform hover:scale-105 overflow-hidden shadow-xs"
+                    style={{
+                      background: 'conic-gradient(red, yellow, lime, cyan, blue, magenta, red)',
+                      boxShadow: !PALETTE_SWATCHES.some((s) => s.hex === selectedModule.colour)
+                        ? `0 0 0 2px var(--gf-card), 0 0 0 4px ${selectedModule.colour}`
+                        : 'none',
+                    }}
+                  >
+                    <input
+                      type="color"
+                      value={selectedModule.colour}
+                      onChange={(e) => updateModule(selectedModule.id, { colour: e.target.value })}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                  </label>
+
+                  <span className="text-[11px] font-mono font-semibold text-[var(--gf-muted)] px-2 py-1 rounded-lg bg-[var(--gf-tint)] border border-[var(--gf-border)]">
+                    {selectedModule.colour.toUpperCase()}
+                  </span>
+                </div>
               </div>
 
               {/* Assessment Marks List */}
