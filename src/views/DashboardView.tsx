@@ -30,7 +30,6 @@ export const DashboardView: React.FC = () => {
     studySessions,
     studyGoal,
     setActiveTab,
-    setSelectedModuleIdForDetail,
     setIsQuickAddMarkOpen,
     setIsQuickAddEventOpen,
   } = useApp();
@@ -305,8 +304,8 @@ export const DashboardView: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid: Upcoming Deadlines & Active Courses */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      {/* Upcoming Deadlines */}
+      <div className="grid grid-cols-1 gap-5">
         {/* Section: Upcoming Deadlines */}
         <div className="gf-3d-card p-5 flex flex-col justify-between">
           <div>
@@ -389,85 +388,6 @@ export const DashboardView: React.FC = () => {
           >
             <Plus className="w-4 h-4" />
             Add Deadline or Event
-          </button>
-        </div>
-
-        {/* Section: Active Modules Performance */}
-        <div className="gf-3d-card p-5 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--gf-border)]/60">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-[var(--gf-tint)] text-[var(--gf-primary)] flex items-center justify-center">
-                  <BookOpen className="w-4 h-4" />
-                </div>
-                <h3 className="text-sm font-bold text-[var(--gf-text)]">Active Modules</h3>
-              </div>
-              <button
-                onClick={() => setActiveTab('modules')}
-                className="text-xs font-bold text-[var(--gf-primary)] hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                All Courses ({activeModules.length})
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-
-            {/* Modules List */}
-            <div className="mt-3 space-y-2.5">
-              {activeModules.map((mod) => {
-                const modMarks = assessments.filter((a) => a.moduleId === mod.id);
-                const avg = calculateModuleAverage(modMarks);
-                const modSessions = studySessions.filter((s) => s.moduleId === mod.id && s.status === 'completed');
-                const totalSeconds = modSessions.reduce((sum, s) => sum + s.durationSeconds, 0);
-                const studyHours = Math.round((totalSeconds / 3600) * 10) / 10;
-
-                return (
-                  <div
-                    key={mod.id}
-                    onClick={() => {
-                      setSelectedModuleIdForDetail(mod.id);
-                      setActiveTab('modules');
-                    }}
-                    className="p-3 rounded-2xl bg-[var(--gf-card)] border border-[var(--gf-border)] hover:border-[var(--gf-primary)] transition-all flex items-center justify-between gap-3 shadow-xs cursor-pointer group"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div
-                        className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-white font-extrabold text-[9px] leading-none tracking-tight text-center px-1 overflow-hidden shadow-xs"
-                        style={{ backgroundColor: mod.colour }}
-                      >
-                        <span className="truncate w-full">{mod.code.split(' ')[0] || mod.code.slice(0, 3)}</span>
-                      </div>
-                      <div className="truncate">
-                        <h4 className="text-xs font-bold text-[var(--gf-text)] group-hover:text-[var(--gf-primary)] transition-colors truncate">
-                          {mod.name}
-                        </h4>
-                        <div className="flex items-center gap-2 text-[11px] text-[var(--gf-muted)] mt-0.5">
-                          <span>{mod.code}</span>
-                          <span>•</span>
-                          <span>{studyHours}h studied</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right shrink-0">
-                      <div className="text-sm font-extrabold text-[var(--gf-text)]">
-                        {avg > 0 ? `${avg.toFixed(1)}%` : '--'}
-                      </div>
-                      <span className="text-[10px] font-bold text-[var(--gf-primary)]">
-                        {avg > 0 ? percentageToLetter(avg) : 'No marks'}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <button
-            onClick={() => setActiveTab('modules')}
-            className="mt-4 w-full py-2.5 rounded-2xl border border-dashed border-[var(--gf-border)] hover:border-[var(--gf-primary)] hover:bg-[var(--gf-tint)] text-xs font-bold text-[var(--gf-primary)] flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-          >
-            <BookOpen className="w-4 h-4" />
-            Manage All Modules & Syllabus
           </button>
         </div>
       </div>
