@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { SplashScreen } from './views/SplashScreen';
+import { AuthView } from './views/AuthView';
 import { HeaderBar } from './components/HeaderBar';
 import { BottomNavBar } from './components/BottomNavBar';
 import { DashboardView } from './views/DashboardView';
@@ -69,10 +72,38 @@ const MainContent: React.FC = () => {
   );
 };
 
-export default function App() {
+// Splash plays its full entrance animation (~2.3s) even if the session check
+// resolves sooner, so the logo animation never gets cut short.
+const MIN_SPLASH_MS = 2300;
+
+const RootRouter: React.FC = () => {
+  const { session, loading } = useAuth();
+  const [minSplashElapsed, setMinSplashElapsed] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setMinSplashElapsed(true), MIN_SPLASH_MS);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading || !minSplashElapsed) {
+    return <SplashScreen />;
+  }
+
+  if (!session) {
+    return <AuthView />;
+  }
+
   return (
     <AppProvider>
       <MainContent />
     </AppProvider>
+  );
+};
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <RootRouter />
+    </AuthProvider>
   );
 }

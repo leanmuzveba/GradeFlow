@@ -1,0 +1,161 @@
+/* Splash screen — scoped under .gf-splash so its custom properties never
+   collide with the app's live theme tokens (--gf-bg etc. in index.css). */
+.gf-splash {
+  --splash-magenta:   #e12b83;
+  --splash-pink:      #ef8fbd;
+  --splash-pale:      #f4e9e7;
+  --splash-pale-pink: #fce8f4;
+  --splash-ink:       #6b7280;
+  --splash-bg:        #ffffff;
+  --splash-radius:    12px;
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--splash-bg);
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  padding: 24px;
+}
+
+/* ---------- LOGO ---------- */
+.gf-splash .logo {
+  position: relative;
+  width: 170px;
+  height: 169px;
+  margin-bottom: 34px;
+}
+
+.gf-splash .tile {
+  position: absolute;
+  border-radius: var(--splash-radius);
+  opacity: 0;
+  animation: 1.15s cubic-bezier(.22,.72,.26,1) forwards;
+  will-change: transform, opacity;
+}
+
+.gf-splash .tile.tl {
+  left: 0;  top: 0;   width: 70px; height: 49px;
+  background: var(--splash-pale);
+  animation-name: gf-splash-in-top;    animation-delay: .00s;
+}
+.gf-splash .tile.tr {
+  left: 84px; top: 0;  width: 86px; height: 78px;
+  background: var(--splash-magenta);
+  animation-name: gf-splash-in-right;  animation-delay: .12s;
+}
+.gf-splash .tile.br {
+  left: 85px; top: 93px; width: 70px; height: 76px;
+  background: var(--splash-pale-pink);
+  animation-name: gf-splash-in-bottom; animation-delay: .24s;
+}
+.gf-splash .tile.bl {
+  left: 0;  top: 64px; width: 70px; height: 105px;
+  background: var(--splash-pink);
+  animation-name: gf-splash-in-left;   animation-delay: .36s;
+}
+
+@keyframes gf-splash-in-top {
+  0%   { opacity: 0; transform: translate(120px, -300px) rotate(300deg) scale(.35); }
+  60%  { opacity: 1; transform: translate(-14px,  9px)   rotate(-22deg) scale(1.02); }
+  100% { opacity: 1; transform: translate(0,0)           rotate(0)      scale(1); }
+}
+@keyframes gf-splash-in-right {
+  0%   { opacity: 0; transform: translate(320px, -120px) rotate(300deg) scale(.35); }
+  60%  { opacity: 1; transform: translate(-11px, 14px)   rotate(-20deg) scale(1.02); }
+  100% { opacity: 1; transform: translate(0,0)           rotate(0)      scale(1); }
+}
+@keyframes gf-splash-in-bottom {
+  0%   { opacity: 0; transform: translate(-120px, 300px) rotate(300deg) scale(.35); }
+  60%  { opacity: 1; transform: translate(14px, -11px)   rotate(-20deg) scale(1.02); }
+  100% { opacity: 1; transform: translate(0,0)           rotate(0)      scale(1); }
+}
+@keyframes gf-splash-in-left {
+  0%   { opacity: 0; transform: translate(-320px, 120px) rotate(300deg) scale(.35); }
+  60%  { opacity: 1; transform: translate(14px, -11px)   rotate(-20deg) scale(1.02); }
+  100% { opacity: 1; transform: translate(0,0)           rotate(0)      scale(1); }
+}
+
+/* ---------- WORDMARK ---------- */
+.gf-splash .wordmark {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: .5px;
+  line-height: 1;
+  margin: 0;
+  opacity: 0;
+  animation: gf-splash-rise 0.7s ease-out 1.35s forwards;
+}
+.gf-splash .wordmark .grade { color: var(--splash-magenta); }
+.gf-splash .wordmark .flow  { color: var(--splash-pink); font-weight: 400; }
+
+.gf-splash .tagline {
+  margin: 14px 0 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--splash-ink);
+  opacity: 0;
+  animation: gf-splash-rise 0.7s ease-out 1.6s forwards;
+}
+.gf-splash .tagline .in-flow { color: var(--splash-pink); font-style: italic; font-weight: 500; }
+
+@keyframes gf-splash-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- LOADING BAR ---------- */
+.gf-splash .loader {
+  position: absolute;
+  bottom: 80px;
+  width: min(200px, 60%);
+  height: 6px;
+  border-radius: 999px;
+  background: #f1e4ea;
+  overflow: hidden;
+  opacity: 0;
+  animation: gf-splash-rise 0.6s ease-out 1.85s forwards;
+}
+.gf-splash .loader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 45%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--splash-pink), var(--splash-magenta));
+  animation: gf-splash-slide 1.4s ease-in-out 2.1s infinite;
+}
+@keyframes gf-splash-slide {
+  0%   { transform: translateX(-110%); }
+  100% { transform: translateX(360%); }
+}
+
+.gf-splash .version {
+  position: absolute;
+  bottom: 40px;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #b9a7ae;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: gf-splash-rise 0.6s ease-out 2.0s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-splash .tile,
+  .gf-splash .wordmark,
+  .gf-splash .tagline,
+  .gf-splash .loader,
+  .gf-splash .version {
+    animation-duration: .01ms;
+    animation-delay: 0s;
+    opacity: 1;
+  }
+  .gf-splash .tile { transform: none; }
+  .gf-splash .loader::before { animation: none; width: 70%; }
+}
