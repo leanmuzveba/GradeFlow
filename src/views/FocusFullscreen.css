@@ -1,0 +1,179 @@
+/* Fullscreen focus countdown — scoped under .gf-fs so its theme variables
+   never touch the app's live --gf-* tokens (see AuthView.css / SplashScreen.css
+   for the same pattern). Theme is switched by swapping [data-fs-theme] on the
+   root element, not by re-mounting, so it can't interrupt the running clock. */
+.gf-fs {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  padding: max(20px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(20px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  transition: background-color .25s ease, color .25s ease;
+}
+
+/* ---- Theme presets ---- */
+.gf-fs[data-fs-theme="mono"] {
+  --fs-bg: #000000;
+  --fs-tile: #c9c9c9;
+  --fs-ink: #111111;
+  --fs-accent: #ffffff;
+  --fs-muted: #8a8a8a;
+  --fs-chip: #1a1a1a;
+}
+.gf-fs[data-fs-theme="pink"] {
+  --fs-bg: #fff8fc;
+  --fs-tile: #ffd6ee;
+  --fs-ink: #1e0f3e;
+  --fs-accent: #e91e8c;
+  --fs-muted: #7b5ea7;
+  --fs-chip: #fff0f8;
+}
+.gf-fs[data-fs-theme="moonlight"] {
+  --fs-bg: #e7ebee;
+  --fs-tile: #dde7ea;
+  --fs-ink: #0f3d4a;
+  --fs-accent: #0d9488;
+  --fs-muted: #3d7080;
+  --fs-chip: #d4e0e4;
+}
+
+.gf-fs {
+  background: var(--fs-bg);
+  color: var(--fs-accent);
+}
+
+/* ---- Header ---- */
+.gf-fs .fs-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--fs-accent);
+}
+.gf-fs .fs-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--fs-accent); flex: none; }
+.gf-fs .fs-header svg { width: 16px; height: 16px; color: var(--fs-muted); }
+
+.gf-fs .fs-close {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top));
+  left: max(20px, env(safe-area-inset-left));
+  width: 38px; height: 38px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--fs-chip);
+  color: var(--fs-accent);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.gf-fs .fs-close svg { width: 18px; height: 18px; }
+
+/* ---- Digit stage ---- */
+.gf-fs .fs-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.gf-fs .fs-digits {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 2vw, 16px);
+}
+.gf-fs .fs-group { display: flex; gap: clamp(3px, 1vw, 8px); }
+
+.gf-fs .fs-digit {
+  position: relative;
+  width: clamp(38px, 12vw, 96px);
+  height: clamp(60px, 19vw, 152px);
+  border-radius: clamp(8px, 1.6vw, 16px);
+  background: var(--fs-tile);
+  color: var(--fs-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(32px, 11vw, 88px);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  flex: none;
+}
+.gf-fs .fs-digit::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 50%;
+  height: clamp(1.5px, 0.3vw, 3px);
+  background: var(--fs-bg);
+  transform: translateY(-50%);
+  opacity: .55;
+}
+
+/* ---- Session label ---- */
+.gf-fs .fs-label {
+  text-align: center;
+  margin-top: clamp(14px, 3vw, 28px);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+}
+
+/* ---- Right-side control rail ---- */
+.gf-fs .fs-rail {
+  position: absolute;
+  top: 50%;
+  right: max(20px, env(safe-area-inset-right));
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.gf-fs .fs-rail-btn {
+  width: 46px; height: 46px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--fs-chip);
+  color: var(--fs-accent);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: transform .12s ease;
+}
+.gf-fs .fs-rail-btn:active { transform: scale(.94); }
+.gf-fs .fs-rail-btn svg { width: 19px; height: 19px; }
+.gf-fs .fs-rail-btn.is-play { background: var(--fs-accent); color: var(--fs-bg); }
+
+/* ---- Theme picker sheet ---- */
+.gf-fs .fs-theme-sheet {
+  position: absolute;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 999px;
+  background: var(--fs-chip);
+}
+.gf-fs .fs-theme-swatch {
+  width: 34px; height: 34px;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.gf-fs .fs-theme-swatch.is-active { border-color: var(--fs-accent); }
+.gf-fs .fs-theme-swatch svg { width: 14px; height: 14px; }
+
+@media (max-width: 420px) {
+  .gf-fs .fs-rail { right: 12px; gap: 10px; }
+  .gf-fs .fs-rail-btn { width: 40px; height: 40px; }
+}

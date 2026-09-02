@@ -17,8 +17,10 @@ import {
   BarChart3,
   Pencil,
   Trash2,
+  Maximize2,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { FocusFullscreen } from './FocusFullscreen';
 
 export const FocusView: React.FC = () => {
   const {
@@ -45,6 +47,7 @@ export const FocusView: React.FC = () => {
   const [editModuleId, setEditModuleId] = useState<string>('');
   const [editMinutes, setEditMinutes] = useState<number>(0);
   const [editNotes, setEditNotes] = useState<string>('');
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Forces a re-render every second while running so the displayed clock moves;
   // the actual elapsed time is always derived from real timestamps below, so it
@@ -82,6 +85,7 @@ export const FocusView: React.FC = () => {
       setFocusTimer((prev) => ({ ...prev, isRunning: false, runStartedAt: null, accumulatedSeconds: durationSecs }));
       setCompletedSecondsToSave(durationSecs);
       setIsCompletionModalOpen(true);
+      setIsFullscreen(false);
       soundEngine.playChime(true);
       confetti({
         particleCount: 70,
@@ -137,6 +141,7 @@ export const FocusView: React.FC = () => {
     setFocusTimer((prev) => ({ ...prev, isRunning: false, runStartedAt: null }));
     setCompletedSecondsToSave(elapsedNow);
     setIsCompletionModalOpen(true);
+    setIsFullscreen(false);
   };
 
   const handleSaveCompletedSession = () => {
@@ -435,6 +440,15 @@ export const FocusView: React.FC = () => {
           >
             <CheckCircle2 className="w-5 h-5" />
           </button>
+
+          <button
+            onClick={() => setIsFullscreen(true)}
+            className="p-3.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-[var(--gf-muted)] hover:text-[var(--gf-primary)] transition-all cursor-pointer active:scale-95 shadow-xs"
+            title="Enlarge Timer"
+            aria-label="Enlarge timer to fullscreen"
+          >
+            <Maximize2 className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Ambient Sound Bar */}
@@ -645,6 +659,18 @@ export const FocusView: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Fullscreen enlarged timer */}
+      {isFullscreen && (
+        <FocusFullscreen
+          timeSeconds={mode === 'stopwatch' ? stopwatchSeconds : timeLeftSeconds}
+          isRunning={isRunning}
+          sessionLabel={currentModule ? currentModule.name : 'General Study'}
+          onToggle={handleToggleTimer}
+          onFinish={handleFinishEarly}
+          onClose={() => setIsFullscreen(false)}
+        />
+      )}
 
       {/* Completion Modal */}
       {isCompletionModalOpen && (
