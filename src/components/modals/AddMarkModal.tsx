@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { AssessmentType } from '../../types';
-import { X, Award, Percent, Calculator, Calendar, BookOpen, FileText } from 'lucide-react';
+import { X, Award, Calculator, Calendar, BookOpen } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { ASSESSMENT_TYPE_LABELS, ASSESSMENT_TYPE_WEIGHTS } from '../../utils/academicCalculations';
+
+const MARK_TYPES: AssessmentType[] = ['test', 'assignment', 'exam'];
 
 export const AddMarkModal: React.FC = () => {
   const {
@@ -11,20 +14,19 @@ export const AddMarkModal: React.FC = () => {
     modules,
     addAssessment,
     selectedModuleIdForDetail,
+    activeSemester,
   } = useApp();
 
   const [moduleId, setModuleId] = useState<string>('');
-  const [name, setName] = useState<string>('');
+  const [semester, setSemester] = useState<1 | 2>(activeSemester);
   const [assessmentType, setAssessmentType] = useState<AssessmentType>('assignment');
   const [inputMode, setInputMode] = useState<'raw' | 'percentage'>('raw');
   const [score, setScore] = useState<string>('85');
   const [totalScore, setTotalScore] = useState<string>('100');
   const [percentage, setPercentage] = useState<number>(85);
-  const [weighting, setWeighting] = useState<string>('15');
   const [assessmentDate, setAssessmentDate] = useState<string>(
     new Date().toISOString().split('T')[0]
   );
-  const [notes, setNotes] = useState<string>('');
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -36,6 +38,10 @@ export const AddMarkModal: React.FC = () => {
       }
     }
   }, [modules, selectedModuleIdForDetail, isQuickAddMarkOpen]);
+
+  useEffect(() => {
+    if (isQuickAddMarkOpen) setSemester(activeSemester);
+  }, [isQuickAddMarkOpen, activeSemester]);
 
   // Recalculate percentage when raw scores change
   useEffect(() => {
@@ -56,12 +62,12 @@ export const AddMarkModal: React.FC = () => {
 
   if (!isQuickAddMarkOpen) return null;
 
+  const selectedModule = modules.find((m) => m.id === moduleId);
+  // e.g. "INS622 Assignment, S2"
+  const name = `${selectedModule?.code || selectedModule?.name || 'Module'} ${ASSESSMENT_TYPE_LABELS[assessmentType]}, S${semester}`;
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError('Please enter an assessment title.');
-      return;
-    }
     if (!moduleId) {
       setError('Please select a course / module.');
       return;
@@ -69,7 +75,6 @@ export const AddMarkModal: React.FC = () => {
 
     const s = parseFloat(score);
     const t = inputMode === 'raw' ? parseFloat(totalScore) : 100;
-    const w = weighting ? parseFloat(weighting) : undefined;
 
     if (isNaN(percentage) || percentage < 0 || percentage > 100) {
       setError('Percentage must be between 0% and 100%.');
@@ -78,14 +83,14 @@ export const AddMarkModal: React.FC = () => {
 
     addAssessment({
       moduleId,
-      name: name.trim(),
+      name,
       assessmentType,
       score: isNaN(s) ? percentage : s,
       totalScore: isNaN(t) ? 100 : t,
       percentage,
-      weighting: w,
+      weighting: ASSESSMENT_TYPE_WEIGHTS[assessmentType],
+      semester,
       assessmentDate,
-      notes: notes.trim() || undefined,
     });
 
     if (percentage >= 90) {
@@ -98,8 +103,6 @@ export const AddMarkModal: React.FC = () => {
     }
 
     // Reset and close
-    setName('');
-    setNotes('');
     setError('');
     setIsQuickAddMarkOpen(false);
   };
@@ -108,7 +111,7 @@ export const AddMarkModal: React.FC = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
       <div className="bg-[var(--gf-card)] rounded-3xl w-full max-w-lg shadow-2xl border border-[var(--gf-border)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[#fff5f9] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[var(--gf-card)] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
               <Award className="w-4 h-4" />
@@ -154,20 +157,23 @@ export const AddMarkModal: React.FC = () => {
             </select>
           </div>
 
-          {/* Assessment Title */}
+          {/* Semester */}
           <div>
-            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
-              Assessment Name *
-            </label>
-            <input
-              id="mark-name-input"
-              type="text"
-              required
-              placeholder="e.g. Midterm Exam 1, Lab 4, Essay Final"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-2xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-            />
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1.5">Semester</label>
+            <div className="flex bg-[var(--gf-tint)] p-1 rounded-2xl border border-[var(--gf-border)]">
+              {([1, 2] as const).map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setSemester(n)}
+                  className={`flex-1 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    semester === n ? 'bg-[var(--gf-primary)] text-white shadow-xs' : 'text-[var(--gf-muted)]'
+                  }`}
+                >
+                  Semester {n}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Assessment Type Pills */}
@@ -176,23 +182,24 @@ export const AddMarkModal: React.FC = () => {
               Assessment Type
             </label>
             <div className="flex flex-wrap gap-1.5">
-              {(
-                ['assignment', 'test', 'exam', 'project', 'quiz', 'lab', 'custom'] as AssessmentType[]
-              ).map((type) => (
+              {MARK_TYPES.map((type) => (
                 <button
                   key={type}
                   type="button"
                   onClick={() => setAssessmentType(type)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-all cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                     assessmentType === type
                       ? 'gf-pill-active'
                       : 'bg-[var(--gf-tint)] text-[var(--gf-muted)] hover:bg-[var(--gf-border)]/50'
                   }`}
                 >
-                  {type}
+                  {ASSESSMENT_TYPE_LABELS[type]} · {ASSESSMENT_TYPE_WEIGHTS[type]}%
                 </button>
               ))}
             </div>
+            <p className="text-[11px] text-[var(--gf-muted)] mt-2">
+              Saved as <strong className="text-[var(--gf-text)]">{name}</strong>
+            </p>
           </div>
 
           {/* Score Conversion Box */}
@@ -291,53 +298,18 @@ export const AddMarkModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Weighting and Date */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-                <Percent className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-                Weight in Course (%)
-              </label>
-              <input
-                id="mark-weight-input"
-                type="number"
-                step="0.5"
-                min="0"
-                max="100"
-                placeholder="e.g. 20"
-                value={weighting}
-                onChange={(e) => setWeighting(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-                Date Received
-              </label>
-              <input
-                id="mark-date-input"
-                type="date"
-                value={assessmentDate}
-                onChange={(e) => setAssessmentDate(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
-            </div>
-          </div>
-
-          {/* Notes */}
+          {/* Date */}
           <div>
             <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-              <FileText className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-              Feedback / Reflection Notes (Optional)
+              <Calendar className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
+              Date Received
             </label>
-            <textarea
-              rows={2}
-              placeholder="What went well? Topics to review next time..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-xs text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)] resize-none"
+            <input
+              id="mark-date-input"
+              type="date"
+              value={assessmentDate}
+              onChange={(e) => setAssessmentDate(e.target.value)}
+              className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
             />
           </div>
 

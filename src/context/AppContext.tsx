@@ -75,6 +75,8 @@ interface AppContextType {
   setActiveTab: (tab: ActiveTab) => void;
   selectedModuleIdForDetail: string | null;
   setSelectedModuleIdForDetail: (id: string | null) => void;
+  activeSemester: 1 | 2;
+  setActiveSemester: (semester: 1 | 2) => void;
   isQuickAddMarkOpen: boolean;
   setIsQuickAddMarkOpen: (open: boolean) => void;
   isQuickAddEventOpen: boolean;
@@ -237,6 +239,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
   const [selectedModuleIdForDetail, setSelectedModuleIdForDetail] = useState<string | null>(null);
+  // Semester tab on the marks screen; until picked, follows the profile's "Current Semester".
+  const [pickedSemester, setActiveSemester] = useState<1 | 2 | null>(null);
+  const activeSemester = pickedSemester ?? (/semester\s*2/i.test(profile.semester) ? 2 : 1);
   const [isQuickAddMarkOpen, setIsQuickAddMarkOpen] = useState(false);
   const [isQuickAddEventOpen, setIsQuickAddEventOpen] = useState(false);
   const [isQuickAddModuleOpen, setIsQuickAddModuleOpen] = useState(false);
@@ -754,6 +759,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setActiveTab,
         selectedModuleIdForDetail,
         setSelectedModuleIdForDetail,
+        activeSemester,
+        setActiveSemester,
         isQuickAddMarkOpen,
         setIsQuickAddMarkOpen,
         isQuickAddEventOpen,
