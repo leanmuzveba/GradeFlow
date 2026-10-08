@@ -25,6 +25,12 @@ export const MarksView: React.FC = () => {
   const activeModules = modules.filter((m) => !m.isArchived);
   const marksFor = (sem: 1 | 2) => assessments.filter((a) => (a.semester ?? 1) === sem);
   const semesterMarks = marksFor(activeSemester);
+  // A module shows on this tab if it's set to this semester, isn't set to the
+  // other one ("Full Year" / older free-text periods), or already has marks here.
+  const otherSemester = `Semester ${activeSemester === 1 ? 2 : 1}`;
+  const tabModules = activeModules.filter(
+    (m) => m.academicPeriod !== otherSemester || semesterMarks.some((a) => a.moduleId === m.id)
+  );
 
   const overallAverage = calculateOverallAverage(modules, assessments);
   const sem1Average = calculateOverallAverage(modules, marksFor(1));
@@ -103,12 +109,12 @@ export const MarksView: React.FC = () => {
           </div>
         </div>
 
-        {activeModules.length === 0 ? (
+        {tabModules.length === 0 ? (
           <div className="py-12 text-center bg-[var(--gf-card)] rounded-3xl border border-dashed border-[var(--gf-border)] p-6">
             <BookOpen className="w-12 h-12 text-[var(--gf-border)] mx-auto mb-3" />
-            <h3 className="text-base font-bold text-[var(--gf-text)]">No modules yet</h3>
+            <h3 className="text-base font-bold text-[var(--gf-text)]">No modules for Semester {activeSemester} yet</h3>
             <p className="text-xs text-[var(--gf-muted)] max-w-sm mx-auto mt-1 mb-4">
-              Add a module first, then tap it here to log marks.
+              Add a module for this semester (or set an existing one's semester in Modules), then tap it here to log marks.
             </p>
             <button
               onClick={() => setIsQuickAddModuleOpen(true)}
@@ -118,7 +124,7 @@ export const MarksView: React.FC = () => {
             </button>
           </div>
         ) : (
-          activeModules.map((mod) => {
+          tabModules.map((mod) => {
             const modMarks = semesterMarks.filter((a) => a.moduleId === mod.id);
             const avg = calculateModuleAverage(modMarks);
             return (
