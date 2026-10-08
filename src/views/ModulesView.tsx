@@ -16,7 +16,7 @@ import {
   Palette,
 } from 'lucide-react';
 import { AcademicModule } from '../types';
-import { PALETTE_SWATCHES } from '../components/modals/AddModuleModal';
+import { PALETTE_SWATCHES, MODULE_SEMESTERS } from '../components/modals/AddModuleModal';
 
 export const ModulesView: React.FC = () => {
   const {
@@ -270,6 +270,27 @@ export const ModulesView: React.FC = () => {
                 >
                   <Calendar className="w-4 h-4" /> Add Deadline
                 </button>
+              </div>
+
+              {/* Semester */}
+              <div>
+                <h4 className="text-xs font-bold text-[var(--gf-text)] uppercase tracking-wider mb-2">Semester</h4>
+                <div className="flex max-w-xs bg-[var(--gf-tint)] p-1 rounded-xl border border-[var(--gf-border)]">
+                  {MODULE_SEMESTERS.map((p) => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => updateModule(selectedModule.id, { academicPeriod: p.value })}
+                      className={`flex-1 py-1 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                        selectedModule.academicPeriod === p.value
+                          ? 'bg-[var(--gf-primary)] text-white shadow-xs'
+                          : 'text-[var(--gf-muted)]'
+                      }`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* Course Color */}

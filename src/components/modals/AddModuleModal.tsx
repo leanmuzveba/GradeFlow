@@ -13,6 +13,13 @@ export const PALETTE_SWATCHES = [
   { hex: '#ff758c', label: 'Coral Rose' },
 ];
 
+/** Stored in module.academicPeriod; "Full Year" modules show under both semester tabs. */
+export const MODULE_SEMESTERS = [
+  { value: 'Semester 1', label: '1' },
+  { value: 'Semester 2', label: '2' },
+  { value: 'Full Year', label: 'Both' },
+];
+
 export const AddModuleModal: React.FC = () => {
   const { isQuickAddModuleOpen, setIsQuickAddModuleOpen, addModule } = useApp();
 
@@ -118,16 +125,16 @@ export const AddModuleModal: React.FC = () => {
                 Semester
               </label>
               <div className="flex bg-[var(--gf-tint)] p-1 rounded-xl border border-[var(--gf-border)]">
-                {['Semester 1', 'Semester 2'].map((p, i) => (
+                {MODULE_SEMESTERS.map((p) => (
                   <button
-                    key={p}
+                    key={p.value}
                     type="button"
-                    onClick={() => setAcademicPeriod(p)}
+                    onClick={() => setAcademicPeriod(p.value)}
                     className={`flex-1 py-1 rounded-lg text-sm font-bold transition-all cursor-pointer ${
-                      academicPeriod === p ? 'bg-[var(--gf-primary)] text-white shadow-xs' : 'text-[var(--gf-muted)]'
+                      academicPeriod === p.value ? 'bg-[var(--gf-primary)] text-white shadow-xs' : 'text-[var(--gf-muted)]'
                     }`}
                   >
-                    {i + 1}
+                    {p.label}
                   </button>
                 ))}
               </div>
