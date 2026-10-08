@@ -1,9 +1,23 @@
-import { AssessmentMark, AcademicModule } from '../types';
+import { AssessmentMark, AcademicModule, AssessmentType } from '../types';
+
+/** Module contribution of each assessment type: CA tests 20%, assignments 20%, exam 60%. */
+export const ASSESSMENT_TYPE_WEIGHTS: Partial<Record<AssessmentType, number>> = {
+  test: 20,
+  assignment: 20,
+  exam: 60,
+};
+
+export const ASSESSMENT_TYPE_LABELS: Partial<Record<AssessmentType, string>> = {
+  test: 'CA Test',
+  assignment: 'Assignment',
+  exam: 'Exam',
+};
 
 /**
  * Calculates a module's average mark.
- * If assessment weighting is provided for assessments, uses weighted average.
- * If no weighting is configured (or sum of weights is 0), falls back to arithmetic mean.
+ * CA test / assignment / exam marks: each type is averaged on its own, then
+ * combined 20/20/60 (rescaled over the types logged so far).
+ * Older marks of other types fall back to per-mark weighting, then arithmetic mean.
  */
 export function calculateModuleAverage(assessments: AssessmentMark[]): number {
   if (!assessments || assessments.length === 0) return 0;
@@ -12,6 +26,19 @@ export function calculateModuleAverage(assessments: AssessmentMark[]): number {
     (a) => typeof a.percentage === 'number' && !isNaN(a.percentage)
   );
   if (validMarks.length === 0) return 0;
+
+  if (validMarks.every((a) => ASSESSMENT_TYPE_WEIGHTS[a.assessmentType])) {
+    let weightedSum = 0;
+    let totalWeight = 0;
+    for (const [type, weight] of Object.entries(ASSESSMENT_TYPE_WEIGHTS)) {
+      const ofType = validMarks.filter((a) => a.assessmentType === type);
+      if (ofType.length === 0) continue;
+      const mean = ofType.reduce((s, a) => s + a.percentage, 0) / ofType.length;
+      weightedSum += mean * weight!;
+      totalWeight += weight!;
+    }
+    return weightedSum / totalWeight;
+  }
 
   // Check if assessments have explicit weights
   const weightedAssessments = validMarks.filter(
