@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { X, BookOpen, UserCheck, Hash, Target, Check } from 'lucide-react';
+import { X, BookOpen, Hash, Target, Check } from 'lucide-react';
 
 export const PALETTE_SWATCHES = [
   { hex: '#e91e8c', label: 'Berry Magenta' },
@@ -19,10 +19,8 @@ export const AddModuleModal: React.FC = () => {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
   const [colour, setColour] = useState(PALETTE_SWATCHES[0].hex);
-  const [academicPeriod, setAcademicPeriod] = useState('Fall 2026');
+  const [academicPeriod, setAcademicPeriod] = useState('Semester 1');
   const [creditHours, setCreditHours] = useState('4');
-  const [instructor, setInstructor] = useState('');
-  const [room, setRoom] = useState('');
   const [targetGrade, setTargetGrade] = useState('90');
   const [error, setError] = useState('');
 
@@ -42,16 +40,12 @@ export const AddModuleModal: React.FC = () => {
       academicPeriod,
       moduleWeight: 1.0,
       creditHours: parseFloat(creditHours) || 3,
-      instructor: instructor.trim() || undefined,
-      room: room.trim() || undefined,
       targetGrade: parseFloat(targetGrade) || 85,
       isArchived: false,
     });
 
     setName('');
     setCode('');
-    setInstructor('');
-    setRoom('');
     setError('');
     setIsQuickAddModuleOpen(false);
   };
@@ -60,7 +54,7 @@ export const AddModuleModal: React.FC = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
       <div className="bg-[var(--gf-card)] rounded-3xl w-full max-w-lg shadow-2xl border border-[var(--gf-border)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[#fff5f9] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[var(--gf-card)] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
               <BookOpen className="w-4 h-4" />
@@ -121,15 +115,22 @@ export const AddModuleModal: React.FC = () => {
 
             <div>
               <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
-                Semester / Term
+                Semester
               </label>
-              <input
-                type="text"
-                placeholder="e.g. Fall 2026"
-                value={academicPeriod}
-                onChange={(e) => setAcademicPeriod(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
+              <div className="flex bg-[var(--gf-tint)] p-1 rounded-xl border border-[var(--gf-border)]">
+                {['Semester 1', 'Semester 2'].map((p, i) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => setAcademicPeriod(p)}
+                    className={`flex-1 py-1 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+                      academicPeriod === p ? 'bg-[var(--gf-primary)] text-white shadow-xs' : 'text-[var(--gf-muted)]'
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -216,36 +217,6 @@ export const AddModuleModal: React.FC = () => {
                 value={targetGrade}
                 onChange={(e) => setTargetGrade(e.target.value)}
                 className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm font-bold text-[var(--gf-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
-            </div>
-          </div>
-
-          {/* Instructor & Classroom */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-                <UserCheck className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-                Professor / Instructor
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Dr. Vance"
-                value={instructor}
-                onChange={(e) => setInstructor(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1">
-                Classroom / Hall
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Room 302"
-                value={room}
-                onChange={(e) => setRoom(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
               />
             </div>
           </div>

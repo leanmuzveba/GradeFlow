@@ -209,8 +209,6 @@ export const ModulesView: React.FC = () => {
                   </div>
                   <h2 className="text-xl sm:text-2xl font-extrabold">{selectedModule.name}</h2>
                   <div className="flex flex-wrap gap-4 mt-2 text-xs text-pink-100">
-                    {selectedModule.instructor && <span>Instructor: {selectedModule.instructor}</span>}
-                    {selectedModule.room && <span>Location: {selectedModule.room}</span>}
                     <span>Credits: {selectedModule.creditHours}</span>
                   </div>
                 </div>
