@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { EventType, PriorityLevel } from '../../types';
-import { X, Calendar, Clock, MapPin, AlertCircle, BookOpen, BellRing } from 'lucide-react';
+import { EventType } from '../../types';
+import { X, Calendar, Clock, BookOpen, BellRing } from 'lucide-react';
 
 export const AddEventModal: React.FC = () => {
   const {
@@ -19,8 +19,6 @@ export const AddEventModal: React.FC = () => {
     new Date(Date.now() + 86400000 * 3).toISOString().split('T')[0]
   );
   const [dueTime, setDueTime] = useState<string>('23:59');
-  const [priority, setPriority] = useState<PriorityLevel>('high');
-  const [location, setLocation] = useState<string>('');
   const [reminderMinutes, setReminderMinutes] = useState<number>(120);
   const [error, setError] = useState<string>('');
 
@@ -50,14 +48,12 @@ export const AddEventModal: React.FC = () => {
       moduleId: moduleId || undefined,
       eventType,
       dueAt: combinedDueAt,
-      priority,
+      priority: 'medium',
       isCompleted: false,
-      location: location.trim() || undefined,
       reminderMinutes,
     });
 
     setTitle('');
-    setLocation('');
     setError('');
     setIsQuickAddEventOpen(false);
   };
@@ -66,7 +62,7 @@ export const AddEventModal: React.FC = () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in">
       <div className="bg-[var(--gf-card)] rounded-3xl w-full max-w-lg shadow-2xl border border-[var(--gf-border)] overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[#fff5f9] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--gf-tint)] to-[var(--gf-card)] px-6 py-4 border-b border-[var(--gf-border)] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
               <Calendar className="w-4 h-4" />
@@ -186,69 +182,23 @@ export const AddEventModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Priority */}
+          {/* Reminder */}
           <div>
-            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1.5 flex items-center gap-1">
-              <AlertCircle className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-              Priority Level
+            <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
+              <BellRing className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
+              Reminder Alert
             </label>
-            <div className="grid grid-cols-3 gap-2">
-              {(
-                [
-                  { id: 'low', label: 'Low Priority', color: 'border-blue-300 text-blue-700 bg-blue-50' },
-                  { id: 'medium', label: 'Medium', color: 'border-amber-300 text-amber-700 bg-amber-50' },
-                  { id: 'high', label: 'High Priority', color: 'border-rose-400 text-rose-700 bg-rose-50' },
-                ] as const
-              ).map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setPriority(p.id)}
-                  className={`py-2 px-2 rounded-xl text-xs font-bold text-center border transition-all cursor-pointer ${
-                    priority === p.id
-                      ? `${p.color} ring-2 ring-[var(--gf-primary)] font-extrabold shadow-xs`
-                      : 'bg-[var(--gf-card)] border-[var(--gf-border)] text-[var(--gf-muted)]'
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Location & Reminder */}
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-                Location / Link
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. Room 302 / Canvas"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-[var(--gf-text)] mb-1 flex items-center gap-1">
-                <BellRing className="w-3.5 h-3.5 text-[var(--gf-primary)]" />
-                Reminder Alert
-              </label>
-              <select
-                value={reminderMinutes}
-                onChange={(e) => setReminderMinutes(Number(e.target.value))}
-                className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
-              >
-                <option value={15}>15 minutes before</option>
-                <option value={60}>1 hour before</option>
-                <option value={120}>2 hours before</option>
-                <option value={1440}>1 day before</option>
-                <option value={2880}>2 days before</option>
-              </select>
-            </div>
+            <select
+              value={reminderMinutes}
+              onChange={(e) => setReminderMinutes(Number(e.target.value))}
+              className="w-full px-3 py-2 rounded-xl bg-[var(--gf-tint)] border border-[var(--gf-border)] text-sm text-[var(--gf-text)] focus:outline-none focus:ring-2 focus:ring-[var(--gf-primary)]"
+            >
+              <option value={15}>15 minutes before</option>
+              <option value={60}>1 hour before</option>
+              <option value={120}>2 hours before</option>
+              <option value={1440}>1 day before</option>
+              <option value={2880}>2 days before</option>
+            </select>
           </div>
 
           {/* Footer Buttons */}
