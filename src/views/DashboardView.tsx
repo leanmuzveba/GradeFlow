@@ -30,7 +30,6 @@ export const DashboardView: React.FC = () => {
     studySessions,
     studyGoal,
     setActiveTab,
-    setIsQuickAddMarkOpen,
     setIsQuickAddEventOpen,
   } = useApp();
 
@@ -260,47 +259,6 @@ export const DashboardView: React.FC = () => {
               {todaySessions.length} session{todaySessions.length === 1 ? '' : 's'} today
             </span>
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="bg-[var(--gf-card)] rounded-3xl p-4 border border-[var(--gf-border)] shadow-xs">
-        <div className="text-xs font-bold text-[var(--gf-muted)] uppercase tracking-wider mb-3 px-1">
-          Quick Actions
-        </div>
-        <div className="grid grid-cols-3 gap-3">
-          <button
-            onClick={() => setActiveTab('focus')}
-            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[var(--gf-tint)] hover:bg-[var(--gf-border)]/40 border border-[var(--gf-border)] transition-all group cursor-pointer"
-          >
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
-              <Timer className="w-4 h-4" />
-            </div>
-            <span className="text-xs font-bold text-[var(--gf-text)] mt-2 text-center">Start Timer</span>
-            <span className="text-[10px] text-[var(--gf-muted)]">Focus session</span>
-          </button>
-
-          <button
-            onClick={() => setIsQuickAddMarkOpen(true)}
-            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[var(--gf-tint)] hover:bg-[var(--gf-border)]/40 border border-[var(--gf-border)] transition-all group cursor-pointer"
-          >
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
-              <Award className="w-4 h-4" />
-            </div>
-            <span className="text-xs font-bold text-[var(--gf-text)] mt-2 text-center">Log Mark</span>
-            <span className="text-[10px] text-[var(--gf-muted)]">Assessment</span>
-          </button>
-
-          <button
-            onClick={() => setIsQuickAddEventOpen(true)}
-            className="flex flex-col items-center justify-center p-3 rounded-2xl bg-[var(--gf-tint)] hover:bg-[var(--gf-border)]/40 border border-[var(--gf-border)] transition-all group cursor-pointer"
-          >
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center shadow-xs">
-              <Calendar className="w-4 h-4" />
-            </div>
-            <span className="text-xs font-bold text-[var(--gf-text)] mt-2 text-center">Add Event</span>
-            <span className="text-[10px] text-[var(--gf-muted)]">Deadlines</span>
-          </button>
         </div>
       </div>
 
