@@ -48,6 +48,7 @@ export interface DbAssessment {
   total_score: number;
   percentage: number;
   weighting: number | null;
+  semester: number | null;
   assessment_date: string;
   notes: string | null;
   created_at: string;
@@ -149,6 +150,7 @@ export const assessmentFromDb = (r: DbAssessment): AssessmentMark => ({
   totalScore: r.total_score,
   percentage: r.percentage,
   weighting: r.weighting ?? undefined,
+  semester: r.semester === 2 ? 2 : 1,
   assessmentDate: r.assessment_date,
   notes: r.notes ?? undefined,
   createdAt: r.created_at,
@@ -166,6 +168,7 @@ export const assessmentToDb = (a: AssessmentMark, userId: string) => ({
   total_score: a.totalScore,
   percentage: a.percentage,
   weighting: a.weighting ?? null,
+  semester: a.semester ?? 1,
   assessment_date: a.assessmentDate,
   notes: a.notes ?? null,
   created_at: a.createdAt,

@@ -67,6 +67,7 @@ create table public.assessments (
   total_score numeric not null,
   percentage numeric not null,
   weighting numeric,
+  semester smallint not null default 1 check (semester in (1, 2)),
   assessment_date text not null,
   notes text,
   created_at timestamptz not null default now(),
@@ -122,3 +123,6 @@ create table public.study_goals (
 );
 alter table public.study_goals enable row level security;
 create policy "study_goals_all_own" on public.study_goals for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Migration for existing projects (run once in the SQL editor):
+-- alter table public.assessments add column semester smallint not null default 1 check (semester in (1, 2));

@@ -45,6 +45,7 @@ export interface AssessmentMark {
   totalScore: number;
   percentage: number;
   weighting?: number; // E.g., 20% of the module
+  semester?: 1 | 2; // Missing on marks logged before semesters existed — treated as 1
   assessmentDate: string;
   notes?: string;
   createdAt: string;
