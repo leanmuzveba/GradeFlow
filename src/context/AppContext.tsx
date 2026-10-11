@@ -237,7 +237,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   });
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('planner');
   const [selectedModuleIdForDetail, setSelectedModuleIdForDetail] = useState<string | null>(null);
   // Semester tab on the marks screen; until picked, follows the profile's "Current Semester".
   const [pickedSemester, setActiveSemester] = useState<1 | 2 | null>(null);

@@ -5,7 +5,6 @@ import { SplashScreen } from './views/SplashScreen';
 import { AuthView } from './views/AuthView';
 import { HeaderBar } from './components/HeaderBar';
 import { BottomNavBar } from './components/BottomNavBar';
-import { DashboardView } from './views/DashboardView';
 import { StatsView } from './views/StatsView';
 import { MarksView } from './views/MarksView';
 import { FocusView } from './views/FocusView';
@@ -31,22 +30,21 @@ const MainContent: React.FC = () => {
 
   const renderActiveScreen = () => {
     switch (activeTab) {
-      case 'dashboard':
-        return <DashboardView key="dashboard" />;
+      // Planner home: the calendar until the weekly planner spread replaces it.
+      case 'planner':
+        return <CalendarView key="planner" />;
       case 'stats':
         return <StatsView key="stats" />;
       case 'marks':
         return <MarksView key="marks" />;
       case 'focus':
         return <FocusView key="focus" />;
-      case 'calendar':
-        return <CalendarView key="calendar" />;
       case 'analytics':
         return <AnalyticsView key="analytics" />;
       case 'profile':
         return <ProfileView key="profile" />;
       default:
-        return <DashboardView key="dashboard-default" />;
+        return <CalendarView key="planner-default" />;
     }
   };
 

@@ -2,10 +2,9 @@ import React from 'react';
 import { useApp } from '../context/AppContext';
 import { ActiveTab } from '../types';
 import {
-  LayoutDashboard,
+  NotebookPen,
   BarChart3,
   Timer,
-  Calendar,
   User,
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -17,10 +16,9 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
+  { id: 'planner', label: 'Planner', icon: NotebookPen },
   { id: 'stats', label: 'Stats', icon: BarChart3 },
   { id: 'focus', label: 'Focus', icon: Timer },
-  { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'profile', label: 'Profile', icon: User },
 ];
 

@@ -275,7 +275,7 @@ export const DashboardView: React.FC = () => {
                 <h3 className="text-sm font-bold text-[var(--gf-text)]">Upcoming Deadlines</h3>
               </div>
               <button
-                onClick={() => setActiveTab('calendar')}
+                onClick={() => setActiveTab('planner')}
                 className="text-xs font-bold text-[var(--gf-primary)] hover:underline flex items-center gap-1 cursor-pointer"
               >
                 View All ({events.filter((e) => !e.isCompleted).length})
