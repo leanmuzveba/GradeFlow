@@ -96,4 +96,13 @@ export const PLANNER_THEMES: PlannerTheme[] = [
 
 export const themeById = (id?: string) => PLANNER_THEMES.find((t) => t.id === id) ?? PLANNER_THEMES[0];
 
+/** Theme a month starts with until one is picked (index 0 = January). */
+const DEFAULT_MONTH_THEMES: PackId[] = [
+  'pineapple', 'flowers', 'fall', 'fall', 'flowers', 'cactus',
+  'fall', 'flowers', 'flowers', 'cactus', 'pineapple', 'pineapple',
+];
+
+export const themeForMonth = (monthStart: Date, picked?: string) =>
+  themeById(picked ?? DEFAULT_MONTH_THEMES[monthStart.getMonth()]);
+
 export const themeStickerIds = (theme: PlannerTheme) => packStickerIds(theme.id);

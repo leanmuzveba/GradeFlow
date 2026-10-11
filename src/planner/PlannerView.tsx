@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { usePlanner } from './usePlanner';
-import { themeById } from './themes';
+import { PLANNER_THEMES, themeForMonth } from './themes';
 import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
 import { Paper, PaperColors } from './Paper';
 import { WeekSpread } from './WeekSpread';
@@ -25,7 +25,7 @@ export const PlannerView: React.FC = () => {
   const [section, setSection] = useState<Section>(() => ({ kind: 'week', index: currentWeekIndex() }));
 
   const month = pages[monthKey(monthStart)] ?? {};
-  const theme = themeById(month.theme);
+  const theme = themeForMonth(monthStart, month.theme);
   const colors: PaperColors = profile.theme === 'dark' ? { paper: '#161616', ink: '#f2f2f2' } : { paper: theme.paper, ink: theme.ink };
 
   const goToMonth = (delta: number) => {
@@ -58,6 +58,25 @@ export const PlannerView: React.FC = () => {
         <button onClick={() => goToMonth(1)} className="p-2 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[var(--gf-text)] cursor-pointer" aria-label="Next month">
           <ChevronRight className="w-4 h-4" />
         </button>
+      </div>
+
+      {/* Theme for this month */}
+      <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1">
+        {PLANNER_THEMES.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => updatePage(monthKey(monthStart), { theme: t.id })}
+            className="shrink-0 flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full border text-[11px] font-bold cursor-pointer transition-all"
+            style={
+              t.id === theme.id
+                ? { background: t.primary, borderColor: t.primary, color: t.onPrimary }
+                : { background: 'var(--gf-card)', borderColor: 'var(--gf-border)', color: 'var(--gf-muted)' }
+            }
+          >
+            <span className="w-4 h-4 rounded-full border-2 border-white/80" style={{ background: `linear-gradient(135deg, ${t.primary} 50%, ${t.secondary} 50%)` }} />
+            {t.name}
+          </button>
+        ))}
       </div>
 
       <CalendarTools />
