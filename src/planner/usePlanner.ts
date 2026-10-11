@@ -36,11 +36,23 @@ export function usePlanner() {
           return;
         }
         // Pages with a save still pending keep their newer local version.
+        const inCloud = new Set((data ?? []).map((row) => row.page_key));
         setPages((local) => {
           const merged: Pages = { ...local };
           for (const row of data ?? []) if (!pending.current[row.page_key]) merged[row.page_key] = row.data;
           return merged;
         });
+        // Pages only on this device (written offline, or before the table
+        // existed) get uploaded now so they aren't lost.
+        const localOnly = Object.keys(latest.current).filter((key) => !inCloud.has(key));
+        if (localOnly.length) {
+          supabase
+            .from('planner_pages')
+            .upsert(localOnly.map((key) => ({ user_id: userId, page_key: key, data: latest.current[key], updated_at: new Date().toISOString() })))
+            .then(({ error }) => {
+              if (error) console.warn('Planner: failed to upload local pages', error);
+            });
+        }
       });
   }, [userId]);
 
