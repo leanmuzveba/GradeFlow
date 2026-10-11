@@ -11,12 +11,13 @@ interface Props {
   onUpload?: (file: File) => void;
   onDeleteUser?: (path: string) => void;
   uploading?: boolean;
+  initialTab?: string;
 }
 
 /** Sticker picker: this month's pack first, then the other packs and the user's own uploads. */
-export const StickerTray: React.FC<Props> = ({ theme, onAdd, userStickers, userUrls, onUpload, onDeleteUser, uploading }) => {
+export const StickerTray: React.FC<Props> = ({ theme, onAdd, userStickers, userUrls, onUpload, onDeleteUser, uploading, initialTab }) => {
   const packs = [theme, ...PLANNER_THEMES.filter((t) => t.id !== theme.id)];
-  const [tab, setTab] = useState<string>(theme.id);
+  const [tab, setTab] = useState<string>(initialTab ?? theme.id);
   const [editingMine, setEditingMine] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 

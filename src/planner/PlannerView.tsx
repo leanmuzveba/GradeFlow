@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Check, ChevronLeft, ChevronRight, Sticker } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, ImagePlus, Palette, Sticker } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { deletePlannerFile, listUserStickers, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
@@ -30,6 +30,9 @@ export const PlannerView: React.FC = () => {
   const paperRef = useRef<HTMLDivElement>(null);
   const [myStickers, setMyStickers] = useState<string[]>([]);
   const [uploadingSticker, setUploadingSticker] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [trayTab, setTrayTab] = useState<string | undefined>();
+  const stickerInputRef = useRef<HTMLInputElement>(null);
 
   const [monthStart, setMonthStart] = useState(() => startOfMonth(new Date()));
   const weeks = weeksOfMonth(monthStart);
@@ -162,46 +165,23 @@ export const PlannerView: React.FC = () => {
         <button onClick={() => goToMonth(-1)} className="p-2 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[var(--gf-text)] cursor-pointer" aria-label="Previous month">
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <div className="text-sm font-extrabold text-[var(--gf-text)]">
+        <div className="flex-1 text-center text-sm font-extrabold text-[var(--gf-text)]">
           {monthStart.toLocaleString('default', { month: 'long', year: 'numeric' })}
         </div>
         <button onClick={() => goToMonth(1)} className="p-2 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[var(--gf-text)] cursor-pointer" aria-label="Next month">
           <ChevronRight className="w-4 h-4" />
         </button>
-      </div>
-
-      {/* Theme for this month */}
-      <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1 [scrollbar-width:none]">
-        {PLANNER_THEMES.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => updatePage(mKey, { theme: t.id })}
-            className="shrink-0 flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full border text-[11px] font-bold cursor-pointer transition-all"
-            style={
-              t.id === theme.id
-                ? { background: t.primary, borderColor: t.primary, color: t.onPrimary }
-                : { background: 'var(--gf-card)', borderColor: 'var(--gf-border)', color: 'var(--gf-muted)' }
-            }
-          >
-            <span className="w-4 h-4 rounded-full border-2 border-white/80" style={{ background: `linear-gradient(135deg, ${t.primary} 50%, ${t.secondary} 50%)` }} />
-            {t.name}
-          </button>
-        ))}
-      </div>
-
-      <CalendarTools>
         <button
           onClick={() => {
-            setDecorating(!decorating);
-            setSelectedSticker(null);
+            setMenuOpen(true);
+            setDecorating(false);
           }}
-          className="px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-          style={decorating ? { background: theme.primary, color: theme.onPrimary } : { background: 'var(--gf-card)', color: 'var(--gf-muted)', border: '1px solid var(--gf-border)' }}
+          className="px-3.5 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-sm"
+          style={{ background: theme.primary, color: theme.onPrimary }}
         >
-          {decorating ? <Check className="w-3.5 h-3.5" /> : <Sticker className="w-3.5 h-3.5" />}
-          {decorating ? 'Done decorating' : 'Decorate'}
+          <Palette className="w-3.5 h-3.5" /> Theme
         </button>
-      </CalendarTools>
+      </div>
 
       {/* Divider tabs */}
       <div className="flex gap-1.5 overflow-x-auto pt-1 -mx-1 px-1 [scrollbar-width:none]">
@@ -264,9 +244,92 @@ export const PlannerView: React.FC = () => {
         </Paper>
       </div>
 
+      {/* Theme menu: themes, stickers, decorate, import / export */}
+      {menuOpen && (
+        <>
+          <div className="fixed inset-0 z-30 bg-black/20" onClick={() => setMenuOpen(false)} />
+          <div className="fixed left-0 right-0 bottom-[72px] z-40 px-3 animate-fade-in">
+            <div className="max-w-xl mx-auto bg-[var(--gf-card)] border border-[var(--gf-border)] rounded-3xl shadow-2xl p-4 space-y-4">
+              <div>
+                <div className="text-[11px] font-bold tracking-wider text-[var(--gf-muted)] uppercase mb-2">
+                  {monthStart.toLocaleString('default', { month: 'long' })} theme
+                </div>
+                <div className="flex gap-1.5 flex-wrap">
+                  {PLANNER_THEMES.map((t) => (
+                    <button
+                      key={t.id}
+                      onClick={() => updatePage(mKey, { theme: t.id })}
+                      className="shrink-0 flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full border text-[11px] font-bold cursor-pointer transition-all"
+                      style={
+                        t.id === theme.id
+                          ? { background: t.primary, borderColor: t.primary, color: t.onPrimary }
+                          : { background: 'var(--gf-card)', borderColor: 'var(--gf-border)', color: 'var(--gf-muted)' }
+                      }
+                    >
+                      <span className="w-4 h-4 rounded-full border-2 border-white/80" style={{ background: `linear-gradient(135deg, ${t.primary} 50%, ${t.secondary} 50%)` }} />
+                      {t.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="text-[11px] font-bold tracking-wider text-[var(--gf-muted)] uppercase mb-2">Stickers & calendar</div>
+                <CalendarTools>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      setTrayTab(undefined);
+                      setDecorating(true);
+                      setSelectedSticker(null);
+                    }}
+                    className="px-3 py-1.5 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[11px] font-bold text-[var(--gf-muted)] flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Sticker className="w-3.5 h-3.5" /> Decorate
+                  </button>
+                  <button
+                    onClick={() => stickerInputRef.current?.click()}
+                    disabled={uploadingSticker}
+                    className="px-3 py-1.5 rounded-full bg-[var(--gf-card)] border border-[var(--gf-border)] text-[11px] font-bold text-[var(--gf-muted)] flex items-center gap-1.5 cursor-pointer disabled:opacity-60"
+                  >
+                    <ImagePlus className="w-3.5 h-3.5" /> {uploadingSticker ? 'Uploading…' : 'Upload sticker'}
+                  </button>
+                </CalendarTools>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      <input
+        ref={stickerInputRef}
+        type="file"
+        accept="image/png,image/webp,image/*"
+        className="hidden"
+        onChange={async (e) => {
+          const f = e.target.files?.[0];
+          e.target.value = '';
+          if (!f) return;
+          await uploadSticker(f);
+          setMenuOpen(false);
+          setTrayTab('mine');
+          setDecorating(true);
+        }}
+      />
+
       {decorating && (
         <div className="fixed left-0 right-0 bottom-[72px] z-30 px-3">
           <div className="max-w-xl mx-auto bg-[var(--gf-card)] border border-[var(--gf-border)] rounded-3xl shadow-2xl p-3 space-y-3">
+            <div className="flex justify-end -mb-1">
+              <button
+                onClick={() => {
+                  setDecorating(false);
+                  setSelectedSticker(null);
+                }}
+                className="px-3 py-1 rounded-full text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+                style={{ background: theme.primary, color: theme.onPrimary }}
+              >
+                <Check className="w-3.5 h-3.5" /> Done
+              </button>
+            </div>
             {selected ? (
               <StickerControls sticker={selected} onUpdate={updateSelected} />
             ) : (
@@ -280,6 +343,7 @@ export const PlannerView: React.FC = () => {
               onUpload={uploadSticker}
               onDeleteUser={deleteSticker}
               uploading={uploadingSticker}
+              initialTab={trayTab}
             />
           </div>
         </div>
