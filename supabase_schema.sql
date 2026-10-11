@@ -126,3 +126,26 @@ create policy "study_goals_all_own" on public.study_goals for all using (auth.ui
 
 -- Migration for existing projects (run once in the SQL editor):
 -- alter table public.assessments add column semester smallint not null default 1 check (semester in (1, 2));
+
+-- ============================================================
+-- Planner (run once in the SQL editor)
+-- ============================================================
+-- One row per planner page. page_key is 'month:YYYY-MM' (cover, review,
+-- memory dump, theme) or 'week:YYYY-MM-DD' (the Monday of that week).
+create table if not exists public.planner_pages (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  page_key text not null,
+  data jsonb not null default '{}'::jsonb,
+  updated_at timestamptz not null default now(),
+  primary key (user_id, page_key)
+);
+alter table public.planner_pages enable row level security;
+create policy "planner_pages_all_own" on public.planner_pages for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+
+-- Private storage for Memory Dump photos and uploaded stickers, one folder per user:
+-- planner/<user id>/photos/... and planner/<user id>/stickers/...
+insert into storage.buckets (id, name, public) values ('planner', 'planner', false)
+on conflict (id) do nothing;
+create policy "planner_files_own" on storage.objects for all
+  using (bucket_id = 'planner' and (storage.foldername(name))[1] = auth.uid()::text)
+  with check (bucket_id = 'planner' and (storage.foldername(name))[1] = auth.uid()::text);
