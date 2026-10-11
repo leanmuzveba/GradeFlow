@@ -7,8 +7,9 @@ import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
 import { Paper, PaperColors } from './Paper';
 import { WeekSpread } from './WeekSpread';
 import { CalendarTools } from './CalendarTools';
+import { CoverPage, ReviewPage } from './MonthPages';
 
-type Section = { kind: 'week'; index: number };
+type Section = { kind: 'cover' } | { kind: 'week'; index: number } | { kind: 'review' };
 
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
 
@@ -38,12 +39,21 @@ export const PlannerView: React.FC = () => {
     if (i >= 0) setSection({ kind: 'week', index: i });
   };
 
-  const weekIndex = Math.min(section.index, weeks.length - 1);
+  const mKey = monthKey(monthStart);
+  const weekIndex = Math.min(section.kind === 'week' ? section.index : 0, weeks.length - 1);
   const monday = weeks[weekIndex];
   const wKey = weekKey(monday);
   const week = pages[wKey] ?? {};
 
-  const tabs = weeks.map((_, i) => ({ label: `Week ${i + 1}`, active: weekIndex === i, go: () => setSection({ kind: 'week', index: i }) }));
+  const tabs = [
+    { label: 'Cover', active: section.kind === 'cover', go: () => setSection({ kind: 'cover' }) },
+    ...weeks.map((_, i) => ({
+      label: `Week ${i + 1}`,
+      active: section.kind === 'week' && weekIndex === i,
+      go: () => setSection({ kind: 'week', index: i }),
+    })),
+    { label: 'Review', active: section.kind === 'review', go: () => setSection({ kind: 'review' }) },
+  ];
 
   return (
     <div className="space-y-3 pb-24 animate-fade-in">
@@ -65,7 +75,7 @@ export const PlannerView: React.FC = () => {
         {PLANNER_THEMES.map((t) => (
           <button
             key={t.id}
-            onClick={() => updatePage(monthKey(monthStart), { theme: t.id })}
+            onClick={() => updatePage(mKey, { theme: t.id })}
             className="shrink-0 flex items-center gap-1.5 pl-1.5 pr-3 py-1 rounded-full border text-[11px] font-bold cursor-pointer transition-all"
             style={
               t.id === theme.id
@@ -99,17 +109,29 @@ export const PlannerView: React.FC = () => {
         ))}
       </div>
 
-      <Paper theme={theme} colors={colors} stickers={week.stickers ?? theme.decor.week} userStickerUrls={{}}>
-        <WeekSpread
-          key={wKey}
-          theme={theme}
-          monthStart={monthStart}
-          monday={monday}
-          page={week}
-          onChange={(u) => updatePage(wKey, u)}
-          onPickWeek={pickWeekOf}
-        />
-      </Paper>
+      {section.kind === 'cover' && (
+        <Paper theme={theme} colors={colors} stickers={month.coverStickers ?? theme.decor.cover} userStickerUrls={{}}>
+          <CoverPage theme={theme} monthStart={monthStart} page={month} onChange={(u) => updatePage(mKey, u)} />
+        </Paper>
+      )}
+      {section.kind === 'week' && (
+        <Paper theme={theme} colors={colors} stickers={week.stickers ?? theme.decor.week} userStickerUrls={{}}>
+          <WeekSpread
+            key={wKey}
+            theme={theme}
+            monthStart={monthStart}
+            monday={monday}
+            page={week}
+            onChange={(u) => updatePage(wKey, u)}
+            onPickWeek={pickWeekOf}
+          />
+        </Paper>
+      )}
+      {section.kind === 'review' && (
+        <Paper theme={theme} colors={colors} stickers={month.reviewStickers ?? theme.decor.review} userStickerUrls={{}}>
+          <ReviewPage theme={theme} ink={colors.ink} page={month} onChange={(u) => updatePage(mKey, u)} photoUrls={[null, null, null, null]} />
+        </Paper>
+      )}
     </div>
   );
 };

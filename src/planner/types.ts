@@ -28,7 +28,8 @@ export interface WeekPage {
 export interface MonthPage {
   theme?: string;
   highlight?: string;
-  notes?: string;
+  notes?: string; // cover: "this month I will…"
+  reviewNotes?: string;
   photos?: (string | null)[]; // storage paths for the 4 Memory Dump frames
   coverStickers?: PlacedSticker[];
   reviewStickers?: PlacedSticker[];
