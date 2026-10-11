@@ -171,7 +171,7 @@ export const PlannerView: React.FC = () => {
       </div>
 
       {/* Theme for this month */}
-      <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1">
+      <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1 [scrollbar-width:none]">
         {PLANNER_THEMES.map((t) => (
           <button
             key={t.id}
@@ -189,10 +189,22 @@ export const PlannerView: React.FC = () => {
         ))}
       </div>
 
-      <CalendarTools />
+      <CalendarTools>
+        <button
+          onClick={() => {
+            setDecorating(!decorating);
+            setSelectedSticker(null);
+          }}
+          className="px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+          style={decorating ? { background: theme.primary, color: theme.onPrimary } : { background: 'var(--gf-card)', color: 'var(--gf-muted)', border: '1px solid var(--gf-border)' }}
+        >
+          {decorating ? <Check className="w-3.5 h-3.5" /> : <Sticker className="w-3.5 h-3.5" />}
+          {decorating ? 'Done decorating' : 'Decorate'}
+        </button>
+      </CalendarTools>
 
       {/* Divider tabs */}
-      <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+      <div className="flex gap-1.5 overflow-x-auto pt-1 -mx-1 px-1 [scrollbar-width:none]">
         {tabs.map((t) => (
           <button
             key={t.label}
@@ -207,20 +219,6 @@ export const PlannerView: React.FC = () => {
             {t.label}
           </button>
         ))}
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          onClick={() => {
-            setDecorating(!decorating);
-            setSelectedSticker(null);
-          }}
-          className="px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer"
-          style={decorating ? { background: theme.primary, color: theme.onPrimary } : { background: 'var(--gf-card)', color: 'var(--gf-muted)', border: '1px solid var(--gf-border)' }}
-        >
-          {decorating ? <Check className="w-3.5 h-3.5" /> : <Sticker className="w-3.5 h-3.5" />}
-          {decorating ? 'Done decorating' : 'Decorate'}
-        </button>
       </div>
 
       <div ref={paperRef} className={decorating ? 'pb-[42vh]' : ''}>

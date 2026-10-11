@@ -27,7 +27,7 @@ export const CoverPage: React.FC<{ theme: PlannerTheme; monthStart: Date; page: 
   page,
   onChange,
 }) => (
-  <div className="flex flex-col items-center text-center px-6" style={{ minHeight: '140cqw', paddingTop: '34cqw' }}>
+  <div className="flex flex-col items-center text-center px-6" style={{ minHeight: '145cqw', paddingTop: '34cqw' }}>
     <Script theme={theme} className="text-7xl">
       {monthStart.toLocaleString('default', { month: 'long' })}
     </Script>

@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { parseCalendarFile, CalendarImportError } from '../utils/calendarImport';
 
 /** Overdue count + import/export of deadlines (moved here from the old Calendar tab). */
-export const CalendarTools: React.FC = () => {
+export const CalendarTools: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { events, importEvents } = useApp();
   const [feedback, setFeedback] = useState<{ ok: boolean; message: string } | null>(null);
   const [isImporting, setIsImporting] = useState(false);
@@ -72,6 +72,7 @@ export const CalendarTools: React.FC = () => {
             <AlertCircle className="w-3.5 h-3.5" /> {overdue} overdue
           </span>
         )}
+        {children}
         <span className="flex-1" />
         <input ref={inputRef} type="file" accept=".csv,.json,.ics,.ical,text/csv,application/json,text/calendar" onChange={importFile} className="hidden" />
         <button onClick={() => inputRef.current?.click()} disabled={isImporting} className={btn} title="Import deadlines from a CSV, JSON or .ics file">

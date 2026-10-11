@@ -39,7 +39,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     ink: '#1a1a1a',
     font: HANDWRITING,
     decor: {
-      cover: [at('flowers/bouquet', 0.62, 0.62, 0.36, -8), at('flowers/lavender', 0.06, 0.08, 0.2, -15), at('flowers/butterfly', 0.7, 0.1, 0.18, 12)],
+      cover: [at('flowers/bouquet', 0.64, 0.98, 0.34, -8), at('flowers/lavender', 0.06, 0.08, 0.2, -15), at('flowers/butterfly', 0.7, 0.1, 0.18, 12)],
       week: [at('flowers/bouquet', 0.74, 0.0, 0.24, 6)],
       review: [at('flowers/sprig', 0.8, 0.0, 0.18, 10), at('flowers/heart', 0.04, 0.02, 0.1, -12)],
     },
@@ -55,7 +55,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     ink: '#22361c',
     font: HANDWRITING,
     decor: {
-      cover: [at('cactus/saguaro', 0.62, 0.66, 0.32, 4), at('cactus/sun', 0.7, 0.06, 0.22, 0), at('cactus/rosette', 0.06, 0.74, 0.2, -10)],
+      cover: [at('cactus/saguaro', 0.64, 1.06, 0.3, 4), at('cactus/sun', 0.7, 0.06, 0.22, 0), at('cactus/rosette', 0.08, 1.12, 0.2, -10)],
       week: [at('cactus/barrel', 0.78, 0.0, 0.2, 6)],
       review: [at('cactus/aloe', 0.8, 0.0, 0.17, 8), at('cactus/bloom', 0.04, 0.02, 0.1, -12)],
     },
@@ -71,7 +71,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     ink: '#3b2414',
     font: HANDWRITING,
     decor: {
-      cover: [at('fall/maple', 0.64, 0.64, 0.3, 18), at('fall/pumpkin', 0.08, 0.74, 0.24, -6), at('fall/oak', 0.74, 0.06, 0.18, -20)],
+      cover: [at('fall/maple', 0.64, 1.06, 0.28, 18), at('fall/pumpkin', 0.08, 1.1, 0.24, -6), at('fall/oak', 0.74, 0.06, 0.18, -20)],
       week: [at('fall/maple', 0.78, 0.0, 0.2, 16)],
       review: [at('fall/acorn', 0.8, 0.0, 0.15, 10), at('fall/mushroom', 0.04, 0.02, 0.11, -12)],
     },
@@ -87,7 +87,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     ink: '#3d2a00',
     font: HANDWRITING,
     decor: {
-      cover: [at('pineapple/pineapple', 0.64, 0.6, 0.3, 8), at('pineapple/sun', 0.72, 0.05, 0.2, 0), at('pineapple/hibiscus', 0.06, 0.74, 0.2, -12)],
+      cover: [at('pineapple/pineapple', 0.66, 1.04, 0.28, 8), at('pineapple/sun', 0.72, 0.05, 0.2, 0), at('pineapple/hibiscus', 0.08, 1.12, 0.2, -12)],
       week: [at('pineapple/pineapple', 0.8, 0.0, 0.17, 10)],
       review: [at('pineapple/drink', 0.8, 0.0, 0.15, 8), at('pineapple/orange', 0.04, 0.02, 0.1, -12)],
     },
