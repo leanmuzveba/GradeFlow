@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Check, ChevronLeft, ChevronRight, Sticker } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
-import { deletePlannerFile, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
+import { deletePlannerFile, listUserStickers, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
 import { usePlanner } from './usePlanner';
 import { PLANNER_THEMES, themeForMonth } from './themes';
 import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
@@ -28,6 +28,8 @@ export const PlannerView: React.FC = () => {
   const [decorating, setDecorating] = useState(false);
   const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
   const paperRef = useRef<HTMLDivElement>(null);
+  const [myStickers, setMyStickers] = useState<string[]>([]);
+  const [uploadingSticker, setUploadingSticker] = useState(false);
 
   const [monthStart, setMonthStart] = useState(() => startOfMonth(new Date()));
   const weeks = weeksOfMonth(monthStart);
@@ -98,7 +100,34 @@ export const PlannerView: React.FC = () => {
         ? updatePage(mKey, { reviewStickers: stickers })
         : updatePage(wKey, { stickers });
 
-  const userStickerUrls = useSignedUrls(pageStickers.filter((s) => s.ref.startsWith('user:')).map((s) => s.ref.slice(5)));
+  useEffect(() => {
+    if (decorating) listUserStickers(userId).then(setMyStickers);
+  }, [decorating, userId]);
+
+  const userStickerUrls = useSignedUrls([
+    ...myStickers,
+    ...pageStickers.filter((s) => s.ref.startsWith('user:')).map((s) => s.ref.slice(5)),
+  ]);
+
+  const uploadSticker = async (file: File) => {
+    setUploadingSticker(true);
+    setUploadError('');
+    try {
+      const path = await uploadPlannerFile(userId, 'stickers', await resizeImage(file, 512, 'image/png'), 'png');
+      setMyStickers((prev) => [...prev, path]);
+    } catch (err) {
+      console.warn('Planner: sticker upload failed', err);
+      setUploadError("Couldn't upload that sticker. Check your connection and try again.");
+    } finally {
+      setUploadingSticker(false);
+    }
+  };
+
+  const deleteSticker = (path: string) => {
+    if (!confirm('Delete this sticker? It will also disappear from pages where you used it.')) return;
+    deletePlannerFile(path);
+    setMyStickers((prev) => prev.filter((p) => p !== path));
+  };
 
   /** Drops a new sticker in the middle of the visible part of the page. */
   const addSticker = (ref: string) => {
@@ -245,7 +274,15 @@ export const PlannerView: React.FC = () => {
             ) : (
               <p className="text-[11px] text-center text-[var(--gf-muted)]">Tap a sticker to add it · drag stickers on the page to move them · tap one to resize, rotate or remove</p>
             )}
-            <StickerTray theme={theme} onAdd={addSticker} userStickers={[]} userUrls={{}} />
+            <StickerTray
+              theme={theme}
+              onAdd={addSticker}
+              userStickers={myStickers}
+              userUrls={userStickerUrls}
+              onUpload={uploadSticker}
+              onDeleteUser={deleteSticker}
+              uploading={uploadingSticker}
+            />
           </div>
         </div>
       )}
