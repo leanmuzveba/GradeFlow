@@ -6,7 +6,7 @@ import { AuthView } from './views/AuthView';
 import { HeaderBar } from './components/HeaderBar';
 import { BottomNavBar } from './components/BottomNavBar';
 import { DashboardView } from './views/DashboardView';
-import { ModulesView } from './views/ModulesView';
+import { StatsView } from './views/StatsView';
 import { MarksView } from './views/MarksView';
 import { FocusView } from './views/FocusView';
 import { CalendarView } from './views/CalendarView';
@@ -33,8 +33,8 @@ const MainContent: React.FC = () => {
     switch (activeTab) {
       case 'dashboard':
         return <DashboardView key="dashboard" />;
-      case 'modules':
-        return <ModulesView key="modules" />;
+      case 'stats':
+        return <StatsView key="stats" />;
       case 'marks':
         return <MarksView key="marks" />;
       case 'focus':

@@ -3,7 +3,7 @@ import { useApp } from '../context/AppContext';
 import { ActiveTab } from '../types';
 import {
   LayoutDashboard,
-  BookOpen,
+  BarChart3,
   Timer,
   Calendar,
   User,
@@ -18,7 +18,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Home', icon: LayoutDashboard },
-  { id: 'modules', label: 'Modules', icon: BookOpen },
+  { id: 'stats', label: 'Stats', icon: BarChart3 },
   { id: 'focus', label: 'Focus', icon: Timer },
   { id: 'calendar', label: 'Calendar', icon: Calendar },
   { id: 'profile', label: 'Profile', icon: User },

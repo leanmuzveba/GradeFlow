@@ -100,7 +100,7 @@ export interface NotificationItem {
   type: 'deadline' | 'study' | 'grade' | 'system';
 }
 
-export type ActiveTab = 'dashboard' | 'modules' | 'marks' | 'focus' | 'calendar' | 'analytics' | 'profile';
+export type ActiveTab = 'dashboard' | 'stats' | 'marks' | 'focus' | 'calendar' | 'analytics' | 'profile';
 
 // Timer progress is derived from real wall-clock timestamps (not a decrementing
 // counter) so it stays correct across tab switches, backgrounding, and full app
