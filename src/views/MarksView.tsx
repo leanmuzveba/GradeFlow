@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { useApp } from '../context/AppContext';
-import { calculateModuleAverage, calculateOverallAverage } from '../utils/academicCalculations';
+import {
+  calculateModuleAverage,
+  calculateOverallAverage,
+  percentageToGpa,
+  percentageToLetter,
+} from '../utils/academicCalculations';
 import { BookOpen, Plus, Trash2 } from 'lucide-react';
 
 const fmt = (n: number) => (n > 0 ? `${n.toFixed(1)}%` : '--');
@@ -53,6 +58,19 @@ export const MarksView: React.FC = () => {
             {overallAverage > 0 ? overallAverage.toFixed(1) : '--'}
           </span>
           <span className="text-3xl font-bold"> %</span>
+        </div>
+
+        <div className="mt-5 pt-4 border-t border-[var(--gf-border)] flex items-center justify-between">
+          <div>
+            <span className="text-[10px] font-bold tracking-wider text-[var(--gf-muted)] uppercase">Current GPA</span>
+            <div className="text-2xl font-black text-[var(--gf-text)] leading-tight">
+              {overallAverage > 0 ? percentageToGpa(overallAverage).toFixed(2) : '--'}
+              <span className="text-sm font-bold text-[var(--gf-muted)]"> / 4.0</span>
+            </div>
+          </div>
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[var(--gf-primary-light)] to-[var(--gf-primary)] text-white flex items-center justify-center text-xl font-black shadow-xs">
+            {overallAverage > 0 ? percentageToLetter(overallAverage) : '—'}
+          </div>
         </div>
       </div>
 
