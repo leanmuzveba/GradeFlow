@@ -8,7 +8,7 @@ import { BottomNavBar } from './components/BottomNavBar';
 import { StatsView } from './views/StatsView';
 import { MarksView } from './views/MarksView';
 import { FocusView } from './views/FocusView';
-import { CalendarView } from './views/CalendarView';
+import { PlannerView } from './planner/PlannerView';
 import { AnalyticsView } from './views/AnalyticsView';
 import { ProfileView } from './views/ProfileView';
 import { AddMarkModal } from './components/modals/AddMarkModal';
@@ -30,9 +30,8 @@ const MainContent: React.FC = () => {
 
   const renderActiveScreen = () => {
     switch (activeTab) {
-      // Planner home: the calendar until the weekly planner spread replaces it.
       case 'planner':
-        return <CalendarView key="planner" />;
+        return <PlannerView key="planner" />;
       case 'stats':
         return <StatsView key="stats" />;
       case 'marks':
@@ -44,7 +43,7 @@ const MainContent: React.FC = () => {
       case 'profile':
         return <ProfileView key="profile" />;
       default:
-        return <CalendarView key="planner-default" />;
+        return <PlannerView key="planner-default" />;
     }
   };
 

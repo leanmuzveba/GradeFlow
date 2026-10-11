@@ -76,6 +76,8 @@ interface AppContextType {
   selectedModuleIdForDetail: string | null;
   setSelectedModuleIdForDetail: (id: string | null) => void;
   activeSemester: 1 | 2;
+  eventDraftDate: string | null; // YYYY-MM-DD to pre-fill the next Add Event form
+  setEventDraftDate: (date: string | null) => void;
   setActiveSemester: (semester: 1 | 2) => void;
   isQuickAddMarkOpen: boolean;
   setIsQuickAddMarkOpen: (open: boolean) => void;
@@ -240,6 +242,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [activeTab, setActiveTab] = useState<ActiveTab>('planner');
   const [selectedModuleIdForDetail, setSelectedModuleIdForDetail] = useState<string | null>(null);
   // Semester tab on the marks screen; until picked, follows the profile's "Current Semester".
+  const [eventDraftDate, setEventDraftDate] = useState<string | null>(null);
   const [pickedSemester, setActiveSemester] = useState<1 | 2 | null>(null);
   const activeSemester = pickedSemester ?? (/semester\s*2/i.test(profile.semester) ? 2 : 1);
   const [isQuickAddMarkOpen, setIsQuickAddMarkOpen] = useState(false);
@@ -761,6 +764,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         setSelectedModuleIdForDetail,
         activeSemester,
         setActiveSemester,
+        eventDraftDate,
+        setEventDraftDate,
         isQuickAddMarkOpen,
         setIsQuickAddMarkOpen,
         isQuickAddEventOpen,

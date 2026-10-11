@@ -10,6 +10,8 @@ export const AddEventModal: React.FC = () => {
     modules,
     addEvent,
     selectedModuleIdForDetail,
+    eventDraftDate,
+    setEventDraftDate,
   } = useApp();
 
   const [moduleId, setModuleId] = useState<string>('');
@@ -31,6 +33,14 @@ export const AddEventModal: React.FC = () => {
       }
     }
   }, [modules, selectedModuleIdForDetail, isQuickAddEventOpen]);
+
+  // Opened from a planner day: use that day, once.
+  useEffect(() => {
+    if (isQuickAddEventOpen && eventDraftDate) {
+      setDueDate(eventDraftDate);
+      setEventDraftDate(null);
+    }
+  }, [isQuickAddEventOpen, eventDraftDate]);
 
   if (!isQuickAddEventOpen) return null;
 
