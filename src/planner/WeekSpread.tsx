@@ -59,7 +59,7 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
       {/* Month name + mini calendar */}
       <div className="flex items-start gap-4 pr-[22%]">
         <div className="pt-2">
-          <Script theme={theme} className="text-5xl block">
+          <Script theme={theme} className="text-6xl block">
             {monthStart.toLocaleString('default', { month: 'long' })}
           </Script>
           <span className="text-xs font-semibold opacity-60 block mt-2">
@@ -68,13 +68,13 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
           </span>
         </div>
       </div>
-      <div className="rounded-lg p-2.5 w-full max-w-[230px]" style={{ background: theme.secondary, color: theme.onSecondary }}>
-        <div className="grid grid-cols-7 text-center text-[10px] font-bold tracking-wide mb-1">
+      <div className="rounded-lg p-3 w-full" style={{ background: theme.secondary, color: theme.onSecondary }}>
+        <div className="grid grid-cols-7 text-center text-xs font-bold tracking-wide mb-1">
           {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
             <span key={i}>{d}</span>
           ))}
         </div>
-        <div className="grid grid-cols-7 text-center text-[11px] gap-y-0.5">
+        <div className="grid grid-cols-7 text-center text-sm gap-y-1">
           {Array.from({ length: firstWeekday }, (_, i) => (
             <span key={`b${i}`} />
           ))}
@@ -85,7 +85,7 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
               <button
                 key={i}
                 onClick={() => onPickWeek(date)}
-                className="rounded-full leading-5 cursor-pointer"
+                className="rounded-full leading-6 mx-auto w-7 cursor-pointer"
                 style={inWeek ? { background: theme.primary, color: theme.onPrimary, fontWeight: 700 } : undefined}
               >
                 {i + 1}
@@ -151,7 +151,7 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
         return (
           <section key={d.key}>
             <div className="relative h-9 rounded-sm flex items-center" style={{ background: theme.primary }}>
-              <Script theme={theme} className="absolute left-3 -top-2 text-4xl" >
+              <Script theme={theme} className="absolute left-3 -top-3 text-4xl">
                 <span style={{ color: theme.ink }}>{d.name}</span>
               </Script>
               <span className="ml-auto text-[11px] font-bold mr-2" style={{ color: theme.onPrimary }}>

@@ -15,6 +15,9 @@ export interface PlannerTheme {
   decor: { cover: PlacedSticker[]; week: PlacedSticker[]; review: PlacedSticker[] };
 }
 
+/** Rounded marker-style handwriting for month / day names. */
+const HANDWRITING = "'Gochi Hand', 'Comic Sans MS', cursive";
+
 const at = (ref: string, x: number, y: number, size: number, rotation = 0): PlacedSticker => ({
   id: `decor-${ref}-${x}-${y}`,
   ref: `pack:${ref}`,
@@ -34,7 +37,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     onSecondary: '#ffffff',
     paper: '#ffffff',
     ink: '#1a1a1a',
-    font: "'Great Vibes', cursive",
+    font: HANDWRITING,
     decor: {
       cover: [at('flowers/bouquet', 0.62, 0.62, 0.36, -8), at('flowers/lavender', 0.06, 0.08, 0.2, -15), at('flowers/butterfly', 0.7, 0.1, 0.18, 12)],
       week: [at('flowers/bouquet', 0.74, 0.0, 0.24, 6)],
@@ -50,7 +53,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     onSecondary: '#22361c',
     paper: '#FBFDF5',
     ink: '#22361c',
-    font: "'Pacifico', cursive",
+    font: HANDWRITING,
     decor: {
       cover: [at('cactus/saguaro', 0.62, 0.66, 0.32, 4), at('cactus/sun', 0.7, 0.06, 0.22, 0), at('cactus/rosette', 0.06, 0.74, 0.2, -10)],
       week: [at('cactus/barrel', 0.78, 0.0, 0.2, 6)],
@@ -66,7 +69,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     onSecondary: '#FFF3DC',
     paper: '#FFF9F0',
     ink: '#3b2414',
-    font: "'Dancing Script', cursive",
+    font: HANDWRITING,
     decor: {
       cover: [at('fall/maple', 0.64, 0.64, 0.3, 18), at('fall/pumpkin', 0.08, 0.74, 0.24, -6), at('fall/oak', 0.74, 0.06, 0.18, -20)],
       week: [at('fall/maple', 0.78, 0.0, 0.2, 16)],
@@ -82,7 +85,7 @@ export const PLANNER_THEMES: PlannerTheme[] = [
     onSecondary: '#ffffff',
     paper: '#FFFDF4',
     ink: '#3d2a00',
-    font: "'Pacifico', cursive",
+    font: HANDWRITING,
     decor: {
       cover: [at('pineapple/pineapple', 0.64, 0.6, 0.3, 8), at('pineapple/sun', 0.72, 0.05, 0.2, 0), at('pineapple/hibiscus', 0.06, 0.74, 0.2, -12)],
       week: [at('pineapple/pineapple', 0.8, 0.0, 0.17, 10)],

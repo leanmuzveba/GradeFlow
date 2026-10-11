@@ -29,7 +29,13 @@ interface PaperProps {
 export const Paper: React.FC<PaperProps> = ({ theme, colors, stickers, userStickerUrls, overlay, children }) => (
   <div
     className="relative rounded-[22px] shadow-md border overflow-hidden"
-    style={{ background: colors.paper, color: colors.ink, borderColor: `${theme.primary}55`, containerType: 'inline-size' }}
+    style={{
+      background: colors.paper,
+      color: colors.ink,
+      borderColor: `${theme.primary}55`,
+      containerType: 'inline-size',
+      fontFamily: "'Patrick Hand', 'Comic Sans MS', cursive",
+    }}
   >
     <div className="relative">{children}</div>
     {overlay ?? (
@@ -72,7 +78,7 @@ export const PaperText: React.FC<{
     onChange={(e) => onChange(e.target.value)}
     placeholder={placeholder}
     rows={minRows}
-    className={`w-full bg-transparent resize-none text-sm leading-6 focus:outline-none placeholder:opacity-50 field-sizing-content ${className}`}
+    className={`w-full bg-transparent resize-none text-base leading-6 focus:outline-none placeholder:opacity-50 field-sizing-content ${className}`}
     style={{ color: 'inherit', minHeight: `${minRows * 1.5}rem`, ...style }}
   />
 );
