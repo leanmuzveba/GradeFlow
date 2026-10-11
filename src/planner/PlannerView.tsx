@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, Sticker } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { deletePlannerFile, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
@@ -10,6 +10,9 @@ import { Paper, PaperColors } from './Paper';
 import { WeekSpread } from './WeekSpread';
 import { CalendarTools } from './CalendarTools';
 import { CoverPage, ReviewPage } from './MonthPages';
+import { StickerControls, StickerEditor } from './StickerEditor';
+import { StickerTray } from './StickerTray';
+import { PlacedSticker } from './types';
 
 type Section = { kind: 'cover' } | { kind: 'week'; index: number } | { kind: 'review' };
 
@@ -22,6 +25,9 @@ export const PlannerView: React.FC = () => {
   const photoInputRef = useRef<HTMLInputElement>(null);
   const photoSlot = useRef(0);
   const [uploadError, setUploadError] = useState('');
+  const [decorating, setDecorating] = useState(false);
+  const [selectedSticker, setSelectedSticker] = useState<string | null>(null);
+  const paperRef = useRef<HTMLDivElement>(null);
 
   const [monthStart, setMonthStart] = useState(() => startOfMonth(new Date()));
   const weeks = weeksOfMonth(monthStart);
@@ -76,6 +82,38 @@ export const PlannerView: React.FC = () => {
       console.warn('Planner: photo upload failed', err);
       setUploadError("Couldn't upload that photo. Check your connection and try again.");
     }
+  };
+
+  // Stickers on the page being shown (theme decoration until the page is decorated)
+  const pageStickers: PlacedSticker[] =
+    section.kind === 'cover'
+      ? month.coverStickers ?? theme.decor.cover
+      : section.kind === 'review'
+        ? month.reviewStickers ?? theme.decor.review
+        : week.stickers ?? theme.decor.week;
+  const setPageStickers = (stickers: PlacedSticker[]) =>
+    section.kind === 'cover'
+      ? updatePage(mKey, { coverStickers: stickers })
+      : section.kind === 'review'
+        ? updatePage(mKey, { reviewStickers: stickers })
+        : updatePage(wKey, { stickers });
+
+  const userStickerUrls = useSignedUrls(pageStickers.filter((s) => s.ref.startsWith('user:')).map((s) => s.ref.slice(5)));
+
+  /** Drops a new sticker in the middle of the visible part of the page. */
+  const addSticker = (ref: string) => {
+    const rect = paperRef.current!.getBoundingClientRect();
+    const size = 0.22;
+    const visibleMid = (Math.min(window.innerHeight * 0.4, rect.bottom) - rect.top) / rect.width;
+    const sticker: PlacedSticker = { id: crypto.randomUUID(), ref, x: 0.5 - size / 2, y: Math.max(0, visibleMid - size / 2), size, rotation: 0 };
+    setPageStickers([...pageStickers, sticker]);
+    setSelectedSticker(sticker.id);
+  };
+
+  const selected = pageStickers.find((s) => s.id === selectedSticker);
+  const updateSelected = (s: PlacedSticker | null) => {
+    setPageStickers(s ? pageStickers.map((x) => (x.id === s.id ? s : x)) : pageStickers.filter((x) => x.id !== selectedSticker));
+    if (!s) setSelectedSticker(null);
   };
 
   const tabs = [
@@ -142,36 +180,76 @@ export const PlannerView: React.FC = () => {
         ))}
       </div>
 
-      {section.kind === 'cover' && (
-        <Paper theme={theme} colors={colors} stickers={month.coverStickers ?? theme.decor.cover} userStickerUrls={{}}>
-          <CoverPage theme={theme} monthStart={monthStart} page={month} onChange={(u) => updatePage(mKey, u)} />
+      <div className="flex justify-end">
+        <button
+          onClick={() => {
+            setDecorating(!decorating);
+            setSelectedSticker(null);
+          }}
+          className="px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+          style={decorating ? { background: theme.primary, color: theme.onPrimary } : { background: 'var(--gf-card)', color: 'var(--gf-muted)', border: '1px solid var(--gf-border)' }}
+        >
+          {decorating ? <Check className="w-3.5 h-3.5" /> : <Sticker className="w-3.5 h-3.5" />}
+          {decorating ? 'Done decorating' : 'Decorate'}
+        </button>
+      </div>
+
+      <div ref={paperRef} className={decorating ? 'pb-[42vh]' : ''}>
+        <Paper
+          theme={theme}
+          colors={colors}
+          stickers={pageStickers}
+          userStickerUrls={userStickerUrls}
+          overlay={
+            decorating ? (
+              <StickerEditor
+                stickers={pageStickers}
+                userStickerUrls={userStickerUrls}
+                selectedId={selectedSticker}
+                onSelect={setSelectedSticker}
+                onChange={setPageStickers}
+              />
+            ) : undefined
+          }
+        >
+          {section.kind === 'cover' && <CoverPage theme={theme} monthStart={monthStart} page={month} onChange={(u) => updatePage(mKey, u)} />}
+          {section.kind === 'week' && (
+            <WeekSpread
+              key={wKey}
+              theme={theme}
+              monthStart={monthStart}
+              monday={monday}
+              page={week}
+              onChange={(u) => updatePage(wKey, u)}
+              onPickWeek={pickWeekOf}
+            />
+          )}
+          {section.kind === 'review' && (
+            <ReviewPage
+              theme={theme}
+              ink={colors.ink}
+              page={month}
+              onChange={(u) => updatePage(mKey, u)}
+              photoUrls={photos.map((p) => (p ? signed[p] ?? null : null))}
+              onPickPhoto={pickPhoto}
+            />
+          )}
         </Paper>
+      </div>
+
+      {decorating && (
+        <div className="fixed left-0 right-0 bottom-[72px] z-30 px-3">
+          <div className="max-w-xl mx-auto bg-[var(--gf-card)] border border-[var(--gf-border)] rounded-3xl shadow-2xl p-3 space-y-3">
+            {selected ? (
+              <StickerControls sticker={selected} onUpdate={updateSelected} />
+            ) : (
+              <p className="text-[11px] text-center text-[var(--gf-muted)]">Tap a sticker to add it · drag stickers on the page to move them · tap one to resize, rotate or remove</p>
+            )}
+            <StickerTray theme={theme} onAdd={addSticker} userStickers={[]} userUrls={{}} />
+          </div>
+        </div>
       )}
-      {section.kind === 'week' && (
-        <Paper theme={theme} colors={colors} stickers={week.stickers ?? theme.decor.week} userStickerUrls={{}}>
-          <WeekSpread
-            key={wKey}
-            theme={theme}
-            monthStart={monthStart}
-            monday={monday}
-            page={week}
-            onChange={(u) => updatePage(wKey, u)}
-            onPickWeek={pickWeekOf}
-          />
-        </Paper>
-      )}
-      {section.kind === 'review' && (
-        <Paper theme={theme} colors={colors} stickers={month.reviewStickers ?? theme.decor.review} userStickerUrls={{}}>
-          <ReviewPage
-            theme={theme}
-            ink={colors.ink}
-            page={month}
-            onChange={(u) => updatePage(mKey, u)}
-            photoUrls={photos.map((p) => (p ? signed[p] ?? null : null))}
-            onPickPhoto={pickPhoto}
-          />
-        </Paper>
-      )}
+
       <input ref={photoInputRef} type="file" accept="image/*" onChange={uploadPhoto} className="hidden" />
       {uploadError && <p className="text-xs font-semibold text-rose-600 text-center">{uploadError}</p>}
     </div>
