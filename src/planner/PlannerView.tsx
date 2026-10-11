@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
+import { deletePlannerFile, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
 import { usePlanner } from './usePlanner';
 import { PLANNER_THEMES, themeForMonth } from './themes';
 import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
@@ -15,7 +17,11 @@ const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
 
 export const PlannerView: React.FC = () => {
   const { profile } = useApp();
+  const userId = useAuth().user!.id;
   const { pages, updatePage } = usePlanner();
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const photoSlot = useRef(0);
+  const [uploadError, setUploadError] = useState('');
 
   const [monthStart, setMonthStart] = useState(() => startOfMonth(new Date()));
   const weeks = weeksOfMonth(monthStart);
@@ -44,6 +50,33 @@ export const PlannerView: React.FC = () => {
   const monday = weeks[weekIndex];
   const wKey = weekKey(monday);
   const week = pages[wKey] ?? {};
+
+  const photos = month.photos ?? [null, null, null, null];
+  const signed = useSignedUrls(photos.filter((p): p is string => !!p));
+
+  const pickPhoto = (slot: number) => {
+    photoSlot.current = slot;
+    photoInputRef.current?.click();
+  };
+
+  const uploadPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    setUploadError('');
+    const slot = photoSlot.current;
+    try {
+      const path = await uploadPlannerFile(userId, 'photos', await resizeImage(file, 1280, 'image/jpeg'), 'jpg');
+      const old = photos[slot];
+      const next = [...photos];
+      next[slot] = path;
+      updatePage(mKey, { photos: next });
+      if (old) deletePlannerFile(old);
+    } catch (err) {
+      console.warn('Planner: photo upload failed', err);
+      setUploadError("Couldn't upload that photo. Check your connection and try again.");
+    }
+  };
 
   const tabs = [
     { label: 'Cover', active: section.kind === 'cover', go: () => setSection({ kind: 'cover' }) },
@@ -129,9 +162,18 @@ export const PlannerView: React.FC = () => {
       )}
       {section.kind === 'review' && (
         <Paper theme={theme} colors={colors} stickers={month.reviewStickers ?? theme.decor.review} userStickerUrls={{}}>
-          <ReviewPage theme={theme} ink={colors.ink} page={month} onChange={(u) => updatePage(mKey, u)} photoUrls={[null, null, null, null]} />
+          <ReviewPage
+            theme={theme}
+            ink={colors.ink}
+            page={month}
+            onChange={(u) => updatePage(mKey, u)}
+            photoUrls={photos.map((p) => (p ? signed[p] ?? null : null))}
+            onPickPhoto={pickPhoto}
+          />
         </Paper>
       )}
+      <input ref={photoInputRef} type="file" accept="image/*" onChange={uploadPhoto} className="hidden" />
+      {uploadError && <p className="text-xs font-semibold text-rose-600 text-center">{uploadError}</p>}
     </div>
   );
 };
