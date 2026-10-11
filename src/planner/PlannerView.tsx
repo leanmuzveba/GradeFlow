@@ -6,6 +6,7 @@ import { themeById } from './themes';
 import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
 import { Paper, PaperColors } from './Paper';
 import { WeekSpread } from './WeekSpread';
+import { CalendarTools } from './CalendarTools';
 
 type Section = { kind: 'week'; index: number };
 
@@ -58,6 +59,8 @@ export const PlannerView: React.FC = () => {
           <ChevronRight className="w-4 h-4" />
         </button>
       </div>
+
+      <CalendarTools />
 
       {/* Divider tabs */}
       <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
