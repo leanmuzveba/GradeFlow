@@ -21,7 +21,8 @@ export interface WeekPage {
   goals?: string;
   todos?: TodoItem[];
   notes?: string;
-  days?: Partial<Record<DayKey, string>>;
+  days?: Partial<Record<DayKey, string>>; // older free-text day notes, shown as tasks until edited
+  dayTasks?: Partial<Record<DayKey, TodoItem[]>>;
   stickers?: PlacedSticker[]; // undefined = theme's default decoration
 }
 

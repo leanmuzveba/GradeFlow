@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Check, Plus, Trash2, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useApp } from '../context/AppContext';
@@ -7,6 +7,7 @@ import { PlannerTheme } from './themes';
 import { DayKey, TodoItem, WeekPage } from './types';
 import { addDays, sameDay, ymd } from './dates';
 import { PaperText, Script } from './Paper';
+import { TaskCircle, TaskLines, textToTasks } from './TaskLines';
 
 const DAYS: { key: DayKey; name: string; offsets: number[] }[] = [
   { key: 'mon', name: 'Monday', offsets: [0] },
@@ -31,6 +32,11 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
   const [newTodo, setNewTodo] = useState('');
   const today = new Date();
   const todos = page.todos ?? [];
+  // Old free-text day notes become task lines (ids kept stable until saved).
+  const legacyDayTasks = useMemo(
+    () => Object.fromEntries(DAYS.map((d) => [d.key, textToTasks(page.days?.[d.key])])) as Record<DayKey, TodoItem[]>,
+    [page.days]
+  );
 
   const setTodos = (next: TodoItem[]) => onChange({ todos: next });
   const addTodo = () => {
@@ -107,14 +113,12 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
         <ul className="space-y-1.5">
           {todos.map((t) => (
             <li key={t.id} className="flex items-center gap-2">
-              <button
-                onClick={() => setTodos(todos.map((x) => (x.id === t.id ? { ...x, done: !x.done } : x)))}
-                className="w-4.5 h-4.5 shrink-0 rounded border-2 flex items-center justify-center cursor-pointer"
-                style={{ borderColor: theme.onSecondary, background: t.done ? theme.primary : 'transparent' }}
-                aria-label={t.done ? 'Mark not done' : 'Mark done'}
-              >
-                {t.done && <Check className="w-3 h-3" style={{ color: theme.onPrimary }} />}
-              </button>
+              <TaskCircle
+                done={t.done}
+                color={theme.onSecondary}
+                fill={theme.primary}
+                onToggle={() => setTodos(todos.map((x) => (x.id === t.id ? { ...x, done: !x.done } : x)))}
+              />
               <input
                 value={t.text}
                 onChange={(e) => setTodos(todos.map((x) => (x.id === t.id ? { ...x, text: e.target.value } : x)))}
@@ -201,10 +205,11 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
                   </div>
                 );
               })}
-              <PaperText
-                value={page.days?.[d.key] ?? ''}
-                onChange={(text) => onChange({ days: { ...page.days, [d.key]: text } })}
-                placeholder="Plans, notes…"
+              <TaskLines
+                items={page.dayTasks?.[d.key] ?? legacyDayTasks[d.key]}
+                onChange={(items) => onChange({ dayTasks: { ...page.dayTasks, [d.key]: items } })}
+                ink={theme.ink}
+                accent={theme.primary}
               />
             </div>
           </section>
