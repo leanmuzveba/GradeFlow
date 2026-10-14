@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { Bell } from 'lucide-react';
 import { TodoItem } from './types';
 
 /** Bullet-journal circle: empty = to do, filled = done. */
@@ -14,11 +15,40 @@ export const TaskCircle: React.FC<{ done: boolean; color: string; fill: string; 
 
 const LINE_HEIGHT = 34;
 
+/** Bell that opens the phone's time picker; the picker's Clear removes the reminder. */
+const ReminderBell: React.FC<{ remindAt?: string; dates: string[]; ink: string; accent: string; onChange: (remindAt?: string) => void }> = ({
+  remindAt,
+  dates,
+  ink,
+  accent,
+  onChange,
+}) => {
+  const single = dates.length === 1;
+  const at = remindAt ? new Date(remindAt) : null;
+  return (
+    <label className="relative flex items-center gap-1 shrink-0 text-xs font-bold cursor-pointer" style={{ color: at ? accent : `${ink}55` }}>
+      <Bell className="w-3.5 h-3.5" fill={at ? 'currentColor' : 'none'} />
+      {at && (single ? '' : at.toLocaleDateString('default', { weekday: 'short' }) + ' ') + at.toLocaleTimeString('default', { hour: 'numeric', minute: '2-digit' })}
+      <input
+        type={single ? 'time' : 'datetime-local'}
+        value={remindAt ? (single ? remindAt.slice(11) : remindAt) : ''}
+        min={single ? undefined : `${dates[0]}T00:00`}
+        max={single ? undefined : `${dates[dates.length - 1]}T23:59`}
+        onChange={(e) => onChange(e.target.value ? (single ? `${dates[0]}T${e.target.value}` : e.target.value) : undefined)}
+        className="absolute inset-0 opacity-0 cursor-pointer"
+        aria-label={at ? 'Change reminder' : 'Set reminder'}
+      />
+    </label>
+  );
+};
+
 interface Props {
   items: TodoItem[];
   onChange: (items: TodoItem[]) => void;
   ink: string;
   accent: string;
+  /** The day(s) this box covers (YYYY-MM-DD); tasks can get a reminder on them. */
+  dates: string[];
   /** Lines always shown, like a notebook page. */
   minLines?: number;
 }
@@ -28,7 +58,7 @@ interface Props {
  * The first empty line is where you write the next task; the empty line keeps
  * its React key when it turns into a task, so the keyboard stays open.
  */
-export const TaskLines: React.FC<Props> = ({ items, onChange, ink, accent, minLines = 5 }) => {
+export const TaskLines: React.FC<Props> = ({ items, onChange, ink, accent, dates, minLines = 5 }) => {
   const [draftId, setDraftId] = useState(() => crypto.randomUUID());
   const inputs = useRef<Record<string, HTMLInputElement | null>>({});
   const blankLines = Math.max(0, minLines - items.length - 1);
@@ -77,6 +107,15 @@ export const TaskLines: React.FC<Props> = ({ items, onChange, ink, accent, minLi
             className={`flex-1 min-w-0 bg-transparent text-base focus:outline-none ${t.done ? 'line-through opacity-50' : ''}`}
             style={{ color: 'inherit' }}
           />
+          {t.id !== draftId && !t.done && (
+            <ReminderBell
+              remindAt={t.remindAt}
+              dates={dates}
+              ink={ink}
+              accent={accent}
+              onChange={(remindAt) => onChange(items.map((x) => (x.id === t.id ? { ...x, remindAt } : x)))}
+            />
+          )}
         </div>
       ))}
       {Array.from({ length: blankLines }, (_, i) => (

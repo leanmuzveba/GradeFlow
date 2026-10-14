@@ -210,6 +210,7 @@ export const WeekSpread: React.FC<Props> = ({ theme, monthStart, monday, page, o
                 onChange={(items) => onChange({ dayTasks: { ...page.dayTasks, [d.key]: items } })}
                 ink={theme.ink}
                 accent={theme.primary}
+                dates={dates.map(ymd)}
               />
             </div>
           </section>

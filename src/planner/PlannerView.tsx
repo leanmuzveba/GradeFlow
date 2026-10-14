@@ -4,6 +4,7 @@ import { useApp } from '../context/AppContext';
 import { useAuth } from '../context/AuthContext';
 import { deletePlannerFile, listUserStickers, resizeImage, uploadPlannerFile, useSignedUrls } from './storage';
 import { usePlanner } from './usePlanner';
+import { useReminders } from './reminders';
 import { PLANNER_THEMES, themeForMonth } from './themes';
 import { monthKey, mondayOf, weekKey, weeksOfMonth, ymd } from './dates';
 import { Paper, PaperColors } from './Paper';
@@ -19,9 +20,10 @@ type Section = { kind: 'cover' } | { kind: 'week'; index: number } | { kind: 're
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
 
 export const PlannerView: React.FC = () => {
-  const { profile } = useApp();
+  const { profile, events } = useApp();
   const userId = useAuth().user!.id;
   const { pages, updatePage } = usePlanner();
+  useReminders(pages, events);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const photoSlot = useRef(0);
   const [uploadError, setUploadError] = useState('');

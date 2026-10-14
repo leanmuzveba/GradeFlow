@@ -12,6 +12,7 @@ export interface TodoItem {
   id: string;
   text: string;
   done: boolean;
+  remindAt?: string; // local 'YYYY-MM-DDTHH:mm'
 }
 
 export const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'weekend'] as const;
